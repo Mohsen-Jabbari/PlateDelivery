@@ -7,14 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Counters\" />
-    <Folder Include="Services\Batches\" />
-    <Folder Include="Services\Oks\" />
-    <Folder Include="Services\Representations\" />
-    <Folder Include="Services\Stores\" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PlateDelivery.Core\PlateDelivery.Core.csproj" />
     <ProjectReference Include="..\PlateDelivery.DataLayer\PlateDelivery.DataLayer.csproj" />
   </ItemGroup>
 

@@ -16,15 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\BatchAgg\Configuration\" />
-    <Folder Include="Entities\CounterAgg\Configuration\" />
-    <Folder Include="Entities\OkAgg\Configuration\" />
-    <Folder Include="Entities\RepresentationAgg\Configuration\" />
-    <Folder Include="Entities\StoreAgg\Configuration\" />
-    <Folder Include="Entities\UserAgg\Configuration\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\PlateDelivery.Common\PlateDelivery.Common.csproj" />
   </ItemGroup>
 
