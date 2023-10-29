@@ -1,4 +1,6 @@
-﻿using PlateDelivery.DataLayer.Entities.UserAgg;
+﻿using Newtonsoft.Json.Linq;
+using PlateDelivery.Core.Models;
+using PlateDelivery.DataLayer.Entities.UserAgg;
 using PlateDelivery.DataLayer.Entities.UserAgg.Repository;
 
 namespace PlateDelivery.Core.Services.Users;
@@ -10,6 +12,28 @@ public class UserService : IUserService
     public UserService(IUserRepository userRepository)
     {
         _userRepository = userRepository;
+    }
+
+    public async Task<User> AddToken(UserToken token, long UserId)
+    {
+        var user = _userRepository.GetTracking(UserId);
+        if (user.Result == null)
+            return null;
+        user.Result.AddToken(token.HashJwtToken, token.HashRefreshToken, token.TokenExpireDate,
+            token.RefreshTokenExpireDate, token.Device);
+        await _userRepository.Save();
+        return user.Result;
+    }
+
+    public async Task<bool> AddToken(long UserId, string hashToken, string hashRefreshToken, DateTime expireTokenDate, DateTime expireRefreshTokenDate, string device)
+    {
+        var user = await _userRepository.GetTracking(UserId);
+        if (user == null)
+            return false;
+        user.AddToken(hashToken, hashRefreshToken, expireTokenDate,
+        expireRefreshTokenDate, device);
+        await _userRepository.Save();
+        return true;
     }
 
     public async Task<long> CreateUser(string UserName, string Password)
@@ -44,6 +68,22 @@ public class UserService : IUserService
     public async Task<string> GetUserTokenByJwtToken(string JwtToken)
     {
         throw new NotImplementedException();
+    }
+
+    public UserDto Login(string UserName)
+    {
+        var user = _userRepository.GetUserByUserName(UserName);
+        if (user != null)
+            return new UserDto()
+            {
+                CreationDate = user.CreationDate,
+                Id = user.Id,
+                IsActive = user.IsActive,
+                IsDelete = user.IsDelete,
+                Password = user.Password,
+                UserName = user.UserName
+            };
+        return null;
     }
 
     public async Task<bool> SetActive(long UserId)

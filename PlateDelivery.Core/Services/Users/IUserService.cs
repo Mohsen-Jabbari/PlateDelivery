@@ -1,4 +1,5 @@
-﻿using PlateDelivery.DataLayer.Entities.UserAgg;
+﻿using PlateDelivery.Core.Models;
+using PlateDelivery.DataLayer.Entities.UserAgg;
 
 namespace PlateDelivery.Core.Services.Users;
 public interface IUserService
@@ -9,4 +10,7 @@ public interface IUserService
     Task<string> GetUserTokenByJwtToken(string JwtToken);
 
     Task<User> GetUserById(long UserId);
+    UserDto Login(string UserName);
+    Task<User> AddToken(UserToken token, long UserId);
+    Task<bool> AddToken(long UserId, string hashToken, string hashRefreshToken, DateTime expireTokenDate, DateTime expireRefreshTokenDate, string device);
 }

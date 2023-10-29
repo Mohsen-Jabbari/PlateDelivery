@@ -259,14 +259,67 @@ namespace PlateDelivery.DataLayer.Migrations
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Id")
                         .IsUnique();
 
+                    b.HasIndex("UserName")
+                        .IsUnique();
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("PlateDelivery.DataLayer.Entities.UserAgg.User", b =>
+                {
+                    b.OwnsMany("PlateDelivery.DataLayer.Entities.UserAgg.UserToken", "Tokens", b1 =>
+                        {
+                            b1.Property<long>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("bigint");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<long>("Id"));
+
+                            b1.Property<DateTime>("CreationDate")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("Device")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("nvarchar(100)");
+
+                            b1.Property<string>("HashJwtToken")
+                                .IsRequired()
+                                .HasMaxLength(250)
+                                .HasColumnType("nvarchar(250)");
+
+                            b1.Property<string>("HashRefreshToken")
+                                .IsRequired()
+                                .HasMaxLength(250)
+                                .HasColumnType("nvarchar(250)");
+
+                            b1.Property<DateTime>("RefreshTokenExpireDate")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<DateTime>("TokenExpireDate")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<long>("UserId")
+                                .HasColumnType("bigint");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("UserId");
+
+                            b1.ToTable("Tokens", "dbo");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.Navigation("Tokens");
                 });
 #pragma warning restore 612, 618
         }

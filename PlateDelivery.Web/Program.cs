@@ -1,37 +1,54 @@
 using Employment.API.Infrastructure.JwtUtil;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PlateDelivery.Config;
 using PlateDelivery.DataLayer.Context;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages(option =>
-{
-    var jwtSecurityScheme = new OpenApiSecurityScheme
-    {
-        Scheme = "bearer",
-        BearerFormat = "JWT",
-        Name = "JWT Authentication",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Description = "Enter Token",
+builder.Services.AddRazorPages();
+builder.Services.AddControllers();
 
-        Reference = new OpenApiReference
-        {
-            Id = JwtBearerDefaults.AuthenticationScheme,
-            Type = ReferenceType.SecurityScheme
-        }
+#region Jwt Token Configuration
+
+builder.Services.AddAuthentication(option =>
+{
+    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    option.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(option =>
+{
+    option.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidAudience = builder.Configuration["JwtConfig:Audience"],
+        ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
+        IssuerSigningKey =
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:SignInKey"])),
+        ValidateLifetime = true,
+        ValidateAudience = true,
+        ValidateIssuer = true,
+        ValidateIssuerSigningKey = true
     };
 });
-builder.Services.AddControllers();
+
+#endregion
+
+#region DbContext Configuration
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.RegisterPlateDeliveryDependency(connectionString);
 
-builder.Services.AddJwtAuthentication(builder.Configuration);
+#endregion
+
+
+
+builder.Services.AddAuthorization();
+builder.Services.AddSession();
+//builder.Services.AddJwtAuthentication(builder.Configuration);
 
 var app = builder.Build();
 
@@ -43,14 +60,36 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.Use(async (context, next) =>
+{
+    var token = context.Request.Cookies["token"]?.ToString();
+    if (string.IsNullOrWhiteSpace(token) == false)
+    {
+        context.Request.Headers.Append("Authorization", $"Bearer {token}");
+    }
+    await next();
+});
+
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
+
+app.Use(async (context, next) =>
+{
+    await next();
+    var status = context.Response.StatusCode;
+    if (status == 401)
+    {
+        var path = context.Request.Path;
+        context.Response.Redirect($"/auth/login?redirectTo={path}");
+    }
+});
+
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapRazorPages();
+app.MapControllerRoute("Default", "{controller=Home}/{action=Index}/{id?}");
 
 using (var scope = app.Services.CreateScope())
 {
