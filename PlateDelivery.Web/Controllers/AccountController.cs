@@ -1,6 +1,9 @@
 ﻿using Employment.API.Infrastructure.JwtUtil;
 using LatinMedia.Core.Convertors;
 using LatinMedia.Core.Genertors;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PlateDelivery.Core.Convertors;
 using PlateDelivery.Core.Models;
@@ -84,7 +87,7 @@ namespace PlateDelivery.Web.Controllers
                 {
                     HttpOnly = true,
                     Expires = tokenString.ExpireDate.AddHours(12)
-                });
+                }); ;
                 SyncUser(tokenString.Token);
                 ViewBag.IsSuccess = true;
                 return View();
@@ -98,8 +101,7 @@ namespace PlateDelivery.Web.Controllers
             }
             return View(login);
         }
-
-        private UserTokenDto AddTokenAndGenerateJwt(LoginViewModel user)
+        private UserTokenResponseDto AddTokenAndGenerateJwt(LoginViewModel user)
         {
             var uaParser = Parser.GetDefault();
             var header = HttpContext.Request.Headers["user-agent"].ToString();
@@ -126,7 +128,7 @@ namespace PlateDelivery.Web.Controllers
                 var handler = new JwtSecurityTokenHandler();
                 var jwt = handler.ReadJwtToken(token);
 
-                return new UserTokenDto()
+                return new UserTokenResponseDto()
                 {
                     Token = token,
                     ExpireDate = DateTime.Now.AddHours(12),
@@ -140,26 +142,46 @@ namespace PlateDelivery.Web.Controllers
             
             catch (Exception ex)
             {
-                return new UserTokenDto()
+                return new UserTokenResponseDto()
                 {
                     Token = ex.InnerException?.Message,
                     ExpireDate = DateTime.MinValue,
                     UserId = "0",
                     RefreshToken = "",
                     CreationDate = DateTime.MinValue,
-                    Id = -1
+                    Id = -1,
                 };
             }
 
             
         }
-
         private void SyncUser(string token)
         {
             HttpContext.Request.Headers.Append("Authorization", $"Bearer {token}");
             var handler = new JwtSecurityTokenHandler();
             var jwtSecurityToken = handler.ReadJwtToken(token);
             var userId = Convert.ToInt64(jwtSecurityToken.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
+        }
+
+        [Authorize]
+        [Route("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            var token = await HttpContext.GetTokenAsync("access_token");
+            if (token == null)
+            {
+                ViewBag.Token = false;
+                return Redirect("/Login");
+            }
+            var result = await _userService.LogOut(token);
+
+            if (result)
+            {
+                HttpContext.Response.Cookies.Delete("token");
+                HttpContext.Response.Cookies.Delete("refresh-token");
+            }
+            ViewBag.Token = true;
+            return Redirect("/Login");
         }
     }
 }

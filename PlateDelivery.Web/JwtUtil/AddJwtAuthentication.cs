@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using PlateDelivery.Web.JwtUtil;
 
 namespace Employment.API.Infrastructure.JwtUtil;
 

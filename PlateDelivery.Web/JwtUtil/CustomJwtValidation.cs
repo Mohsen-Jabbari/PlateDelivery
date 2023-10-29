@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using PlateDelivery.Core.Services.Users;
 
-namespace Employment.API.Infrastructure.JwtUtil;
+namespace PlateDelivery.Web.JwtUtil;
 
 public class CustomJwtValidation
 {

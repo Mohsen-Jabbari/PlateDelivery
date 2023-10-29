@@ -40,6 +40,20 @@
 
             }
 
+            @if (ViewBag.Token == false)
+            {
+                <script>
+                    swal("خطا !", "توکن معتبر نمی باشد", "error")
+                </script>
+            }
+
+            @if (ViewBag.Token == true)
+            {
+                <script>
+                    swal("خطا !", "شما با موفقیت از سیستم خارج شدید", "success")
+                </script>
+            }
+
             @if (ViewBag.IsSuccess == false)
             {
                 <script>

@@ -13,7 +13,7 @@ public class JwtTokenBuilder
     {
         var claims = new List<Claim>()
         {
-            new Claim(ClaimTypes.NameIdentifier,user.UserName.ToString()),
+            new Claim(ClaimTypes.NameIdentifier,user.UserId.ToString()),
         };
         var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtConfig:SignInKey"]));
         var credential = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);

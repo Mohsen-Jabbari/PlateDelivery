@@ -20,6 +20,7 @@ public static class DataLayerBootstrapper
         services.AddTransient<ICounterRepository, CounterRepository>();
         services.AddTransient<IBatchRepository, BatchRepository>();
 
+        services.AddTransient(_ => new DapperContext.DapperContext(connectionString));
         services.AddDbContext<PlateDeliveryDBContext>(option =>
         {
             option.UseSqlServer(connectionString);
