@@ -1,4 +1,3 @@
-using Employment.API.Infrastructure.JwtUtil;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

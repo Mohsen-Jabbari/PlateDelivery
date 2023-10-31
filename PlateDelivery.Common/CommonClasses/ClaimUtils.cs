@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Security.Principal;
 
-namespace Common.AspNetCore;
+namespace PlateDelivery.Common.CommonClasses;
 
 public static class ClaimUtils
 {

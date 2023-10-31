@@ -1,6 +1,4 @@
-﻿using Employment.API.Infrastructure.JwtUtil;
-using LatinMedia.Core.Convertors;
-using LatinMedia.Core.Genertors;
+﻿using LatinMedia.Core.Genertors;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +9,7 @@ using PlateDelivery.Core.Security;
 using PlateDelivery.Core.Services.Users;
 using PlateDelivery.DataLayer.Context;
 using PlateDelivery.DataLayer.Entities.UserAgg;
+using PlateDelivery.Web.JwtUtil;
 using PlateDelivery.Web.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

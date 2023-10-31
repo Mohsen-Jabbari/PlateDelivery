@@ -1,5 +1,5 @@
-﻿using Common.AspNetCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using PlateDelivery.Common.CommonClasses;
 using PlateDelivery.Core.Services.Users;
 
 namespace PlateDelivery.Web.JwtUtil;

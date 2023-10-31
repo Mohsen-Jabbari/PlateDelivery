@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace LatinMedia.Core.Convertors
+namespace PlateDelivery.Core.Convertors
 {
    public class FixedText
     {

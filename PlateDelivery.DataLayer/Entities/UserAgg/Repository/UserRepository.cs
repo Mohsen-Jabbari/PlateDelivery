@@ -15,7 +15,7 @@ internal class UserRepository : BaseRepository<User>, IUserRepository
     {
         var user = Context.Users.Where(u => u.UserName == userName).FirstOrDefault();
         if (user == null)
-            return new User("User Not Found", "", false, false);
+            return new User("User Not Found", "", "", "", false, false);
         return user;
     }
 }

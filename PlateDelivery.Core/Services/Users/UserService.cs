@@ -42,11 +42,11 @@ public class UserService : IUserService
         return true;
     }
 
-    public async Task<long> CreateUser(string UserName, string Password)
+    public async Task<long> CreateUser(string FirstName, string LastName, string UserName, string Password)
     {
         if (!await _userRepository.ExistsAsync(u => u.UserName == UserName))
         {
-            var user = new User(UserName, Password, true, false);
+            var user = new User(FirstName, LastName, UserName, Password, true, false);
             _userRepository.Add(user);
             await _userRepository.Save();
             return user.Id;
@@ -129,4 +129,27 @@ public class UserService : IUserService
         var sql = $"SELECT TOP(1) * FROM {_dapperContext.Tokens} Where HashJwtToken=@hashJwtToken";
         return await connection.QueryFirstOrDefaultAsync<UserTokenDto?>(sql, new { hashJwtToken = hashJwtToken });
     }
+
+    #region SideBar
+    public SideBarAdminPanelViewModel GetSideBarAdminPanelData(long UserId)
+    {
+        throw new NotImplementedException();
+    }
+
+    #endregion
+
+    #region Users
+
+    public UsersViewModel GetUsers(int pageId = 1, int take = 10, string? filterByLastName = "", string? filterByUserName = "")
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<long> EditUser(long Id, string FirstName, string LastName, string Password)
+    {
+        throw new NotImplementedException();
+    }
+
+    #endregion
+
 }

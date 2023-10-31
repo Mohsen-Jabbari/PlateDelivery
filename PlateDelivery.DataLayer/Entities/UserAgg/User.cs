@@ -4,13 +4,24 @@ using PlateDelivery.Common.Exceptions;
 namespace PlateDelivery.DataLayer.Entities.UserAgg;
 public class User : BaseEntity
 {
-    public User(string userName, string password, bool isActive, bool isDelete)
+    public User(string firstName, string lastName, string userName, string password, bool isActive, bool isDelete)
     {
-        Guard(userName, password);
+        Guard(firstName, lastName, userName, password);
         UserName = userName;
         Password = password;
         IsActive = isActive;
         IsDelete = isDelete;
+        FirstName = firstName;
+        LastName = lastName;
+    }
+
+    public void EditUser(string firstName, string lastName, string password, bool isActive)
+    {
+        Guard(firstName, lastName, UserName, password);
+        Password = password;
+        IsActive = isActive;
+        FirstName = firstName;
+        LastName = lastName;
     }
 
     public void ResetPassword(string password)
@@ -64,12 +75,16 @@ public class User : BaseEntity
 
     #endregion
 
-    public static void Guard(string userName, string password)
+    public static void Guard(string FirstName, string LastName, string userName, string password)
     {
+        NullOrEmptyDataException.CheckString(FirstName, nameof(FirstName));
+        NullOrEmptyDataException.CheckString(LastName, nameof(LastName));
         NullOrEmptyDataException.CheckString(userName, nameof(userName));
         NullOrEmptyDataException.CheckString(password, nameof(password));
     }
 
+    public string FirstName { get; private set; }
+    public string LastName { get; private set; }
     public string UserName { get; private set; }
     public string Password { get; private set; }
     public bool IsActive { get; private set; }

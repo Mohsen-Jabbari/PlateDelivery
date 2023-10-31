@@ -1,11 +1,10 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using PlateDelivery.Core.Models;
 using PlateDelivery.Web.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Employment.API.Infrastructure.JwtUtil;
+namespace PlateDelivery.Web.JwtUtil;
 
 public class JwtTokenBuilder
 {
