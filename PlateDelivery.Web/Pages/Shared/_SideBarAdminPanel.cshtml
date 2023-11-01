@@ -5,7 +5,7 @@
 @using PlateDelivery.Common.CommonClasses
 @inject IUserService UserService
 @{
-    SideBarAdminPanelViewModel user = UserService.GetSideBarAdminPanelData(User.GetUserId());
+    SideBarAdminPanelViewModel user = await UserService.GetSideBarAdminPanelData(User.GetUserId());
 }
 
 <div class="col-md-3 left_col hidden-print">
@@ -19,7 +19,7 @@
         <!-- menu profile quick info -->
         <div class="profile clearfix">
             <div class="profile_pic">
-                <img src="/UserAvatar/@user.AvatarName" alt="..." class="img-circle profile_img">
+                <img src="/UserAvatar/default.png" alt="..." class="img-circle profile_img">
             </div>
             <div class="profile_info">
                 <span>خوش آمدید,</span>
@@ -48,17 +48,6 @@
                                     <li><a href="/Leon/Profile">مشاهده پروفایل</a></li>
                                     <li><a href="/Leon/EditProfile">ویرایش پروفایل</a></li>
                                     <li><a href="/Leon/ChangePassword">ویرایش کلمه عبور</a></li>
-                                    @*<li><a href="/Leon/CancelClass">تعطیلی کلاس ها</a></li>*@
-                                </ul>
-                            </li>
-                            <li>
-                                <a>
-                                    <i class="fa fa-envelope"></i> مدیریت پیام ها<span class="fa fa-chevron-down"></span>
-                                </a>
-                                <ul class="nav child_menu">
-                                    <li><a href="/Leon/AdminMessages/MainPage">پیامهای صفحه اصلی</a></li>
-                                    <li><a href="/Leon/AdminMessages/MessageToSupporter">پیامهای ارسالی به استانها</a></li>
-                                    <li><a href="/Leon/AdminMessages/MessageToAllAcademy">پیامهای ارسالی به آموزشگاهها</a></li>
                                 </ul>
                             </li>
                             <li>
@@ -73,7 +62,7 @@
 
                                 </ul>
                             </li>
-                            <li>
+                            @* <li>
                                 <a>
                                     <i class="fa fa-user-secret"></i>مدیریت مدرسان<span class="fa fa-chevron-down"></span>
                                 </a>
@@ -140,7 +129,7 @@
                                 <a href="/Support/">
                                     <i class="fa fa-shopping-basket"></i>فروشگاه آنلاین
                                 </a>
-                            </li>
+                            </li> *@
                         </ul>
                     </div>
                 </div>

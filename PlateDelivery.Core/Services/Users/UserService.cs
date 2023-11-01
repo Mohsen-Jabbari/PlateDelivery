@@ -1,11 +1,13 @@
 ﻿using Azure.Core;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using PlateDelivery.Core.Models;
 using PlateDelivery.Core.Security;
 using PlateDelivery.DataLayer.DapperContext;
 using PlateDelivery.DataLayer.Entities.UserAgg;
 using PlateDelivery.DataLayer.Entities.UserAgg.Repository;
+using System.Reflection;
 
 namespace PlateDelivery.Core.Services.Users;
 
@@ -66,10 +68,7 @@ public class UserService : IUserService
         return false;
     }
 
-    public async Task<User> GetUserById(long UserId)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<User> GetUserById(long UserId) => await _userRepository.GetTracking(UserId);
 
     public async Task<bool> LogOut(string JwtToken)
     {
@@ -131,9 +130,28 @@ public class UserService : IUserService
     }
 
     #region SideBar
-    public SideBarAdminPanelViewModel GetSideBarAdminPanelData(long UserId)
+    public async Task<SideBarAdminPanelViewModel> GetSideBarAdminPanelData(long UserId)
     {
-        throw new NotImplementedException();
+        var user = await _userRepository.GetTracking(UserId);
+        var userRoles = new List<UserRole>();
+        userRoles.Add(new UserRole() { UR_Id = 1, UserId = 20, RoleId = 1 });
+        var result = new SideBarAdminPanelViewModel()
+        {
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            AvatarName = "defualt.png",
+            Gender = "",
+            RollId = userRoles
+        };
+        return result;
+        //.Select(u => new SideBarAdminPanelViewModel()
+        //{
+        //    FirstName = PasswordHelper.DecryptString(u.FirstName),
+        //    LastName = PasswordHelper.DecryptString(u.LastName),
+        //    AvatarName = u.UserAvatar,
+        //    Gender = u.Gender.GenderName,
+        //    RollId = u.UserRoles
+        //}).Single();
     }
 
     #endregion

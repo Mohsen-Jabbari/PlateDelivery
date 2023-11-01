@@ -3,6 +3,9 @@
 @using PlateDelivery.Core.Services.Users;
 @using System.Security.Claims
 @inject IUserService UserService
+@{
+    var user = await UserService.GetUserById(User.GetUserId());
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,21 +58,19 @@
                 <div class="user-quickview">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        var claim = User.GetUserId();
-                        var user = UserService.GetUserById(User.GetUserId());
                         <div class="outer-ring">
                             <div class="inner-ring"></div>
                             <figure class="user-avatar">
                                 <img src="/UserAvatar/default.png" alt="avatar">
                             </figure>
                         </div>
-                        <p class="user-name" style="width:auto">@User.Identity.Name ، خوش آمدید</p>
+                        <p class="user-name" style="width:auto">@user.FirstName @user.LastName ، خوش آمدید</p>
                         <svg class="svg-arrow">
                             <use xlink:href="#svg-arrow"></use>
                         </svg>
                         <ul class="dropdown small hover-effect closed">
                             <li class="dropdown-item">
-                                <a href="/InspectorPanel/">پنل کاربری</a>
+                                <a href="/Leon/">پنل مدیریت</a>
                             </li>
                             @* @if (PermissionService.CheckUserIsRoleAcademy(User.Identity.GetMobile()))
                         {
@@ -133,8 +134,6 @@
         <!-- SIDE MENU HEADER -->
         @if (User.Identity.IsAuthenticated)
         {
-            var claim = User.GetUserId();
-            var user = UserService.GetUserById(User.GetUserId());
             <div class="side-menu-header">
                 <!-- USER QUICKVIEW -->
                 <div class="user-quickview">
@@ -150,7 +149,7 @@
                     </a>
                     <!-- /USER AVATAR -->
                     <!-- USER INFORMATION -->
-                    <p class="user-name">@User.Identity.Name</p>
+                    <p class="user-name">@user.FirstName @user.LastName</p>
 
                     <!-- /USER INFORMATION -->
 
@@ -160,7 +159,7 @@
             <p class="side-menu-title">حساب شما</p>
             <ul class="dropdown dark hover-effect">
                 <li class="dropdown-item">
-                    <a href="TeacherPanel">پنل کاربری</a>
+                    <a href="/Leon/">پنل مدیریت</a>
                 </li>
             </ul>
 

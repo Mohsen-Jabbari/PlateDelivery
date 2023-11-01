@@ -16,7 +16,7 @@ public interface IUserService
     Task<UserTokenDto?> GetUserTokenByJwtToken(string JwtToken);
 
     #region SideBar
-    SideBarAdminPanelViewModel GetSideBarAdminPanelData(long UserId);
+    Task<SideBarAdminPanelViewModel> GetSideBarAdminPanelData(long UserId);
     #endregion
 
     #region Users
