@@ -5,6 +5,7 @@ namespace PlateDelivery.Common.Repository;
 public interface IBaseRepository<T> where T : BaseEntity
 {
     Task<List<T>?> GetAllAsync();
+    List<T> GetAll();
     Task<T?> GetAsync(long id);
     Task<T?> GetTracking(long id);
 

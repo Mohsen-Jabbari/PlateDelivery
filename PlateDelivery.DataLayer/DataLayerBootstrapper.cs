@@ -4,7 +4,9 @@ using PlateDelivery.DataLayer.Context;
 using PlateDelivery.DataLayer.Entities.BatchAgg.Repository;
 using PlateDelivery.DataLayer.Entities.CounterAgg.Repository;
 using PlateDelivery.DataLayer.Entities.OkAgg.Repository;
+using PlateDelivery.DataLayer.Entities.PermissionAgg.Repository;
 using PlateDelivery.DataLayer.Entities.RepresentationAgg.Repository;
+using PlateDelivery.DataLayer.Entities.RoleAgg.Repository;
 using PlateDelivery.DataLayer.Entities.StoreAgg.Repository;
 using PlateDelivery.DataLayer.Entities.UserAgg.Repository;
 
@@ -19,6 +21,8 @@ public static class DataLayerBootstrapper
         services.AddTransient<IOkRepository, OkRepository>();
         services.AddTransient<ICounterRepository, CounterRepository>();
         services.AddTransient<IBatchRepository, BatchRepository>();
+        services.AddTransient<IRoleRepository, RoleRepository>();
+        services.AddTransient<IPermissionRepository, PermissionRepository>();
 
         services.AddTransient(_ => new DapperContext.DapperContext(connectionString));
         services.AddDbContext<PlateDeliveryDBContext>(option =>

@@ -75,6 +75,17 @@ public class User : BaseEntity
 
     #endregion
 
+    #region Roles
+
+    public void SetRoles(List<UserRole> roles)
+    {
+        roles.ForEach(f => f.UserId = Id);
+        UserRoles.Clear();
+        UserRoles.AddRange(roles);
+    }
+
+    #endregion
+
     public static void Guard(string FirstName, string LastName, string userName, string password)
     {
         NullOrEmptyDataException.CheckString(FirstName, nameof(FirstName));
@@ -90,4 +101,5 @@ public class User : BaseEntity
     public bool IsActive { get; private set; }
     public bool IsDelete { get; private set; }
     public List<UserToken> Tokens { get; private set; }
+    public List<UserRole> UserRoles { get; private set; }
 }

@@ -33,5 +33,11 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
                 .IsRequired()
                 .HasMaxLength(100);
         });
+
+        builder.OwnsMany(b => b.UserRoles, option =>
+        {
+            option.ToTable("UserRoles", "dbo");
+            option.HasKey(b => b.Id);
+        });
     }
 }

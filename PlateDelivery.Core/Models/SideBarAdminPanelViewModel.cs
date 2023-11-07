@@ -7,12 +7,12 @@ public class SideBarAdminPanelViewModel
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string AvatarName { get; set; }
-    public List<UserRole> RollId { get; set; }
+    public List<UserRoleDto> RollId { get; set; }
 }
 
 public class UsersViewModel
 {
-    public List<User>? Users { get; set; }
+    public List<User> Users { get; set; }
     public int UserCounts { get; set; }
     public int CurrentPage { get; set; }
     public int PageCount { get; set; }
@@ -21,7 +21,7 @@ public class UsersViewModel
     public int NextPage { get; set; }
 }
 
-public class UserRole
+public class UserRoleDto
 {
     public int UR_Id { get; set; }
     public int UserId { get; set; }

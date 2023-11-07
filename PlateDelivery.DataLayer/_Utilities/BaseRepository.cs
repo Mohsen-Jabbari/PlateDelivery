@@ -49,6 +49,11 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
         return await Context.Set<T>().ToListAsync();
     }
 
+    public virtual List<T> GetAll()
+    {
+        return Context.Set<T>().ToList();
+    }
+
     public virtual async Task<T?> GetAsync(long id)
     {
         return await Context.Set<T>().FirstOrDefaultAsync(t => t.Id.Equals(id));

@@ -1,13 +1,9 @@
-﻿using Azure.Core;
-using Dapper;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
+﻿using Dapper;
 using PlateDelivery.Core.Models;
 using PlateDelivery.Core.Security;
 using PlateDelivery.DataLayer.DapperContext;
 using PlateDelivery.DataLayer.Entities.UserAgg;
 using PlateDelivery.DataLayer.Entities.UserAgg.Repository;
-using System.Reflection;
 
 namespace PlateDelivery.Core.Services.Users;
 
@@ -133,8 +129,8 @@ public class UserService : IUserService
     public async Task<SideBarAdminPanelViewModel> GetSideBarAdminPanelData(long UserId)
     {
         var user = await _userRepository.GetTracking(UserId);
-        var userRoles = new List<UserRole>();
-        userRoles.Add(new UserRole() { UR_Id = 1, UserId = 20, RoleId = 1 });
+        var userRoles = new List<UserRoleDto>();
+        userRoles.Add(new UserRoleDto() { UR_Id = 1, UserId = 20, RoleId = 1 });
         var result = new SideBarAdminPanelViewModel()
         {
             FirstName = user.FirstName,
@@ -160,7 +156,34 @@ public class UserService : IUserService
 
     public UsersViewModel GetUsers(int pageId = 1, int take = 10, string? filterByLastName = "", string? filterByUserName = "")
     {
-        throw new NotImplementedException();
+        var result = _userRepository.GetAll();  //lazyLoad;
+
+        if(result != null)
+        {
+            if (!string.IsNullOrEmpty(filterByLastName))
+            {
+                result = result.Where(u => u.LastName.Contains(filterByLastName) || u.FirstName.Contains(filterByLastName)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filterByUserName))
+            {
+                result = result.Where(u => u.UserName.Contains(filterByUserName)).ToList();
+            }
+
+            int takeData = take;
+            int skip = (pageId - 1) * takeData;
+
+            UsersViewModel list = new UsersViewModel();
+            list.Users = result.OrderByDescending(u => u.CreationDate).Skip(skip).Take(takeData).ToList();
+            list.PageCount = (int)Math.Ceiling(result.Count / (double)takeData);
+            list.CurrentPage = pageId;
+            list.LastPage = list.PageCount;
+            list.PrevPage = Math.Max(pageId - 1, list.CurrentPage);
+            list.NextPage = Math.Max(pageId + 1, list.LastPage);
+            list.UserCounts = result.Count;
+            return list;
+        }
+        return new UsersViewModel();
     }
 
     public Task<long> EditUser(long Id, string FirstName, string LastName, string Password)
