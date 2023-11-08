@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using PlateDelivery.Core.Models;
 using PlateDelivery.Core.Services.Permissions;
 using PlateDelivery.Core.Services.Roles;
 using PlateDelivery.DataLayer.Entities.RoleAgg;
@@ -20,7 +21,7 @@ namespace PlateDelivery.Web.Pages.Leon.Roles
         }
 
         [BindProperty]
-        public Role Role { get; set; }
+        public RoleViewModel Role { get; set; }
         public void OnGet(int id)
         {
             Role = _roleService.GetRoleById(id);

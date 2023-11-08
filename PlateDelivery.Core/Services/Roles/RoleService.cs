@@ -1,4 +1,5 @@
-﻿using PlateDelivery.DataLayer.Entities.RoleAgg;
+﻿using PlateDelivery.Core.Models;
+using PlateDelivery.DataLayer.Entities.RoleAgg;
 using PlateDelivery.DataLayer.Entities.RoleAgg.Repository;
 
 namespace PlateDelivery.Core.Services.Roles;
@@ -41,18 +42,24 @@ public class RoleService : IRoleService
         var role = _roleRepository.GetTrackingSync(roleId);
         if (role != null)
         {
-            role.Delete();
-            _roleRepository.SaveSync();
+            _roleRepository.RemoveRole(roleId);
             return true;
         }
         return false;
     }
 
-    public Role GetRoleById(int roleId)
+    
+
+    public RoleViewModel GetRoleById(int roleId)
     {
         var role = _roleRepository.GetTrackingSync(roleId);
-        if(role != null)
-            return role;
+        if (role != null)
+            return new RoleViewModel()
+            {
+                CreationDate = role.CreationDate,
+                RoleName = role.RoleName,
+                Id = role.Id
+            };
         return null;
     }
 

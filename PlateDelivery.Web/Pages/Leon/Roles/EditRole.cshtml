@@ -1,9 +1,10 @@
 ﻿@page "{id}"
+@using PlateDelivery.Core.Models;
 @using PlateDelivery.DataLayer.Entities.PermissionAgg
 @model PlateDelivery.Web.Pages.Leon.Roles.EditRoleModel
 @{
     ViewData["Title"] = "ویرایش نقش";
-    List<Permission> permissions = ViewData["Permissions"] as List<Permission>;
+    List<PermissionViewModel> permissions = ViewData["Permissions"] as List<PermissionViewModel>;
 }
 <form method="post">
     <input type="hidden" asp-for="Role.Id"/>
@@ -76,7 +77,7 @@
                                     @foreach (var sub in permissions.Where(p => p.ParentId == permission.Id))
                                     {
                                         <li>
-                                            <input type="checkbox" name="selectedPermission" @((selectedPermissions.Any(p=> p==sub.Id)? "checked" : "")) value="@sub.Id" /> @sub.Id
+                                            <input type="checkbox" name="selectedPermission" @((selectedPermissions.Any(p => p == sub.Id) ? "checked" : "")) value="@sub.Id" /> @sub.PermissionName
                                             @if (permissions.Any(p => p.ParentId == sub.Id))
                                             {
                                                 <ul>
@@ -97,7 +98,7 @@
                                                                             @foreach (var sub4 in permissions.Where(p => p.ParentId == sub3.Id))
                                                                             {
                                                                                 <li>
-                                                                                    <input type="checkbox" name="selectedPermission" @((selectedPermissions.Any(p => p == sub4.Id) ? "checked" : "")) value="@sub4.Id" /> @sub4.Id
+                                                                                            <input type="checkbox" name="selectedPermission" @((selectedPermissions.Any(p => p == sub4.Id) ? "checked" : "")) value="@sub4.Id" /> @sub4.PermissionName
                                                                                 </li>
                                                                             }
                                                                         </ul>

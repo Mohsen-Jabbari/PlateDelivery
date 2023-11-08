@@ -1,9 +1,10 @@
 ﻿@page
+@using PlateDelivery.Core.Models;
 @using PlateDelivery.DataLayer.Entities.PermissionAgg
 @model PlateDelivery.Web.Pages.Leon.Roles.CreateRoleModel
 @{
     ViewData["Title"] = "افزودن نقش";
-    List<Permission> permissions = ViewData["Permissions"] as List<Permission>;
+    List<PermissionViewModel> permissions = ViewData["Permissions"] as List<PermissionViewModel>;
 }
 
 <form method="post">
