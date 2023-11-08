@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PlateDelivery.DataLayer.Context;
 
@@ -11,9 +12,11 @@ using PlateDelivery.DataLayer.Context;
 namespace PlateDelivery.DataLayer.Migrations
 {
     [DbContext(typeof(PlateDeliveryDBContext))]
-    partial class PlateDeliveryDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231108080344_add_parent_id_to_permission")]
+    partial class add_parent_id_to_permission
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -175,7 +178,7 @@ namespace PlateDelivery.DataLayer.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.ToTable("Permissions");
+                    b.ToTable("Permission");
                 });
 
             modelBuilder.Entity("PlateDelivery.DataLayer.Entities.RepresentationAgg.Representation", b =>
@@ -255,7 +258,7 @@ namespace PlateDelivery.DataLayer.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.ToTable("Roles");
+                    b.ToTable("Role");
                 });
 
             modelBuilder.Entity("PlateDelivery.DataLayer.Entities.StoreAgg.Store", b =>

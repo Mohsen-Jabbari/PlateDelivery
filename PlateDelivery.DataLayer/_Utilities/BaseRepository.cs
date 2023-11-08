@@ -64,9 +64,19 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
         return await Context.Set<T>().AsTracking().FirstOrDefaultAsync(t => t.Id.Equals(id));
     }
 
+    public T? GetTrackingSync(long id)
+    {
+        return Context.Set<T>().AsTracking().FirstOrDefault(t => t.Id.Equals(id));
+    }
+
     public async Task<int> Save()
     {
         return await Context.SaveChangesAsync();
+    }
+
+    public int SaveSync()
+    {
+        return Context.SaveChanges();
     }
 
     public void Update(T entity)

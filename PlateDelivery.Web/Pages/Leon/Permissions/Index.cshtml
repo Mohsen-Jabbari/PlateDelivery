@@ -34,7 +34,7 @@
                   
                     <div class="row">
                         <div class="col-sm-12">
-                            <a href="/Leon/Roles/CreateRole/" class="btn btn-success">افزودن نقش جدید</a>
+                            <a href="/Leon/Permissions/CreatePermission/" class="btn btn-success">افزودن مجور جدید</a>
                             @{
                                 int rowCount = 1;
                             }
@@ -49,15 +49,15 @@
 
                                 <tbody>
 
-                                    @foreach (var role in Model.PermissionsList)
+                                    @foreach (var permission in Model.PermissionsList)
                                     {
 
                                     <tr role="row" class="odd">
                                         <td>@rowCount</td>
-                                        <td>@role.PermissionName</td>
+                                            <td>@permission.PermissionName</td>
                                         <td>
-                                                <a href="/Leon/Permissions/Edit/@role.Id" class="btn btn-warning btn-xs">ویرایش</a>
-                                                <a href="/Leon/Permissions/Delete/@role.Id" class="btn btn-danger btn-xs">حذف</a>
+                                                <a href="/Leon/Permissions/EditPermission/@permission.Id" class="btn btn-warning btn-xs">ویرایش</a>
+                                                <a href="/Leon/Permissions/DeletePermission/@permission.Id" class="btn btn-danger btn-xs">حذف</a>
                                         </td>
                                     </tr>
                                         rowCount++;

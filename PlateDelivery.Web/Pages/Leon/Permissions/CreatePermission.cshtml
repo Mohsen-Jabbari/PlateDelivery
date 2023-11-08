@@ -1,0 +1,85 @@
+﻿@page
+@using PlateDelivery.DataLayer.Entities.PermissionAgg
+@model PlateDelivery.Web.Pages.Leon.Permissions.CreatePermissionModel
+@{
+    ViewData["Title"] = "افزودن مجوز";
+    List<Permission> permissions = ViewData["Permissions"] as List<Permission>;
+}
+
+<form method="post">
+    <div class="col-md-8 col-sm-8 col-xs-8">
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>
+                    افزودن مجوز 
+
+                </h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="row">
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-7  ">
+                            عنوان مجوز :
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="Permission.PermissionName" required="" class="form-control  " placeholder="عنوان مجوز را وارد نمایید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="Permission.PermissionName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    @if (permissions.Count > 0)
+                    {
+                        @* <div class="item form-group">
+                            <label class="control-label col-md-7  ">
+                                گروه :
+                            </label>
+                            <div class="col-md-8">
+                                <select asp-for="Permission.Id" asp-items="@(new SelectList((IEnumerable<Permission>)ViewData["Permissions"],"Id","PermissionName"))" class="form-control col-md-7 col-xs-12" style="font-size:medium"></select>
+                                <span class="text-danger" asp-validation-for="Permission.ParentId"></span>
+                            </div>
+                        </div> *@
+
+                        <div class=" item form-group">
+                            <label class="control-label col-md-7  ">
+                                انتخاب والد :
+                            </label>
+                            <div class="col-md-8 ">
+                                <select name="selectedParent" class="select2 form-control" style="font-size:medium">
+                                    <option value="0">لطفا گروه مجوز را انتخاب کنید</option>
+                                    @foreach (var item in permissions)
+                                    {
+                                        <option value="@item.Id">@item.PermissionName</option>
+                                    }
+
+                                </select>
+                            </div>
+
+                        </div>
+                    }
+
+
+
+                    <hr class="col-md-12" />
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12 col-md-offset-5">
+
+                            <input type="submit" class="btn btn-success" value="ثبت" />
+                            <a asp-page="Index" class="btn btn-warning">انصراف</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+

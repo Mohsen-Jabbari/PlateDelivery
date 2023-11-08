@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using PlateDelivery.Core.Models;
 using PlateDelivery.Core.Services.Permissions;
 using PlateDelivery.DataLayer.Entities.PermissionAgg;
 
@@ -8,14 +9,14 @@ namespace LatinMedia.Web.Pages.Leon.Permissions
     //[TestPermissionChecker(new int[] { 1 }, 24)]
     public class IndexModel : PageModel
     {
-        private IPermissionService _permissionService;
+        private readonly IPermissionService _permissionService;
 
         public IndexModel(IPermissionService permissionService)
         {
             _permissionService = permissionService;
         }
 
-        public List<Permission> PermissionsList { get; set; }
+        public List<PermissionViewModel> PermissionsList { get; set; }
         public void OnGet()
         {
             PermissionsList = _permissionService.GetAllPermissions();

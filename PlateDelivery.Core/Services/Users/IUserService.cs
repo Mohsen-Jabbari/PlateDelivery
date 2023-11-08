@@ -24,4 +24,15 @@ public interface IUserService
     UsersViewModel GetUsers(int pageId = 1, int take = 10, string? filterByLastName = "", string? filterByUserName = "");
 
     #endregion
+
+    #region UserRole
+
+    Task<bool> AddRolesToUser(List<long> roleIds, long userId);
+    Task<bool> EditRolesUser(long userId, List<long> rolesId);
+    Task<bool> RemoveUserRoles(long userId);
+
+    Task<long> GetUserRoleById(long userId, long Id);
+    Task<List<string>> GetUserRoles(long userId);
+
+    #endregion
 }

@@ -2,7 +2,9 @@
 using PlateDelivery.DataLayer.Entities.BatchAgg;
 using PlateDelivery.DataLayer.Entities.CounterAgg;
 using PlateDelivery.DataLayer.Entities.OkAgg;
+using PlateDelivery.DataLayer.Entities.PermissionAgg;
 using PlateDelivery.DataLayer.Entities.RepresentationAgg;
+using PlateDelivery.DataLayer.Entities.RoleAgg;
 using PlateDelivery.DataLayer.Entities.StoreAgg;
 using PlateDelivery.DataLayer.Entities.UserAgg;
 
@@ -20,6 +22,10 @@ public class PlateDeliveryDBContext : DbContext
     public DbSet<Ok> Oks { get; set; }
     public DbSet<Counter> Counters { get; set; }
     public DbSet<Batch> Batches { get; set; }
+
+
+    public DbSet<Role> Roles { get; set; }
+    public DbSet<Permission> Permissions { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

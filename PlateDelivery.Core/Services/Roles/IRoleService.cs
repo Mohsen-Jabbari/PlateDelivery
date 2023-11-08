@@ -1,24 +1,16 @@
 ﻿using PlateDelivery.DataLayer.Entities.RoleAgg;
 
-namespace PlateDelivery.Core.Services.Roles
+namespace PlateDelivery.Core.Services.Roles;
+public interface IRoleService
 {
-    public interface IRoleService
-    {
-        #region Role
+    #region Role
 
-        void AddRole(Role role);
-        void EditRole(Role role);
-        void DeleteRole(Role role);
-        void AddRolesToUser(List<long> roleIds, int userId);
-        void EditRolesUser(int userId, List<long> rolesId);
-        void RemoveUserRoles(int userId);
+    long AddRole(string roleName);
+    bool EditRole(long Id, string roleName);
+    bool DeleteRole(long roleId);
 
-        
 
-        List<Role> GetRoles();
-        int GetUserRoleById(int Id);
-        List<string> GetUserRoles(int userId);
-        Role GetRoleById(int roleId);
-        #endregion
-    }
+    List<Role> GetRoles();
+    Role GetRoleById(int roleId);
+    #endregion
 }

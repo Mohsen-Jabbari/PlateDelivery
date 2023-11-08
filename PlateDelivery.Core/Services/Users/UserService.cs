@@ -2,20 +2,24 @@
 using PlateDelivery.Core.Models;
 using PlateDelivery.Core.Security;
 using PlateDelivery.DataLayer.DapperContext;
+using PlateDelivery.DataLayer.Entities.RoleAgg.Repository;
 using PlateDelivery.DataLayer.Entities.UserAgg;
 using PlateDelivery.DataLayer.Entities.UserAgg.Repository;
+using System.Runtime.InteropServices;
 
 namespace PlateDelivery.Core.Services.Users;
 
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
+    private readonly IRoleRepository _roleRepository;
     private readonly DapperContext _dapperContext;
 
-    public UserService(IUserRepository userRepository, DapperContext dapperContext)
+    public UserService(IUserRepository userRepository, DapperContext dapperContext, IRoleRepository roleRepository)
     {
         _userRepository = userRepository;
         _dapperContext = dapperContext;
+        _roleRepository = roleRepository;
     }
 
     public async Task<User> AddToken(UserToken token, long UserId)
@@ -158,7 +162,7 @@ public class UserService : IUserService
     {
         var result = _userRepository.GetAll();  //lazyLoad;
 
-        if(result != null)
+        if (result != null)
         {
             if (!string.IsNullOrEmpty(filterByLastName))
             {
@@ -189,6 +193,82 @@ public class UserService : IUserService
     public Task<long> EditUser(long Id, string FirstName, string LastName, string Password)
     {
         throw new NotImplementedException();
+    }
+
+    #endregion
+
+
+
+    #region UserRole
+
+    public async Task<bool> AddRolesToUser(List<long> roleIds, long userId)
+    {
+        var user = await _userRepository.GetTracking(userId);
+        if (user == null)
+            return false;
+        List<UserRole> roles = new();
+        foreach (var roleId in roleIds)
+        {
+            roles.Add(new UserRole(userId, roleId));
+        }
+        user.SetRoles(roles);
+        await _userRepository.Save();
+        return true;
+    }
+    public async Task<bool> EditRolesUser(long userId, List<long> rolesId)
+    {
+        var user = await _userRepository.GetTracking(userId);
+        if (user == null)
+            return false;
+        List<UserRole> roles = new();
+        foreach (var roleId in rolesId)
+        {
+            roles.Add(new UserRole(userId, roleId));
+        }
+        user.SetRoles(roles);
+        await _userRepository.Save();
+        return true;
+    }
+    public async Task<bool> RemoveUserRoles(long userId)
+    {
+        var user = await _userRepository.GetTracking(userId);
+        if (user == null)
+            return false;
+        user.UserRoles.Clear();
+        await _userRepository.Save();
+        return true;
+    }
+
+
+    public async Task<long> GetUserRoleById(long userId, long Id)
+    {
+        var user = await _userRepository.GetTracking(userId);
+        if (user == null)
+            return -1;
+        var userRole = user.UserRoles.Where(u => u.RoleId == Id).FirstOrDefault();
+        if (userRole != null)
+            return userRole.Id;
+        return -1;
+    }
+
+    public async Task<List<string>> GetUserRoles(long userId)
+    {
+        var user = await _userRepository.GetTracking(userId);
+        if (user == null)
+            return new List<string>();
+        if (user.UserRoles.Any())
+        {
+            var rolesId = user.UserRoles.Select(u => u.RoleId).ToArray();
+            var roles = await _roleRepository.GetAllAsync();
+            if (roles == null)
+                return new List<string>();
+            else
+            {
+                var result = roles.Where(r => rolesId.Contains(r.Id)).Select(r => r.RoleName).ToList();
+                return result;
+            } 
+        }
+        return new List<string>();
     }
 
     #endregion
