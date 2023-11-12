@@ -15,10 +15,9 @@ public class User : BaseEntity
         LastName = lastName;
     }
 
-    public void EditUser(string firstName, string lastName, string password, bool isActive)
+    public void EditUser(string firstName, string lastName, bool isActive)
     {
-        Guard(firstName, lastName, UserName, password);
-        Password = password;
+        Guard(firstName, lastName);
         IsActive = isActive;
         FirstName = firstName;
         LastName = lastName;
@@ -42,11 +41,13 @@ public class User : BaseEntity
     public void SetIsDeleteTrue()
     {
         IsDelete = true;
+        IsActive = false;
     }
 
     public void SetIsDeleteFalse()
     {
         IsDelete = false;
+        IsActive= true;
     }
 
     #region Token
@@ -92,6 +93,12 @@ public class User : BaseEntity
         NullOrEmptyDataException.CheckString(LastName, nameof(LastName));
         NullOrEmptyDataException.CheckString(userName, nameof(userName));
         NullOrEmptyDataException.CheckString(password, nameof(password));
+    }
+
+    public static void Guard(string FirstName, string LastName)
+    {
+        NullOrEmptyDataException.CheckString(FirstName, nameof(FirstName));
+        NullOrEmptyDataException.CheckString(LastName, nameof(LastName));
     }
 
     public string FirstName { get; private set; }

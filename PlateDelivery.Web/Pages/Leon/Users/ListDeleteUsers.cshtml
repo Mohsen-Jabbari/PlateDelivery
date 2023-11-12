@@ -1,21 +1,16 @@
 ﻿@page
-@using PlateDelivery.Common.CommonClasses;
-@using PlateDelivery.Core.Convertors
-@using PlateDelivery.Core.Services.Users;
-@model PlateDelivery.Web.Pages.Leon.Users.IndexModel
-@inject IUserService UserService
+@using PlateDelivery.Core.Convertors;
+@using PlateDelivery.Core.Security
+@model PlateDelivery.Web.Pages.Leon.Users.ListDeleteUsersModel
 @{
-    ViewData["Title"] = "مدیریت کاربران";
-    long currentUser = User.GetUserId();
+    ViewData["Title"] = "لیست کاربران حذف شده";
 }
 
 <div class="col-md-12 col-sm-12 col-xs-12">
-
-
     <div class="x_panel">
         <div class="x_title">
             <h2>
-                لیست کاربران سامانه
+                لیست کاربران حذف شده
 
             </h2>
             <ul class="nav navbar-right panel_toolbox">
@@ -56,10 +51,12 @@
                             </div>
 
                             <div class="col-sm-6">
-                                <input type="text" name="filterByLastName" class="form-control" style="font-size:medium" value="@ViewData["FilterLastName"]" placeholder="جستجو براساس نام خانوادگی" />
-                                <input type="text" name="filterByUserName" class="form-control" style="font-size:medium" value="@ViewData["FilterUserName"]" placeholder="جستجو بر اساس نام کاربری" />
+                                <input type="text" name="filterByLastName" class="form-control" value="@ViewData["FilterLastName"]" placeholder="جستجو براساس نام خانوادگی" />
+
+                                <input type="text" name="filterByUserName" class="form-control" value="@ViewData["FilterUserName"]" placeholder="جستجو بر اساس نام کاربری" />
+
                                 <input type="submit" value="فیلتر کن" class="btn btn-success btn-round" />
-                                <a href="/Leon/Users/" class="btn btn-default btn-round">حذف فیلتر</a>
+                                <a href="/Leon/Users/ListDeleteUsers" class="btn btn-default btn-round">حذف فیلتر</a>
                             </div>
 
                         </form>
@@ -67,7 +64,7 @@
                     <hr />
                     <div class="row">
                         <div class="col-sm-12">
-                            <a href="/Leon/Users/CreateUser/" class="btn btn-success">افزودن کاربر جدید</a>
+
                             @{
                                 int rowCount = 1;
                             }
@@ -79,48 +76,34 @@
                                         <th style="width: 138px;">نام کاربری</th>
                                         <th style="width: 138px;">وضعیت</th>
                                         <th style="width: 138px;" class="hidden-xs">تاریخ ثبت نام</th>
-                                        <th style="width: 150px;" class="hidden-xs">سطوح دسترسی</th>
                                         <th style="width: 138px;">عملیات</th>
                                     </tr>
                                 </thead>
-
 
                                 <tbody>
 
                                     @foreach (var item in Model.UsersViewModel.Users)
                                     {
+
                                         <tr role="row" class="odd">
                                             <td class="hidden-xs">@rowCount</td>
-                                            <td class="sorting_1">@(item.FirstName + " " + item.LastName)</td>
+                                            <td class="sorting_1">@item.FirstName @item.LastName</td>
                                             <td>@item.UserName</td>
                                             <td>
                                                 @if (item.IsActive)
                                                 {
-                                                    <span class="alert-success" style="font-size:medium">فعال</span>
+                                                    <span class="alert-success">فعال</span>
                                                 }
                                                 else
                                                 {
-                                                    <span class="alert-danger" style="font-size:medium">غیر فعال</span>
+                                                    <span class="alert-danger">غیر فعال</span>
                                                 }
                                             </td>
                                             <td class="hidden-xs">@item.CreationDate.ToShamsi()</td>
-                                            <td class="hidden-xs">
-                                                @{
-                                                    List<string> roles = UserService.GetUserRoles(item.Id);
-                                                }
-                                                @foreach (var role in roles)
-                                                {
-                                                    @(role + " - ")
-                                                }
-                                            </td>
-
                                             <td>
-                                                <a href="/Leon/Users/EditUser/@item.Id" class="btn btn-warning btn-xs">ویرایش</a>
-                                                @if (item.Id != currentUser)
-                                                {
-                                                    <a href="/Leon/Users/DeleteUser/@item.Id" class="btn btn-danger btn-xs">حذف</a>
-                                                }
-                                                <a href="/Leon/Users/UserResetPass/@item.Id" class="btn btn-success   btn-xs">ریست کلمه عبور</a>
+
+                                                <a href="/Leon/Users/RestoreUser/@item.Id" class="btn btn-danger btn-xs">بازیابی</a>
+                                                @* <a href="/Leon/Users/DeletedUserEvents/@item.Id" class="btn btn-success   btn-xs">وقایع کاربر</a> *@
                                             </td>
                                         </tr>
                                         rowCount++;
@@ -140,8 +123,10 @@
                                 @if (Model.UsersViewModel.CurrentPage > 1)
                                 {
 
-                                    <a class="btn btn-default" href="/Leon/Users?pageId=1&fl=@ViewData["FilterLastName"]&fu=@ViewData["FilterUserName"]">اولین صفحه</a>
-                                    <a class="btn btn-default" href="/Leon/Users?pageId=@(Model.UsersViewModel.CurrentPage-1)&fl=@ViewData["FilterLastName"]&fu=@ViewData["FilterUserName"]">قبلی</a>
+                                    <a class="btn btn-default" href="/Leon/Users/ListDeleteUsers?pageId=@(Model.UsersViewModel.CurrentPage-1)&fl=@ViewData["FilterLastName"]&fm=@ViewData["FilterMobile"]">قبلی</a>
+
+                                    <a class="btn btn-default" href="/Leon/Users/ListDeleteUsers?pageId=1&fl=@ViewData["FilterLastName"]&fm=@ViewData["FilterMobile"]">اولین صفحه</a>
+
                                 }
 
                                 @if (Model.UsersViewModel.CurrentPage + 4 <= Model.UsersViewModel.PageCount)
@@ -149,23 +134,27 @@
                                     @for (int i = Model.UsersViewModel.CurrentPage; i <= Model.UsersViewModel.CurrentPage + 4; i++)
                                     {
 
-                                        <a href="/Leon/Users/Index?pageId=@i&fl=@ViewData["FilterLastName"]&fu=@ViewData["FilterUserName"]" class="btn btn-default @((i==Model.UsersViewModel.CurrentPage)? "btn btn-info" : "")">@i</a>
+                                        <a href="/Leon/Users/ListDeleteUsers?pageId=@i&fl=@ViewData["FilterLastName"]&fm=@ViewData["FilterMobile"]" class="btn btn-default @((i==Model.UsersViewModel.CurrentPage)? "btn btn-info" : "")">@i</a>
 
                                     }
                                 }
                                 else
                                 {
-                                    for (int i = Model.UsersViewModel.CurrentPage; i <= Model.UsersViewModel.PageCount; i++)
+                                    @for (int i = Model.UsersViewModel.CurrentPage; i <= Model.UsersViewModel.PageCount; i++)
                                     {
-                                        <a href="/Leon/Users/Index?pageId=@i&fl=@ViewData["FilterLastName"]&fu=@ViewData["FilterUserName"]" class="btn btn-default @((i==Model.UsersViewModel.CurrentPage)? "btn btn-info" : "")">@i</a>
+
+                                        <a href="/Leon/Users/ListDeleteUsers?pageId=@i&fl=@ViewData["FilterLastName"]&fm=@ViewData["FilterMobile"]" class="btn btn-default @((i==Model.UsersViewModel.CurrentPage)? "btn btn-info" : "")">@i</a>
+
                                     }
                                 }
+
+
 
                                 @if (Model.UsersViewModel.CurrentPage < Model.UsersViewModel.PageCount)
                                 {
 
-                                    <a class="btn btn-default" href="/Leon/Users?pageId=@(Model.UsersViewModel.CurrentPage + 1)&fl=@ViewData["FilterLastName"]&fu=@ViewData["FilterUserName"]">بعدی</a>
-                                    <a class="btn btn-default" href="/Leon/Users?pageId=@(Model.UsersViewModel.PageCount)&fl=@ViewData["FilterLastName"]&fu=@ViewData["FilterUserName"]">اخرین صفحه</a>
+                                    <a class="btn btn-default" href="/Leon/Users/ListDeleteUsers?pageId=@(Model.UsersViewModel.CurrentPage + 1)&fl=@ViewData["FilterLastName"]&fm=@ViewData["FilterMobile"]">بعدی</a>
+                                    <a class="btn btn-default" href="/Leon/Users/ListDeleteUsers?pageId=@(Model.UsersViewModel.PageCount)&fl=@ViewData["FilterLastName"]&fm=@ViewData["FilterMobile"]">اخرین صفحه</a>
 
                                 }
                             </div>

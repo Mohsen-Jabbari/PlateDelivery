@@ -1,0 +1,125 @@
+﻿@page
+@using PlateDelivery.DataLayer.Entities.RoleAgg;
+@using PlateDelivery.DataLayer.Entities.UserAgg
+@model PlateDelivery.Web.Pages.Leon.Users.CreateUserModel
+@{
+    ViewData["Title"] = "افزودن کاربر";
+    List<Role> roles = ViewData["Roles"] as List<Role>;
+}
+
+<form enctype="multipart/form-data" method="post">
+<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+  
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>
+                افزودن کاربر جدید
+
+            </h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li>
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <div class="row">
+                <div class="item form-group">
+                    <label class="control-label col-md-7  ">
+                        نام :
+                    </label>
+                    <div class="col-md-8">
+                        <input asp-for="CreateUserViewModel.FirstName" required="" class="form-control  " style="font-size:medium" placeholder="لطفا نام را وارد کنید" type="text">
+                        <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                        <span asp-validation-for="CreateUserViewModel.FirstName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="item form-group">
+                    <label class="control-label col-md-7  ">
+                        نام خانوادگی :
+                    </label>
+                    <div class="col-md-8">
+                        <input asp-for="CreateUserViewModel.LastName" required="" class="form-control  " style="font-size:medium" placeholder="لطفا نام خانوادگی را وارد کنید" type="text">
+                        <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                        <span asp-validation-for="CreateUserViewModel.LastName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="item form-group">
+                    <label class="control-label col-md-7  ">
+                        نام کاربری :
+                    </label>
+                    <div class="col-md-8">
+                        <input asp-for="CreateUserViewModel.UserName" required="" class="form-control  " style="font-size:medium"
+                               placeholder="لطفا نام کاربری را وارد کنید" type="text">
+                        <span class="fa fa-phone form-control-feedback left" aria-hidden="true"></span>
+                        <span asp-validation-for="CreateUserViewModel.UserName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="item form-group">
+                    <label class="control-label col-md-7  ">
+                        کلمه عبور :
+                    </label>
+                    <div class="col-md-8">
+                        <input asp-for="CreateUserViewModel.Password" required="" class="form-control  " style="font-size:medium" placeholder="لطفا کلمه عبور را وارد کنید">
+                        <span class="fa fa-key form-control-feedback left" aria-hidden="true"></span>
+                        <span asp-validation-for="CreateUserViewModel.Password" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+                <div class=" item form-group">
+                    <label class="control-label col-md-7  ">
+                        سطح دسترسی :
+                    </label>
+                    <div class="col-md-8 ">
+                        <select name="selectedRoles" class="select2_multiple form-control" style="font-size:medium">
+                                <option value="0">لطفا سطح دسترسی را انتخاب کنید</option>
+                            @foreach (var item in roles)
+                            {
+                                <option value="@item.Id">@item.RoleName</option>
+                            }
+
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="item  form-group">
+
+                    <div class="col-md-12 col-sm-12 col-xs-12  ">
+                        <input asp-for="CreateUserViewModel.IsActive" type="checkbox" class="js-switch"  checked="" data-switchery="true" style="display: none;">
+                        &nbsp;
+                        <label>فعال / غیر فعال</label>
+                    </div>
+                </div>
+                <hr class="col-md-12" />
+                <div class="item form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12 col-md-offset-5">
+
+                        <input type="submit" class="btn btn-success" value="ثبت" />
+                        <a asp-page="Index" class="btn btn-warning">انصراف</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+
+@section Scripts
+{
+    <script>
+        function onlyNumberKey(evt) {
+
+            // Only ASCII character in that range allowed
+            var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+                return false;
+            return true;
+        }
+    </script>
+}

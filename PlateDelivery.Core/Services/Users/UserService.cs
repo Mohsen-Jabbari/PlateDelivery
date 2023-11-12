@@ -1,11 +1,11 @@
 ﻿using Dapper;
 using PlateDelivery.Core.Models;
+using PlateDelivery.Core.Models.Users;
 using PlateDelivery.Core.Security;
 using PlateDelivery.DataLayer.DapperContext;
 using PlateDelivery.DataLayer.Entities.RoleAgg.Repository;
 using PlateDelivery.DataLayer.Entities.UserAgg;
 using PlateDelivery.DataLayer.Entities.UserAgg.Repository;
-using System.Runtime.InteropServices;
 
 namespace PlateDelivery.Core.Services.Users;
 
@@ -44,25 +44,39 @@ public class UserService : IUserService
         return true;
     }
 
-    public async Task<long> CreateUser(string FirstName, string LastName, string UserName, string Password)
+    public long CreateUser(CreateUserViewModel model)
     {
-        if (!await _userRepository.ExistsAsync(u => u.UserName == UserName))
+        if (!_userRepository.Exists(u => u.UserName == model.UserName))
         {
-            var user = new User(FirstName, LastName, UserName, Password, true, false);
+            var Password = Sha256Hasher.Hash(model.Password);
+            var user = new User(model.FirstName, model.LastName,
+                model.UserName, Password, model.IsActive, false);
             _userRepository.Add(user);
-            await _userRepository.Save();
+            _userRepository.SaveSync();
             return user.Id;
         }
         return -1;
     }
 
-    public async Task<bool> DeleteUser(long UserId)
+    public bool DeleteUser(long UserId)
     {
-        var user = await _userRepository.GetAsync(UserId);
+        var user = _userRepository.GetTrackingSync(UserId);
         if (user != null)
         {
             user.SetIsDeleteTrue();
-            await _userRepository.Save();
+            _userRepository.SaveSync();
+            return true;
+        }
+        return false;
+    }
+
+    public bool RestoreUser(long UserId)
+    {
+        var user = _userRepository.GetTrackingSync(UserId);
+        if (user != null)
+        {
+            user.SetIsDeleteFalse();
+            _userRepository.SaveSync();
             return true;
         }
         return false;
@@ -70,6 +84,26 @@ public class UserService : IUserService
 
     public async Task<User> GetUserById(long UserId) => await _userRepository.GetTracking(UserId);
 
+    public EditUserViewModel GetUserByIdForEdit(long UserId)
+    {
+        var user = _userRepository.GetTrackingSync(UserId);
+        if (user != null)
+            return new EditUserViewModel()
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                CreationDate = user.CreationDate,
+                Id = user.Id,
+                IsActive = user.IsActive,
+                UserRoles = user.UserRoles.Select(u => u.RoleId).ToList(),
+            };
+        return null;
+    }
+
+    public bool IsUserNameExitsts(string UserName)
+    {
+        return _userRepository.Exists(u => u.UserName == UserName);
+    }
     public async Task<bool> LogOut(string JwtToken)
     {
         var hashJwtToken = Sha256Hasher.Hash(JwtToken);
@@ -158,6 +192,20 @@ public class UserService : IUserService
 
     #region Users
 
+    public InformationUserViewModel GetUserInformation(long UserId)
+    {
+        var user = _userRepository.GetTrackingSync(UserId);
+        if (user == null)
+            return null;
+        return new InformationUserViewModel()
+        {
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            CreationDate = user.CreationDate,
+            Id = user.Id,
+            UserName = user.UserName
+        };
+    }
     public UsersViewModel GetUsers(int pageId = 1, int take = 10, string? filterByLastName = "", string? filterByUserName = "")
     {
         var result = _userRepository.GetAll();  //lazyLoad;
@@ -178,7 +226,7 @@ public class UserService : IUserService
             int skip = (pageId - 1) * takeData;
 
             UsersViewModel list = new UsersViewModel();
-            list.Users = result.OrderByDescending(u => u.CreationDate).Skip(skip).Take(takeData).ToList();
+            list.Users = result.Where(u => u.IsDelete == false).OrderByDescending(u => u.CreationDate).Skip(skip).Take(takeData).ToList();
             list.PageCount = (int)Math.Ceiling(result.Count / (double)takeData);
             list.CurrentPage = pageId;
             list.LastPage = list.PageCount;
@@ -190,9 +238,60 @@ public class UserService : IUserService
         return new UsersViewModel();
     }
 
-    public Task<long> EditUser(long Id, string FirstName, string LastName, string Password)
+
+    public UsersViewModel GetDeleteUsers(int pageId = 1, int take = 10, string? filterByLastName = "", string? filterByUserName = "")
     {
-        throw new NotImplementedException();
+        var result = _userRepository.GetAll();  //lazyLoad;
+
+        if (result != null)
+        {
+            if (!string.IsNullOrEmpty(filterByLastName))
+            {
+                result = result.Where(u => u.LastName.Contains(filterByLastName) || u.FirstName.Contains(filterByLastName)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filterByUserName))
+            {
+                result = result.Where(u => u.UserName.Contains(filterByUserName)).ToList();
+            }
+
+            int takeData = take;
+            int skip = (pageId - 1) * takeData;
+
+            UsersViewModel list = new UsersViewModel();
+            list.Users = result.Where(u => u.IsDelete == true).OrderByDescending(u => u.CreationDate).Skip(skip).Take(takeData).ToList();
+            list.PageCount = (int)Math.Ceiling(result.Count / (double)takeData);
+            list.CurrentPage = pageId;
+            list.LastPage = list.PageCount;
+            list.PrevPage = Math.Max(pageId - 1, list.CurrentPage);
+            list.NextPage = Math.Max(pageId + 1, list.LastPage);
+            list.UserCounts = result.Count;
+            return list;
+        }
+        return new UsersViewModel();
+    }
+
+    public bool EditUser(EditUserViewModel model)
+    {
+        var oldUser = _userRepository.GetTrackingSync(model.Id);
+        if (oldUser != null)
+        {
+            oldUser.EditUser(model.FirstName, model.LastName, model.IsActive);
+            _userRepository.SaveSync();
+            return true;
+        }
+        return false;
+    }
+
+    public bool ChangePasswordViewModel(long UserId, string Password)
+    {
+        var user = _userRepository.GetTrackingSync(UserId);
+        if (user == null)
+            return false;
+        var HashPassword = Sha256Hasher.Hash(Password);
+        user.ResetPassword(HashPassword);
+        _userRepository.SaveSync();
+        return true;
     }
 
     #endregion
@@ -201,9 +300,9 @@ public class UserService : IUserService
 
     #region UserRole
 
-    public async Task<bool> AddRolesToUser(List<long> roleIds, long userId)
+    public bool AddRolesToUser(List<long> roleIds, long userId)
     {
-        var user = await _userRepository.GetTracking(userId);
+        var user = _userRepository.GetTrackingSync(userId);
         if (user == null)
             return false;
         List<UserRole> roles = new();
@@ -212,12 +311,12 @@ public class UserService : IUserService
             roles.Add(new UserRole(userId, roleId));
         }
         user.SetRoles(roles);
-        await _userRepository.Save();
+        _userRepository.SaveSync();
         return true;
     }
-    public async Task<bool> EditRolesUser(long userId, List<long> rolesId)
+    public bool EditRolesUser(List<long> rolesId, long userId)
     {
-        var user = await _userRepository.GetTracking(userId);
+        var user = _userRepository.GetTrackingSync(userId);
         if (user == null)
             return false;
         List<UserRole> roles = new();
@@ -226,7 +325,7 @@ public class UserService : IUserService
             roles.Add(new UserRole(userId, roleId));
         }
         user.SetRoles(roles);
-        await _userRepository.Save();
+        _userRepository.SaveSync();
         return true;
     }
     public async Task<bool> RemoveUserRoles(long userId)
@@ -240,33 +339,33 @@ public class UserService : IUserService
     }
 
 
-    public async Task<long> GetUserRoleById(long userId, long Id)
+    public long GetUserRoleById(long userId)
     {
-        var user = await _userRepository.GetTracking(userId);
+        var user = _userRepository.GetTrackingSync(userId);
         if (user == null)
             return -1;
-        var userRole = user.UserRoles.Where(u => u.RoleId == Id).FirstOrDefault();
+        var userRole = user.UserRoles.Where(u => u.UserId == userId).FirstOrDefault();
         if (userRole != null)
             return userRole.Id;
         return -1;
     }
 
-    public async Task<List<string>> GetUserRoles(long userId)
+    public List<string> GetUserRoles(long userId)
     {
-        var user = await _userRepository.GetTracking(userId);
+        var user = _userRepository.GetTrackingSync(userId);
         if (user == null)
             return new List<string>();
         if (user.UserRoles.Any())
         {
             var rolesId = user.UserRoles.Select(u => u.RoleId).ToArray();
-            var roles = await _roleRepository.GetAllAsync();
+            var roles = _roleRepository.GetAll();
             if (roles == null)
                 return new List<string>();
             else
             {
                 var result = roles.Where(r => rolesId.Contains(r.Id)).Select(r => r.RoleName).ToList();
                 return result;
-            } 
+            }
         }
         return new List<string>();
     }

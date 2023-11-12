@@ -1,0 +1,76 @@
+﻿@page "{UserId}"
+@model PlateDelivery.Web.Pages.Leon.Users.UserResetPassModel
+@{
+    ViewData["Title"] = "تغییر کلمه عبور";
+}
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>
+                تغییر کلمه عبور
+
+            </h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li>
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+
+
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+
+            <form method="post" class="form-horizontal form-label-left">
+                <input type="hidden" id="UserId" name="UserId" value="@ViewData["UserId"]" />
+                @if (ViewData["Message"] != null)
+                {
+                    <div class="@ViewData["CssClass"] text-center">
+                        @ViewData["Message"]
+                    </div>
+                }
+           
+
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                        کلمه عبور جدید :
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" asp-for="ChangePasswordViewModel.Password" required="" class="form-control col-md-7 col-xs-12  " style="font-size:medium" placeholder="کلمه عبور جدید را وارد نمایید">
+                        <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+
+                        <span class="text-danger" asp-validation-for="ChangePasswordViewModel.Password"></span>
+                    </div>
+
+
+                </div>
+
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">
+                        تکرار کلمه عبور جدید :
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" asp-for="ChangePasswordViewModel.RePassword" required="" class="form-control col-md-7 col-xs-12" style="font-size:medium" placeholder="تکرار کلمه عبور جدید را وارد نمایید">
+                        <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                        <span class="text-danger"></span>
+
+                        <span class="text-danger" asp-validation-for="ChangePasswordViewModel.RePassword"></span>
+                    </div>
+
+                </div>
+
+                <hr />
+                <div class="form-group">
+                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
+                        <button type="submit" class="btn btn-success">ثبت</button>
+                        <a asp-page="Index" class="btn btn-warning">انصراف</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
