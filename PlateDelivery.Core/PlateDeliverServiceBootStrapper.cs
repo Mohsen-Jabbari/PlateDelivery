@@ -1,10 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using PlateDelivery.Core.Convertors;
 using PlateDelivery.Core.Services.Permissions;
+using PlateDelivery.Core.Services.Representations;
 using PlateDelivery.Core.Services.Roles;
 using PlateDelivery.Core.Services.Users;
-using PlateDelivery.DataLayer.Entities.PermissionAgg.Repository;
-using System.Security;
 
 namespace PlateDelivery.Core;
 public static class PlateDeliverServiceBootStrapper
@@ -14,6 +13,7 @@ public static class PlateDeliverServiceBootStrapper
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IViewRenderService, RenderViewToString>();
         services.AddScoped<IRoleService, RoleService>();
-        services.AddScoped<IPermissionService,PermissionService>();
+        services.AddScoped<IPermissionService, PermissionService>();
+        services.AddScoped<IRepresentationService, RepresentationService>();
     }
 }

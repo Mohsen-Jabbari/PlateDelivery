@@ -1,0 +1,162 @@
+﻿@page
+@using PlateDelivery.Core.Convertors;
+@using PlateDelivery.Core.Security
+@model PlateDelivery.Web.Pages.Leon.Representations.ListDeleteRepresentationsModel
+@{
+    ViewData["Title"] = "لیست نمایندگی های حذف شده";
+}
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>
+                لیست نمایندگی های حذف شده
+
+            </h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li>
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+
+
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                @if (Model.RepresentationViewModel.Representations.Count == 0)
+                {
+                    <div class="alert alert-danger ">
+                        رکوردی یافت نشد
+                    </div>
+                }
+
+                <div id="datatable-checkbox_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                    <div class="row">
+                        <form>
+                            <div class="col-sm-5">
+                                <div class="dataTables_length" id="datatable-checkbox_length">
+                                    <label>
+                                        نمایش
+                                        <select name="take" aria-controls="datatable-checkbox" class="form-control input-sm">
+                                            <option value="">پیش فرض</option>
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select> نمایندگی
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <input type="text" name="filterByName" class="form-control" style="font-size:medium" value="@ViewData["FilterName"]" placeholder="جستجو براساس نام خانوادگی" />
+                                <input type="text" name="filterByBrokerCode" class="form-control" style="font-size:medium" value="@ViewData["FilterBrokerCode"]" placeholder="جستجو بر اساس کد نماینده" />
+                                <input type="submit" value="فیلتر کن" class="btn btn-success btn-round" />
+                                <a href="/Leon/Representations/ListDeleteRepresentations" class="btn btn-default btn-round">حذف فیلتر</a>
+                            </div>
+
+                        </form>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-sm-12">
+
+                            @{
+                                int rowCount = 1;
+                            }
+                            <table id="datatable-checkbox" class="table table-striped table-bordered bulk_action dataTable no-footer" role="grid" aria-describedby="datatable-checkbox_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th style="width: 60px;" class="hidden-xs">ردیف</th>
+                                        <th style="width: 138px;">کد نمایندگی</th>
+                                        <th style="width: 190px;">نام نماینده</th>
+                                        <th style="width: 138px;">کد</th>
+                                        <th style="width: 138px;">تلفن</th>
+                                        <th style="width: 138px;">موبایل</th>
+                                        <th style="width: 138px;">معادل</th>
+                                        <th style="width: 138px;">کد دوم</th>
+                                        <th style="width: 138px;">تاریخ اعتبار</th>
+                                        <th style="width: 138px;">عملیات</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    @foreach (var item in Model.RepresentationViewModel.Representations)
+                                    {
+                                        <tr role="row" class="odd">
+                                            <td class="hidden-xs">@rowCount</td>
+                                            <td class="sorting_1">@item.RepresentationCode</td>
+                                            <td>@item.BrokerName</td>
+                                            <td>@item.BrokerCode</td>
+                                            <td>@item.BrokerTell</td>
+                                            <td>@item.BrokerMobile</td>
+                                            <td>@item.Extra</td>
+                                            <td>@item.BrokerCodeR</td>
+                                            <td>@item.ValidityDate</td>
+                                            <td class="hidden-xs">@item.CreationDate.ToShamsi()</td>
+
+                                            <td>
+                                                <a href="/Leon/Representations/RestoreRepresentation/@item.Id" class="btn btn-success btn-xs">بازیابی</a>
+                                            </td>
+                                        </tr>
+                                        rowCount++;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-sm-5">
+                            <div class="dataTables_info" id="datatable-checkbox_info" role="status" aria-live="polite">نمایش @ViewData["PageID"] تا @ViewData["Take"] از @Model.RepresentationViewModel.RepresentationCounts رکورد</div>
+                        </div>
+                        <div class="col-sm-7">
+
+                            <div class="btn-group">
+                                @if (Model.RepresentationViewModel.CurrentPage > 1)
+                                {
+
+                                    <a class="btn btn-default" href="/Leon/Representations/ListDeleteRepresentations?pageId=1&fn=@ViewData["FilterName"]&fb=@ViewData["FilterBrokerCode"]">اولین صفحه</a>
+                                    <a class="btn btn-default" href="/Leon/Representations/ListDeleteRepresentations?pageId=@(Model.RepresentationViewModel.CurrentPage-1)&fn=@ViewData["FilterName"]&fb=@ViewData["FilterBrokerCode"]">قبلی</a>
+                                }
+
+                                @if (Model.RepresentationViewModel.CurrentPage + 4 <= Model.RepresentationViewModel.PageCount)
+                                {
+                                    @for (int i = Model.RepresentationViewModel.CurrentPage; i <= Model.RepresentationViewModel.CurrentPage + 4; i++)
+                                    {
+
+                                        <a href="/Leon/Representations/ListDeleteRepresentations?pageId=@i&fn=@ViewData["FilterName"]&fb=@ViewData["FilterBrokerCode"]" class="btn btn-default @((i==Model.RepresentationViewModel.CurrentPage)? "btn btn-info" : "")">@i</a>
+
+                                    }
+                                }
+                                else
+                                {
+                                    for (int i = Model.RepresentationViewModel.CurrentPage; i <= Model.RepresentationViewModel.PageCount; i++)
+                                    {
+                                        <a href="/Leon/Representations/ListDeleteRepresentations?pageId=@i&fn=@ViewData["FilterName"]&fb=@ViewData["FilterBrokerCode"]" class="btn btn-default @((i==Model.RepresentationViewModel.CurrentPage)? "btn btn-info" : "")">@i</a>
+                                    }
+                                }
+
+                                @if (Model.RepresentationViewModel.CurrentPage < Model.RepresentationViewModel.PageCount)
+                                {
+
+                                    <a class="btn btn-default" href="/Leon/Representations/ListDeleteRepresentations?pageId=@(Model.RepresentationViewModel.CurrentPage + 1)&fn=@ViewData["FilterName"]&fb=@ViewData["FilterBrokerCode"]">بعدی</a>
+                                    <a class="btn btn-default" href="/Leon/Representations/ListDeleteRepresentations?pageId=@(Model.RepresentationViewModel.PageCount)&fn=@ViewData["FilterName"]&fb=@ViewData["FilterBrokerCode"]">اخرین صفحه</a>
+
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+

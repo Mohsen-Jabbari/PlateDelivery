@@ -1,0 +1,138 @@
+﻿@page
+@model PlateDelivery.Web.Pages.Leon.Representations.CreateRepresentationModel
+@{
+    ViewData["Title"] = "افزودن نمایندگی";
+}
+
+<form enctype="multipart/form-data" method="post">
+<div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+  
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>
+                افزودن نمایندگی
+
+            </h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li>
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <div class="row">
+                    <div class="item form-group">
+                        <label class="control-label col-md-7  ">
+                            کد نمایندگی :
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="model.RepresentationCode" required="" class="form-control  " style="font-size:medium" placeholder="لطفا کد نمایندگی را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="model.RepresentationCode" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-7  ">
+                            نام نماینده :
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="model.BrokerName" required="" class="form-control  " style="font-size:medium" placeholder="لطفا نام نماینده را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="model.BrokerName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-7  ">
+                            کد نماینده :
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="model.BrokerCode" required="" class="form-control  " style="font-size:medium" placeholder="لطفا کد نماینده را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="model.BrokerCode" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-7  ">
+                            تلفن نماینده :
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="model.BrokerTell" required="" class="form-control  " style="font-size:medium" placeholder="لطفا تلفن نماینده را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="model.BrokerTell" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-7  ">
+                            موبایل نماینده :
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="model.BrokerMobile" required="" class="form-control  " style="font-size:medium" placeholder="لطفا موبایل نماینده را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="model.BrokerMobile" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-7  ">
+                            کد2 نماینده :
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="model.BrokerCodeR" required="" class="form-control  " style="font-size:medium" placeholder="لطفا کد2 نماینده را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="model.BrokerCodeR" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-7  ">
+                            اعتبار نمایندگی :
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="model.ValidityDate" required="" class="form-control  " style="font-size:medium" placeholder="لطفا اعتبار نمایندگی را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="model.ValidityDate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-7  ">
+                            کد معادل :
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="model.Extra" required="" class="form-control  " style="font-size:medium" placeholder="لطفا کد معادل را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="model.Extra" class="text-danger"></span>
+                        </div>
+                    </div>
+                <hr class="col-md-12" />
+                <div class="item form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12 col-md-offset-5">
+
+                        <input type="submit" class="btn btn-success" value="ثبت" />
+                        <a asp-page="Index" class="btn btn-warning">انصراف</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+
+@section Scripts
+{
+    <script>
+        function onlyNumberKey(evt) {
+
+            // Only ASCII character in that range allowed
+            var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+                return false;
+            return true;
+        }
+    </script>
+}

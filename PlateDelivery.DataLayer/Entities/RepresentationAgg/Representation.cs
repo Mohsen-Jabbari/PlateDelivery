@@ -38,14 +38,14 @@ public class Representation : BaseEntity
         IsDelete = isDelete;
     }
 
-    public void SetIsDeleteTrue()
+    public void SetIsDeleteTrue(bool isDelete)
     {
-        IsDelete = true;
+        IsDelete = isDelete;
     }
 
-    public void SetIsDeleteFalse()
+    public void SetIsDeleteFalse(bool isDelete)
     {
-        IsDelete= false;
+        IsDelete= isDelete;
     }
 
     public string RepresentationCode { get; private set; }
