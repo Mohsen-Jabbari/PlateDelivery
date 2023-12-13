@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using PlateDelivery.DataLayer.Context;
 using PlateDelivery.DataLayer.Entities.BatchAgg.Repository;
+using PlateDelivery.DataLayer.Entities.CertainAgg.Repository;
 using PlateDelivery.DataLayer.Entities.CounterAgg.Repository;
 using PlateDelivery.DataLayer.Entities.OkAgg.Repository;
 using PlateDelivery.DataLayer.Entities.PermissionAgg.Repository;
@@ -23,6 +24,7 @@ public static class DataLayerBootstrapper
         services.AddTransient<IBatchRepository, BatchRepository>();
         services.AddTransient<IRoleRepository, RoleRepository>();
         services.AddTransient<IPermissionRepository, PermissionRepository>();
+        services.AddTransient<ICertainRepository, CertainRepository>();
 
         services.AddTransient(_ => new DapperContext.DapperContext(connectionString));
         services.AddDbContext<PlateDeliveryDBContext>(option =>

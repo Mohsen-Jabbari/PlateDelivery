@@ -17,7 +17,6 @@ internal class OkRepository : BaseRepository<Ok>, IOkRepository
         {
             if (!string.IsNullOrEmpty(row))
             {
-                row.Replace("\r", "");
                 var cells = row.Split(',');
                 if (!Context.Oks.Any(o => o.ContractOwnerId == cells[0] && o.PlateNumber == cells[1] && o.ChassisNumber == cells[2] && o.InvoiceNumber == cells[3]))
                 {

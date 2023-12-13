@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PlateDelivery.DataLayer.Entities.BatchAgg;
+using PlateDelivery.DataLayer.Entities.CertainAgg;
 using PlateDelivery.DataLayer.Entities.CounterAgg;
 using PlateDelivery.DataLayer.Entities.OkAgg;
 using PlateDelivery.DataLayer.Entities.PermissionAgg;
@@ -26,6 +27,8 @@ public class PlateDeliveryDBContext : DbContext
 
     public DbSet<Role> Roles { get; set; }
     public DbSet<Permission> Permissions { get; set; }
+
+    public DbSet<Certain> Certains { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
