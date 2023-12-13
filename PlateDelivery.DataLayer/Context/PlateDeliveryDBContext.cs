@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PlateDelivery.DataLayer.Entities.AccountAgg;
 using PlateDelivery.DataLayer.Entities.BatchAgg;
 using PlateDelivery.DataLayer.Entities.CertainAgg;
 using PlateDelivery.DataLayer.Entities.CounterAgg;
 using PlateDelivery.DataLayer.Entities.OkAgg;
 using PlateDelivery.DataLayer.Entities.PermissionAgg;
+using PlateDelivery.DataLayer.Entities.ProvinceAgg;
 using PlateDelivery.DataLayer.Entities.RepresentationAgg;
 using PlateDelivery.DataLayer.Entities.RoleAgg;
 using PlateDelivery.DataLayer.Entities.StoreAgg;
@@ -29,6 +31,8 @@ public class PlateDeliveryDBContext : DbContext
     public DbSet<Permission> Permissions { get; set; }
 
     public DbSet<Certain> Certains { get; set; }
+    public DbSet<Account> Accounts { get; set; }
+    public DbSet<Province> Provinces { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
