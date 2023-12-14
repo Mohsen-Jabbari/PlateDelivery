@@ -1,15 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PlateDelivery.DataLayer.Entities.AccountAgg;
-using PlateDelivery.DataLayer.Entities.BatchAgg;
 using PlateDelivery.DataLayer.Entities.CertainAgg;
-using PlateDelivery.DataLayer.Entities.CounterAgg;
 using PlateDelivery.DataLayer.Entities.OkAgg;
 using PlateDelivery.DataLayer.Entities.PermissionAgg;
 using PlateDelivery.DataLayer.Entities.ProvinceAgg;
 using PlateDelivery.DataLayer.Entities.RepresentationAgg;
 using PlateDelivery.DataLayer.Entities.RoleAgg;
 using PlateDelivery.DataLayer.Entities.ServiceCodingAgg;
-using PlateDelivery.DataLayer.Entities.StoreAgg;
+using PlateDelivery.DataLayer.Entities.TopYarTmpAgg;
 using PlateDelivery.DataLayer.Entities.UserAgg;
 
 namespace PlateDelivery.DataLayer.Context;
@@ -21,11 +19,8 @@ public class PlateDeliveryDBContext : DbContext
     }
 
     public DbSet<User> Users { get; set; }
-    public DbSet<Store> Stores { get; set; }
     public DbSet<Representation> Representations { get; set; }
     public DbSet<Ok> Oks { get; set; }
-    public DbSet<Counter> Counters { get; set; }
-    public DbSet<Batch> Batches { get; set; }
 
 
     public DbSet<Role> Roles { get; set; }
@@ -35,6 +30,7 @@ public class PlateDeliveryDBContext : DbContext
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Province> Provinces { get; set; }
     public DbSet<ServiceCoding> ServiceCodings { get; set; }
+    public DbSet<TopYarTmp> TopYarTmps { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
