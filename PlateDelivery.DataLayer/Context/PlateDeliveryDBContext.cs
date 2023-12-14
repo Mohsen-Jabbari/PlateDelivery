@@ -8,6 +8,7 @@ using PlateDelivery.DataLayer.Entities.PermissionAgg;
 using PlateDelivery.DataLayer.Entities.ProvinceAgg;
 using PlateDelivery.DataLayer.Entities.RepresentationAgg;
 using PlateDelivery.DataLayer.Entities.RoleAgg;
+using PlateDelivery.DataLayer.Entities.ServiceCodingAgg;
 using PlateDelivery.DataLayer.Entities.StoreAgg;
 using PlateDelivery.DataLayer.Entities.UserAgg;
 
@@ -33,6 +34,7 @@ public class PlateDeliveryDBContext : DbContext
     public DbSet<Certain> Certains { get; set; }
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Province> Provinces { get; set; }
+    public DbSet<ServiceCoding> ServiceCodings { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

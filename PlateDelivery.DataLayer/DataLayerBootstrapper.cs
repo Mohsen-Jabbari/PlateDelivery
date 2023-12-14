@@ -10,6 +10,7 @@ using PlateDelivery.DataLayer.Entities.PermissionAgg.Repository;
 using PlateDelivery.DataLayer.Entities.ProvinceAgg.Repository;
 using PlateDelivery.DataLayer.Entities.RepresentationAgg.Repository;
 using PlateDelivery.DataLayer.Entities.RoleAgg.Repository;
+using PlateDelivery.DataLayer.Entities.ServiceCodingAgg.Repository;
 using PlateDelivery.DataLayer.Entities.StoreAgg.Repository;
 using PlateDelivery.DataLayer.Entities.UserAgg.Repository;
 
@@ -29,6 +30,7 @@ public static class DataLayerBootstrapper
         services.AddTransient<ICertainRepository, CertainRepository>();
         services.AddTransient<IAccountRepository, AccountRepository>();
         services.AddTransient<IProvinceRepository, ProvinceRepository>();
+        services.AddTransient<IServiceCodingRepository, ServiceCodingRepository>();
 
         services.AddTransient(_ => new DapperContext.DapperContext(connectionString));
         services.AddDbContext<PlateDeliveryDBContext>(option =>
