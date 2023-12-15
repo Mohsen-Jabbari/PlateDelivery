@@ -8,4 +8,9 @@ internal class ProvinceRepository : BaseRepository<Province>, IProvinceRepositor
     public ProvinceRepository(PlateDeliveryDBContext context) : base(context)
     {
     }
+
+    public void DeleteProvince(long Id)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -8,4 +8,9 @@ internal class CertainRepository : BaseRepository<Certain>, ICertainRepository
     public CertainRepository(PlateDeliveryDBContext context) : base(context)
     {
     }
+
+    public void DeleteCertain(long Id)
+    {
+        throw new NotImplementedException();
+    }
 }

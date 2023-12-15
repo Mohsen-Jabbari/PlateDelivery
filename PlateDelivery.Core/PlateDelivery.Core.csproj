@@ -8,10 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Counters\" />
-    <Folder Include="Services\Batches\" />
-    <Folder Include="Services\Oks\" />
-    <Folder Include="Services\Stores\" />
+    <Compile Remove="Services\Batches\**" />
+    <Compile Remove="Services\Counters\**" />
+    <Compile Remove="Services\Oks\**" />
+    <Compile Remove="Services\Stores\**" />
+    <EmbeddedResource Remove="Services\Batches\**" />
+    <EmbeddedResource Remove="Services\Counters\**" />
+    <EmbeddedResource Remove="Services\Oks\**" />
+    <EmbeddedResource Remove="Services\Stores\**" />
+    <None Remove="Services\Batches\**" />
+    <None Remove="Services\Counters\**" />
+    <None Remove="Services\Oks\**" />
+    <None Remove="Services\Stores\**" />
   </ItemGroup>
 
   <ItemGroup>
