@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using PlateDelivery.Core.Convertors;
+using PlateDelivery.Core.Services.Accounts;
 using PlateDelivery.Core.Services.Certains;
 using PlateDelivery.Core.Services.Permissions;
 using PlateDelivery.Core.Services.Provinces;
@@ -19,5 +20,6 @@ public static class PlateDeliverServiceBootStrapper
         services.AddScoped<IRepresentationService, RepresentationService>();
         services.AddScoped<IProvinceService, ProvinceService>();
         services.AddScoped<ICertainService, CertainService>();
+        services.AddScoped<IAccountService, AccountService>();
     }
 }

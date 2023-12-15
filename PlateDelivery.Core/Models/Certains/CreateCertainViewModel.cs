@@ -5,8 +5,8 @@ namespace PlateDelivery.Core.Models.Certains;
 public class CreateCertainViewModel : BaseDto
 {
     [Required]
-    public string CertainName { get; private set; }
+    public string CertainName { get; set; }
     [Required]
-    public string CertainCode { get; private set; } 
-    public CertainCategory Category { get; private set; }
+    public string CertainCode { get; set; } 
+    public CertainCategory Category { get; set; }
 }

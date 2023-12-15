@@ -8,4 +8,9 @@ internal class AccountRepository : BaseRepository<Account>, IAccountRepository
     public AccountRepository(PlateDeliveryDBContext context) : base(context)
     {
     }
+
+    public void DeleteAccount(long Id)
+    {
+        throw new NotImplementedException();
+    }
 }
