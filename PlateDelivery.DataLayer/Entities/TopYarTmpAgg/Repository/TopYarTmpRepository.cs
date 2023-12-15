@@ -8,4 +8,9 @@ internal class TopYarTmpRepository : BaseRepository<TopYarTmp>, ITopYarTmpReposi
     public TopYarTmpRepository(PlateDeliveryDBContext context) : base(context)
     {
     }
+
+    public void DeleteTopYarTmp(long Id)
+    {
+        throw new NotImplementedException();
+    }
 }
