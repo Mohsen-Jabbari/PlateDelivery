@@ -9,4 +9,9 @@ internal class ServiceCodingRepository : BaseRepository<ServiceCoding>, IService
     {
 
     }
+
+    public void DeleteServiceCoding(long Id)
+    {
+        throw new NotImplementedException();
+    }
 }

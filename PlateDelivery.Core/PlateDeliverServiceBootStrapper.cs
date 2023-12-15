@@ -6,6 +6,7 @@ using PlateDelivery.Core.Services.Permissions;
 using PlateDelivery.Core.Services.Provinces;
 using PlateDelivery.Core.Services.Representations;
 using PlateDelivery.Core.Services.Roles;
+using PlateDelivery.Core.Services.ServiceCodings;
 using PlateDelivery.Core.Services.Users;
 
 namespace PlateDelivery.Core;
@@ -21,5 +22,6 @@ public static class PlateDeliverServiceBootStrapper
         services.AddScoped<IProvinceService, ProvinceService>();
         services.AddScoped<ICertainService, CertainService>();
         services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<IServiceCodingService, ServiceCodingService>();
     }
 }
