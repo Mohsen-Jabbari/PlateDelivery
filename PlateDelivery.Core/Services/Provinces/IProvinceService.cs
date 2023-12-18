@@ -14,4 +14,6 @@ public interface IProvinceService
     long CreateProvince(CreateProvinceViewModel model);
     bool EditProvince(EditProvinceViewModel model);
     bool DeleteProvince(long Id);
+
+    ProvincesViewModel GetProvinces(int pageId = 1, int take = 50, string filterByProvince = "");
 }

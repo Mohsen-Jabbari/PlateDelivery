@@ -1,6 +1,6 @@
 ﻿using PlateDelivery.Core.Models.Provinces;
-using PlateDelivery.DataLayer.Entities.ProvinceAgg.Repository;
 using PlateDelivery.DataLayer.Entities.ProvinceAgg;
+using PlateDelivery.DataLayer.Entities.ProvinceAgg.Repository;
 
 namespace PlateDelivery.Core.Services.Provinces;
 
@@ -47,5 +47,29 @@ internal class ProvinceService : IProvinceService
             return true;
         }
         return false;
+    }
+
+    public ProvincesViewModel GetProvinces(int pageId = 1, int take = 50, string filterByProvince = "")
+    {
+        var result = _repository.GetAll(); //lazyLoad;
+
+        if (result != null)
+        {
+            if (!string.IsNullOrEmpty(filterByProvince))
+            {
+                result = result.Where(u => u.ProvinceName.Contains(filterByProvince)).ToList();
+            }
+
+            int takeData = take;
+            int skip = (pageId - 1) * takeData;
+
+            ProvincesViewModel list = new ProvincesViewModel();
+            list.Provinces = result.OrderByDescending(u => u.ProvinceName).Skip(skip).Take(takeData).ToList();
+            list.PageCount = (int)Math.Ceiling(result.Count / (double)takeData);
+            list.CurrentPage = pageId;
+            list.ProvincesCounts = result.Count;
+            return list;
+        }
+        return new ProvincesViewModel();
     }
 }
