@@ -14,20 +14,26 @@ public class ProvincesViewModel
 
 public class CreateProvinceViewModel : BaseDto
 {
-    [Required]
+    [Display(Name = "نام استان")]
+    [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string ProvinceName { get; set; }
-    [Required]
+    [Display(Name = "نام شهر یا مرکز")]
+    [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string SubProvince { get; set; }
-    [Required]
+    [Display(Name = "کد استان یا مرکز")]
+    [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string ProvinceCode { get; set; }
 }
 
 public class EditProvinceViewModel : BaseDto
 {
-    [Required]
+    [Display(Name = "نام استان")]
+    [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string ProvinceName { get; set; }
-    [Required]
+    [Display(Name = "نام شهر یا مرکز")]
+    [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string SubProvince { get; set; }
-    [Required]
+    [Display(Name = "کد استان یا مرکز")]
+    [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string ProvinceCode { get; set; }
 }

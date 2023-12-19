@@ -49,6 +49,20 @@ internal class ProvinceService : IProvinceService
         return false;
     }
 
+    public EditProvinceViewModel GetById(long Id)
+    {
+        var result = _repository.GetTrackingSync(Id);
+        if (result != null)
+            return new EditProvinceViewModel()
+            {
+                Id = result.Id,
+                ProvinceName = result.ProvinceName,
+                SubProvince = result.SubProvince,
+                ProvinceCode = result.ProvinceCode
+            };
+        return null;
+    }
+
     public ProvincesViewModel GetProvinces(int pageId = 1, int take = 50, string filterByProvince = "")
     {
         var result = _repository.GetAll(); //lazyLoad;
@@ -71,5 +85,10 @@ internal class ProvinceService : IProvinceService
             return list;
         }
         return new ProvincesViewModel();
+    }
+
+    public bool IsProvinceExist(string ProvinceCode)
+    {
+        return _repository.Exists(u => u.ProvinceCode == ProvinceCode);
     }
 }
