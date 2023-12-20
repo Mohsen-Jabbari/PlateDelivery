@@ -1,0 +1,78 @@
+﻿@page
+@model PlateDelivery.Web.Pages.Leon.Certains.CreateCertainModel
+@{
+    ViewData["Title"] = "افزودن کد معین";
+}
+
+<form enctype="multipart/form-data" method="post">
+    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>
+                    افزودن کد معین
+                </h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="row">
+                    <div class="item form-group">
+                        <label asp-for="CreateCertainViewModel.CertainName" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateCertainViewModel.CertainName" class="form-control  " style="font-size:medium" placeholder="لطفا عنوان معین را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateCertainViewModel.CertainName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateCertainViewModel.Category" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <select asp-for="CreateCertainViewModel.Category" id="category" asp-items="@(ViewData["Category"] as SelectList)" class="form-control col-md-7 col-xs-12" style="font-size:medium"></select>
+                            <span class="text-danger" asp-validation-for="CreateCertainViewModel.Category"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateCertainViewModel.CertainCode" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateCertainViewModel.CertainCode" class="form-control" style="font-size:medium" onkeypress="return onlyNumberKey(event)" placeholder="لطفا کد معین را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateCertainViewModel.CertainCode" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <hr class="col-md-12" />
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12 col-md-offset-5">
+
+                            <input type="submit" class="btn btn-success" value="ثبت" />
+                            <a asp-page="Index" class="btn btn-warning">انصراف</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts
+{
+    <script>
+        function onlyNumberKey(evt) {
+
+            // Only ASCII character in that range allowed
+            var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+                return false;
+            return true;
+        }
+    </script>
+}

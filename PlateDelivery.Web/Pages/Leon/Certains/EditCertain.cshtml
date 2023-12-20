@@ -1,0 +1,68 @@
+﻿@page "{id}"
+@model PlateDelivery.Web.Pages.Leon.Certains.EditCertainModel
+@{
+    ViewData["Title"] = "ویرایش کد معین";
+
+}
+
+<form enctype="multipart/form-data" method="post">
+    <input type="hidden" asp-for="EditCertainViewModel.Id" />
+    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>
+                    ویرایش کد معین
+
+                </h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="row">
+                    <div class="item form-group">
+                        <label asp-for="EditCertainViewModel.CertainName" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditCertainViewModel.CertainName" class="form-control  " style="font-size:medium" placeholder="لطفا عنوان معین را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditCertainViewModel.CertainName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="EditCertainViewModel.Category" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <select asp-for="EditCertainViewModel.Category" asp-items="@ViewBag.Category" class="form-control col-md-7 col-xs-12" style="font-size:medium"></select>
+                            <span class="text-danger" asp-validation-for="EditCertainViewModel.Category"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="EditCertainViewModel.CertainCode" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditCertainViewModel.CertainCode" class="form-control" onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا کد معین را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditCertainViewModel.CertainCode" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <hr class="col-md-12" />
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12 col-md-offset-5">
+
+                            <input type="submit" class="btn btn-success" value="ثبت" />
+                            <a asp-page="Index" class="btn btn-warning">انصراف</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

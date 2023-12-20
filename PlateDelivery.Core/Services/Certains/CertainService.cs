@@ -13,7 +13,7 @@ internal class CertainService : ICertainService
         _repository = repository;
     }
 
-    public long CreateCertain(CreateCertainViewModel model)
+    public long CreateCertain(CreateAndEditCertainViewModel model)
     {
         if (!_repository.Exists(u => u.CertainCode == model.CertainCode))
         {
@@ -37,7 +37,7 @@ internal class CertainService : ICertainService
         return false;
     }
 
-    public bool EditCertain(CreateCertainViewModel model)
+    public bool EditCertain(CreateAndEditCertainViewModel model)
     {
         var oldCertain = _repository.GetTrackingSync(model.Id);
         if (oldCertain != null)
@@ -47,5 +47,49 @@ internal class CertainService : ICertainService
             return true;
         }
         return false;
+    }
+
+    public CreateAndEditCertainViewModel GetById(long Id)
+    {
+        var result = _repository.GetTrackingSync(Id);
+        if (result != null)
+            return new CreateAndEditCertainViewModel()
+            {
+                Id = result.Id,
+                CertainCode = result.CertainCode,
+                Category = result.Category,
+                CertainName = result.CertainName,
+                CreationDate = result.CreationDate
+            };
+        return null;
+    }
+
+    public CertainsViewModel GetCertains(int pageId = 1, int take = 50, string filterByCertainCode = "")
+    {
+        var result = _repository.GetAll(); //lazyLoad;
+
+        if (result != null)
+        {
+            if (!string.IsNullOrEmpty(filterByCertainCode))
+            {
+                result = result.Where(u => u.CertainCode.Contains(filterByCertainCode)).ToList();
+            }
+
+            int takeData = take;
+            int skip = (pageId - 1) * takeData;
+
+            CertainsViewModel list = new CertainsViewModel();
+            list.Certains = result.OrderByDescending(u => u.CertainCode).Skip(skip).Take(takeData).ToList();
+            list.PageCount = (int)Math.Ceiling(result.Count / (double)takeData);
+            list.CurrentPage = pageId;
+            list.CertainsCounts = result.Count;
+            return list;
+        }
+        return new CertainsViewModel();
+    }
+
+    public bool IsCertainExist(string CertainCode)
+    {
+        return _repository.Exists(u => u.CertainCode == CertainCode);
     }
 }

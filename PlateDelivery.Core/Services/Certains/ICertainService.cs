@@ -1,9 +1,14 @@
-﻿using PlateDelivery.Core.Models.Certains;
+﻿using PlateDelivery.Core.Models.Accounts;
+using PlateDelivery.Core.Models.Certains;
 
 namespace PlateDelivery.Core.Services.Certains;
 public interface ICertainService
 {
-    long CreateCertain(CreateCertainViewModel model);
-    bool EditCertain(CreateCertainViewModel model);
+    long CreateCertain(CreateAndEditCertainViewModel model);
+    bool EditCertain(CreateAndEditCertainViewModel model);
     bool DeleteCertain(long Id);
+    bool IsCertainExist(string CertainCode);
+
+    CertainsViewModel GetCertains(int pageId = 1, int take = 50, string filterByCertainCode = "");
+    CreateAndEditCertainViewModel GetById(long Id);
 }

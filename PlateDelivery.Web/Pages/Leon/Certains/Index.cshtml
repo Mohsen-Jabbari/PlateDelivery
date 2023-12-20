@@ -1,0 +1,159 @@
+﻿@page
+@using PlateDelivery.Core.Convertors
+@using PlateDelivery.Core.Services.Certains
+@model PlateDelivery.Web.Pages.Leon.Certains.IndexModel
+@inject ICertainService CertainService
+@{
+    ViewData["Title"] = "کد معین";
+}
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>
+                لیست کدهای معین
+
+            </h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li>
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+
+
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                @if (Model.CertainsViewModel.Certains.Count == 0)
+                {
+                    <div class="alert alert-danger ">
+                        رکوردی یافت نشد
+                    </div>
+                }
+
+
+                <div id="datatable-checkbox_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                    <div class="row">
+                        <form>
+                            <div class="col-sm-5">
+                                <div class="dataTables_length" id="datatable-checkbox_length">
+                                    <label>
+                                        نمایش
+                                        <select name="take" aria-controls="datatable-checkbox" class="form-control input-sm">
+                                                <option value="">پیش فرض</option>
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                        </select> معین
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <input type="text" name="filterByBankCode" class="form-control" value="@ViewData["FilterCertainCode"]" placeholder="جستجو بر اساس کد معین" />
+
+                                <input type="submit" value="فیلتر کن" class="btn btn-success btn-round" />
+                                <a href="/Leon/Certains" class="btn btn-default btn-round">حذف فیلتر</a>
+                            </div>
+
+                        </form>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a href="/Leon/Certains/CreateCertain" class="btn btn-success">افزودن حساب جدید</a>
+                            @{
+                                int rowCount = 1;
+                            }
+                            <table id="datatable-checkbox" class="table table-striped table-bordered bulk_action dataTable no-footer" role="grid" aria-describedby="datatable-checkbox_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th style="width: 60px;" class="hidden-xs">ردیف</th>
+                                        <th style="width: 138px;">عنوان معین</th>
+                                        <th style="width: 138px;">نوع معین</th>
+                                        <th style="width: 138px;">کد معین</th>
+                                        <th style="width: 138px;">تاریخ ثبت</th>
+                                        <th style="width: 138px;">عملیات</th>
+                                    </tr>
+                                </thead>
+
+
+                                <tbody>
+
+                                    @foreach (var item in Model.CertainsViewModel.Certains)
+                                    {
+
+                                        <tr role="row" class="odd">
+                                            <td class="hidden-xs">@rowCount</td>
+                                            <td>@item.CertainName</td>
+                                            <td>@item.Category.GetDescription()</td>
+                                            <td>@item.CertainCode</td>
+                                            <td>@item.CreationDate.ToShamsi()</td>
+                                            <td>
+                                                <a href="/Leon/Certains/EditCertain/@item.Id" class="btn btn-warning btn-xs">ویرایش</a>
+                                                <a href="/Leon/Certains/DeleteCertain/@item.Id" class="btn btn-danger btn-xs">حذف</a>
+                                            </td>
+                                        </tr>
+                                        rowCount++;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-sm-5">
+                            <div class="dataTables_info" id="datatable-checkbox_info" role="status" aria-live="polite">نمایش @ViewData["PageID"] تا @ViewData["Take"] از @Model.CertainsViewModel.CertainsCounts رکورد</div>
+                        </div>
+                        <div class="col-sm-7">
+
+                            <div class="btn-group">
+                                @if (Model.CertainsViewModel.CurrentPage > 1)
+                                {
+
+                                    <a class="btn btn-default" href="/Leon/Certains?pageId=@(Model.CertainsViewModel.CurrentPage-1)">قبلی</a>
+
+                                    <a class="btn btn-default" href="/Leon/Certains?pageId=1">اولین صفحه</a>
+
+
+                                }
+
+                                @if (Model.CertainsViewModel.CurrentPage + 4 <= Model.CertainsViewModel.PageCount)
+                                {
+                                    @for (int i = Model.CertainsViewModel.CurrentPage; i <= Model.CertainsViewModel.CurrentPage + 4; i++)
+                                    {
+
+                                        <a href="/Leon/Certains?pageId=@i&fb=@ViewData["FilterCertainCode"]" class="btn btn-default @((i==Model.CertainsViewModel.CurrentPage)? "btn btn-info" : "")">@i</a>
+
+                                    }
+                                }
+                                else
+                                {
+                                    for (int i = Model.CertainsViewModel.CurrentPage; i <= Model.CertainsViewModel.PageCount; i++)
+                                    {
+                                        <a href="/Leon/Certains?pageId=@i&fb=@ViewData["FilterCertainCode"]" class="btn btn-default @((i==Model.CertainsViewModel.CurrentPage)? "btn btn-info" : "")">@i</a>
+                                    }
+                                }
+
+
+                                @if (Model.CertainsViewModel.CurrentPage < Model.CertainsViewModel.PageCount)
+                                {
+
+                                    <a class="btn btn-default" href="/Leon/Certains?pageId=@(Model.CertainsViewModel.CurrentPage + 1)">بعدی</a>
+                                    <a class="btn btn-default" href="/Leon/Certains?pageId=@(Model.CertainsViewModel.PageCount)">اخرین صفحه</a>
+
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
