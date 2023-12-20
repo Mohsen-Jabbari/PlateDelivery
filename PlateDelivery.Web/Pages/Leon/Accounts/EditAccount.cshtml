@@ -1,0 +1,70 @@
+﻿@page "{id}"
+@model PlateDelivery.Web.Pages.Leon.Accounts.EditProvinceModel
+@{
+    ViewData["Title"] = "ویرایش حساب";
+
+}
+
+<form enctype="multipart/form-data" method="post">
+    <input type="hidden" asp-for="EditAccountViewModel.Id" />
+    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>
+                    ویرایش اطلاعات حساب
+
+                </h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="row">
+                    <div class="item form-group">
+                        <label asp-for="EditAccountViewModel.BankName" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditAccountViewModel.BankName" class="form-control  " style="font-size:medium" placeholder="لطفا نام بانک را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditAccountViewModel.BankName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="EditAccountViewModel.BankCode" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditAccountViewModel.BankCode" class="form-control  " style="font-size:medium" onkeypress="return onlyNumberKey(event)" placeholder="لطفا کد بانک را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditAccountViewModel.BankCode" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="EditAccountViewModel.Iban" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditAccountViewModel.Iban" class="form-control" style="font-size:medium"  placeholder="لطفا شماره شبا را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditAccountViewModel.Iban" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <hr class="col-md-12" />
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12 col-md-offset-5">
+
+                            <input type="submit" class="btn btn-success" value="ثبت" />
+                            <a asp-page="Index" class="btn btn-warning">انصراف</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
