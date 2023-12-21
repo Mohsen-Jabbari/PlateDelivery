@@ -1,15 +1,30 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PlateDelivery.DataLayer.Entities.CertainAgg;
+using PlateDelivery.DataLayer.Entities.ServiceCodingAgg;
+using System.ComponentModel.DataAnnotations;
 
 namespace PlateDelivery.Core.Models.ServiceCodings;
 public class CreateAndEditServiceCodeingViewModel : BaseDto
 {
-    [Required]
+    [Display(Name = "نام خدمت")]
+    [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string ServiceName { get; set; }
+    [Display(Name = "نام کامل خذمت")]
     public string ServiceFullName { get; set; }
-    [Required]
+    [Display(Name = "کد خدمت")]
+    [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string ServiceCode { get; set; }
-    [Required]
+    [Display(Name = "کد تفضیل سطح 4")]
+    [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string CodeLevel4 { get; set; }
-    [Required]
+    [Display(Name = "کد تفضیل سطح 6")]
+    [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string CodeLevel6 { get; set; }
+}
+
+public class ServiceCodingsViewModel
+{
+    public List<ServiceCoding> ServiceCodings { get; set; }
+    public int ServiceCodingsCounts { get; set; }
+    public int CurrentPage { get; set; }
+    public int PageCount { get; set; }
 }

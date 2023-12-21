@@ -1,0 +1,100 @@
+﻿@page
+@model PlateDelivery.Web.Pages.Leon.ServiceCodings.CreateServiceCodingModel
+@{
+    var Title = ViewBag.Title;
+}
+
+<form enctype="multipart/form-data" method="post">
+    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>
+                    @Title
+                </h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="row">
+                    <div class="item form-group">
+                        <label asp-for="CreateServiceCodeingViewModel.ServiceName" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateServiceCodeingViewModel.ServiceName" class="form-control  " style="font-size:medium" placeholder="لطفا نام خدمت را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateServiceCodeingViewModel.ServiceName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateServiceCodeingViewModel.ServiceFullName" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateServiceCodeingViewModel.ServiceFullName" class="form-control  " style="font-size:medium" placeholder="لطفا نام کامل خدمت را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateServiceCodeingViewModel.ServiceFullName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateServiceCodeingViewModel.ServiceCode" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateServiceCodeingViewModel.ServiceCode" class="form-control" onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا کد خدمت را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateServiceCodeingViewModel.ServiceCode" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateServiceCodeingViewModel.CodeLevel4" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateServiceCodeingViewModel.CodeLevel4" class="form-control" onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا کد تفضیل 4 را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateServiceCodeingViewModel.CodeLevel4" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateServiceCodeingViewModel.CodeLevel6" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateServiceCodeingViewModel.CodeLevel6" class="form-control" onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا کد تفضیل 6 را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateServiceCodeingViewModel.CodeLevel6" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <hr class="col-md-12" />
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12 col-md-offset-5">
+
+                            <input type="submit" class="btn btn-success" value="ثبت" />
+                            <a asp-page="Index" class="btn btn-warning">انصراف</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts
+{
+    <script>
+        function onlyNumberKey(evt) {
+
+            // Only ASCII character in that range allowed
+            var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+                return false;
+            return true;
+        }
+    </script>
+}

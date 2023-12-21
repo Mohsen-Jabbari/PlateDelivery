@@ -1,0 +1,160 @@
+﻿@page
+@using PlateDelivery.Core.Convertors
+@using PlateDelivery.Core.Services.ServiceCodings
+@model PlateDelivery.Web.Pages.Leon.ServiceCodings.IndexModel
+@inject IServiceCodingService ServiceCoding
+@{
+    var Title = ViewBag.Title;
+}
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>
+                @Title
+            </h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li>
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+
+
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div id="datatable-checkbox_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                    <div class="row">
+                        <form>
+                            <div class="col-sm-5">
+                                <div class="dataTables_length" id="datatable-checkbox_length">
+                                    <label>
+                                        نمایش
+                                        <select name="take" aria-controls="datatable-checkbox" class="form-control input-sm">
+                                            <option value="">پیش فرض</option>
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select> معین
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <input type="text" name="filterByServiceName" class="form-control" value="@ViewData["filterServiceName"]" placeholder="جستجو بر اساس نام خدمت" />
+                                <input type="text" name="filterByServiceCode" class="form-control" value="@ViewData["filterServiceCode"]" placeholder="جستجو بر اساس کد خدمت" />
+                                <input type="submit" value="فیلتر کن" class="btn btn-success btn-round" />
+                                <a href="/Leon/ServiceCodings" class="btn btn-default btn-round">حذف فیلتر</a>
+                            </div>
+
+                        </form>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a href="/Leon/ServiceCodings/CreateServiceCoding" class="btn btn-success">افزودن حساب جدید</a>
+                            @if (Model.ServiceCodingsViewModel.ServiceCodings.Count == 0)
+                            {
+                                <div class="alert alert-danger ">
+                                    رکوردی یافت نشد
+                                </div>
+                            }
+
+                            else
+                            {
+                                int rowCount = 1;
+                                <table id="datatable-checkbox" class="table table-striped table-bordered bulk_action dataTable no-footer" role="grid" aria-describedby="datatable-checkbox_info">
+                                    <thead>
+                                        <tr role="row">
+                                            <th style="width: 60px;" class="hidden-xs">ردیف</th>
+                                            <th style="width: 138px;">نام خدمت</th>
+                                            <th style="width: 138px;">نام کامل خدمت</th>
+                                            <th style="width: 138px;">کد خدمت</th>
+                                            <th style="width: 138px;">کد تفضیل سطح 4</th>
+                                            <th style="width: 138px;">کد تفضیل سطح 6</th>
+                                            <th style="width: 138px;">تاریخ ثبت</th>
+                                            <th style="width: 138px;">عملیات</th>
+                                        </tr>
+                                    </thead>
+
+
+                                    <tbody>
+
+                                        @foreach (var item in Model.ServiceCodingsViewModel.ServiceCodings)
+                                        {
+
+                                            <tr role="row" class="odd">
+                                                <td class="hidden-xs">@rowCount</td>
+                                                <td>@item.ServiceName</td>
+                                                <td>@item.ServiceFullName</td>
+                                                <td>@item.ServiceCode</td>
+                                                <td>@item.CodeLevel4</td>
+                                                <td>@item.CodeLevel6</td>
+                                                <td>@item.CreationDate.ToShamsi()</td>
+                                                <td>
+                                                    <a href="/Leon/ServiceCodings/EditServiceCoding/@item.Id" class="btn btn-warning btn-xs">ویرایش</a>
+                                                    <a href="/Leon/ServiceCodings/DeleteServiceCoding/@item.Id" class="btn btn-danger btn-xs">حذف</a>
+                                                </td>
+                                            </tr>
+                                            rowCount++;
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-sm-5">
+                            <div class="dataTables_info" id="datatable-checkbox_info" role="status" aria-live="polite">نمایش @ViewData["PageID"] تا @ViewData["Take"] از @Model.ServiceCodingsViewModel.ServiceCodingsCounts رکورد</div>
+                        </div>
+                        <div class="col-sm-7">
+
+                            <div class="btn-group">
+                                @if (Model.ServiceCodingsViewModel.CurrentPage > 1)
+                                {
+
+                                    <a class="btn btn-default" href="/Leon/ServiceCodings?pageId=@(Model.ServiceCodingsViewModel.CurrentPage-1)">قبلی</a>
+
+                                    <a class="btn btn-default" href="/Leon/ServiceCodings?pageId=1">اولین صفحه</a>
+
+
+                                }
+
+                                @if (Model.ServiceCodingsViewModel.CurrentPage + 4 <= Model.ServiceCodingsViewModel.PageCount)
+                                {
+                                    @for (int i = Model.ServiceCodingsViewModel.CurrentPage; i <= Model.ServiceCodingsViewModel.CurrentPage + 4; i++)
+                                    {
+
+                                        <a href="/Leon/ServiceCodings?pageId=@i&fsn=@ViewData["filterServiceName"]&fsb=@ViewData["filterServiceCode"]" class="btn btn-default @((i==Model.ServiceCodingsViewModel.CurrentPage)? "btn btn-info" : "")">@i</a>
+
+                                    }
+                                }
+                                else
+                                {
+                                    for (int i = Model.ServiceCodingsViewModel.CurrentPage; i <= Model.ServiceCodingsViewModel.PageCount; i++)
+                                    {
+                                        <a href="/Leon/ServiceCodings?pageId=@i&fsn=@ViewData["filterServiceName"]&fsb=@ViewData["filterServiceCode"]" class="btn btn-default @((i==Model.ServiceCodingsViewModel.CurrentPage)? "btn btn-info" : "")">@i</a>
+                                    }
+                                }
+
+
+                                @if (Model.ServiceCodingsViewModel.CurrentPage < Model.ServiceCodingsViewModel.PageCount)
+                                {
+
+                                    <a class="btn btn-default" href="/Leon/ServiceCodings?pageId=@(Model.ServiceCodingsViewModel.CurrentPage + 1)">بعدی</a>
+                                    <a class="btn btn-default" href="/Leon/ServiceCodings?pageId=@(Model.ServiceCodingsViewModel.PageCount)">اخرین صفحه</a>
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -50,4 +50,55 @@ internal class ServiceCodingService : IServiceCodingService
         }
         return false;
     }
+
+    public CreateAndEditServiceCodeingViewModel GetById(long Id)
+    {
+        var result = _repository.GetTrackingSync(Id);
+        if (result != null)
+            return new CreateAndEditServiceCodeingViewModel()
+            {
+                Id = result.Id,
+                ServiceCode = result.ServiceCode,
+                ServiceFullName = result.ServiceFullName,
+                CodeLevel4 = result.CodeLevel4,
+                CodeLevel6 = result.CodeLevel6,
+                ServiceName = result.ServiceName,
+                CreationDate = result.CreationDate
+            };
+        return null;
+    }
+
+    public ServiceCodingsViewModel GetServiceCodings(int pageId = 1, int take = 50, string filterByServiceName = "", string filterByServiceCode = "")
+    {
+        var result = _repository.GetAll(); //lazyLoad;
+
+        if (result != null)
+        {
+            if (!string.IsNullOrEmpty(filterByServiceName))
+            {
+                result = result.Where(u => u.ServiceName.Contains(filterByServiceName) || u.ServiceFullName.Contains(filterByServiceName)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filterByServiceCode))
+            {
+                result = result.Where(u => u.ServiceCode.Contains(filterByServiceCode)).ToList();
+            }
+
+            int takeData = take;
+            int skip = (pageId - 1) * takeData;
+
+            ServiceCodingsViewModel list = new ServiceCodingsViewModel();
+            list.ServiceCodings = result.OrderByDescending(u => u.ServiceCode).Skip(skip).Take(takeData).ToList();
+            list.PageCount = (int)Math.Ceiling(result.Count / (double)takeData);
+            list.CurrentPage = pageId;
+            list.ServiceCodingsCounts = result.Count;
+            return list;
+        }
+        return new ServiceCodingsViewModel();
+    }
+
+    public bool IsServiceCodingExist(string ServiceCode)
+    {
+        return _repository.Exists(u => u.ServiceCode == ServiceCode);
+    }
 }
