@@ -1,0 +1,198 @@
+﻿@page "{id}"
+@model PlateDelivery.Web.Pages.Leon.TopYarTmps.EditTopYarTmpModel
+@{
+    var Title = ViewBag.Title;
+
+}
+
+<form method="post">
+    <input type="hidden" asp-for="EditTopYarTmpViewModel.Id" />
+    <input type="hidden" asp-for="EditTopYarTmpViewModel.CertainCode" />
+    <input type="hidden" asp-for="EditTopYarTmpViewModel.IncomeAmount" />
+    <input type="hidden" asp-for="EditTopYarTmpViewModel.TaxAmount" />
+    <input type="hidden" asp-for="EditTopYarTmpViewModel.CodeLevel4" />
+    <input type="hidden" asp-for="EditTopYarTmpViewModel.CodeLevel5" />
+    <input type="hidden" asp-for="EditTopYarTmpViewModel.CodeLevel6" />
+    <input type="hidden" asp-for="EditTopYarTmpViewModel.ProvinceCode" />
+    <input type="hidden" asp-for="EditTopYarTmpViewModel.Description" />
+    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>
+                    @Title
+                </h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="row">
+                    
+                    <div class="item form-group">
+                        <label asp-for="EditTopYarTmpViewModel.ProvinceName" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditTopYarTmpViewModel.ProvinceName" class="form-control  " style="font-size:medium" placeholder="لطفا نام خدمت را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditTopYarTmpViewModel.ProvinceName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="EditTopYarTmpViewModel.SubProvince" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditTopYarTmpViewModel.SubProvince" class="form-control  " style="font-size:medium" placeholder="لطفا نام کامل خدمت را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditTopYarTmpViewModel.SubProvince" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="EditTopYarTmpViewModel.RetrivalRef" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditTopYarTmpViewModel.RetrivalRef" class="form-control" onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا کد خدمت را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditTopYarTmpViewModel.RetrivalRef" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="EditTopYarTmpViewModel.TrackingNo" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditTopYarTmpViewModel.TrackingNo" class="form-control" onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا کد تفضیل 4 را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditTopYarTmpViewModel.TrackingNo" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="EditTopYarTmpViewModel.TransactionDate" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditTopYarTmpViewModel.TransactionDate" class="form-control" onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا کد تفضیل 6 را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditTopYarTmpViewModel.TransactionDate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="EditTopYarTmpViewModel.TransactionTime" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditTopYarTmpViewModel.TransactionTime" class="form-control  " onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا نام خدمت را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditTopYarTmpViewModel.TransactionTime" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="EditTopYarTmpViewModel.FinancialDate" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditTopYarTmpViewModel.FinancialDate" class="form-control  " onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا نام خدمت را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditTopYarTmpViewModel.FinancialDate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="EditTopYarTmpViewModel.Iban" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditTopYarTmpViewModel.Iban" class="form-control  " style="font-size:medium" placeholder="لطفا نام خدمت را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditTopYarTmpViewModel.Iban" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="EditTopYarTmpViewModel.Amount" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditTopYarTmpViewModel.Amount" class="form-control  " onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا نام خدمت را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditTopYarTmpViewModel.Amount" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="EditTopYarTmpViewModel.PrincipalAmount" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditTopYarTmpViewModel.PrincipalAmount" class="form-control  " onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا نام خدمت را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditTopYarTmpViewModel.PrincipalAmount" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="EditTopYarTmpViewModel.CardNo" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditTopYarTmpViewModel.CardNo" class="form-control  " onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا نام خدمت را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditTopYarTmpViewModel.CardNo" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="EditTopYarTmpViewModel.Terminal" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditTopYarTmpViewModel.Terminal" class="form-control  " onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا نام خدمت را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditTopYarTmpViewModel.Terminal" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="EditTopYarTmpViewModel.InstallationPlace" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditTopYarTmpViewModel.InstallationPlace" class="form-control  " style="font-size:medium" placeholder="لطفا نام خدمت را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditTopYarTmpViewModel.InstallationPlace" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="EditTopYarTmpViewModel.ServiceName" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditTopYarTmpViewModel.ServiceName" class="form-control  " style="font-size:medium" placeholder="لطفا نام خدمت را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditTopYarTmpViewModel.ServiceName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="EditTopYarTmpViewModel.ServiceCode" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditTopYarTmpViewModel.ServiceCode" class="form-control  " onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا نام خدمت را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditTopYarTmpViewModel.ServiceCode" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <hr class="col-md-12" />
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12 col-md-offset-5">
+
+                            <input type="submit" class="btn btn-success" value="ثبت" />
+                            <a asp-page="Index" class="btn btn-warning">انصراف</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

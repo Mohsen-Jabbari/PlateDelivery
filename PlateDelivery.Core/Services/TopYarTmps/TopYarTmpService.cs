@@ -8,6 +8,11 @@ internal class TopYarTmpService : ITopYarTmpService
 {
     private readonly ITopYarTmpRepository _repository;
 
+    public TopYarTmpService(ITopYarTmpRepository repository)
+    {
+        _repository = repository;
+    }
+
     public long CreateTopYarTmp(CreateAndEditTopYarTmpViewModel model)
     {
         if (!_repository.Exists(u => u.RetrivalRef == model.RetrivalRef))
@@ -15,7 +20,7 @@ internal class TopYarTmpService : ITopYarTmpService
             var topYarTmp = new TopYarTmp(model.RetrivalRef, model.TrackingNo, model.TransactionDate, model.TransactionTime,
                 model.FinancialDate, model.Iban, model.Amount, model.PrincipalAmount, model.CardNo, model.Terminal,
                 model.InstallationPlace, model.ServiceCode, model.ServiceName, model.ProvinceName, model.SubProvince,
-                model.ProvinceCode, model.CertainCode, model.CodeLever4, model.CodeLever5, model.CodeLever6, model.Description,
+                model.ProvinceCode, model.CertainCode, model.CodeLevel4, model.CodeLevel5, model.CodeLevel6, model.Description,
                 model.TaxAmount, model.IncomeAmount);
             _repository.Add(topYarTmp);
             _repository.SaveSync();
@@ -36,7 +41,7 @@ internal class TopYarTmpService : ITopYarTmpService
         return false;
     }
 
-    public bool EcitTopyarTmp(CreateAndEditTopYarTmpViewModel model)
+    public bool EditTopyarTmp(CreateAndEditTopYarTmpViewModel model)
     {
         var oldTopYarTmp = _repository.GetTrackingSync(model.Id);
         if (oldTopYarTmp != null)
@@ -44,11 +49,117 @@ internal class TopYarTmpService : ITopYarTmpService
             oldTopYarTmp.Edit(model.RetrivalRef, model.TrackingNo, model.TransactionDate, model.TransactionTime,
                 model.FinancialDate, model.Iban, model.Amount, model.PrincipalAmount, model.CardNo, model.Terminal,
                 model.InstallationPlace, model.ServiceCode, model.ServiceName, model.ProvinceName, model.SubProvince,
-                model.ProvinceCode, model.CertainCode, model.CodeLever4, model.CodeLever5, model.CodeLever6, model.Description,
+                model.ProvinceCode, model.CertainCode, model.CodeLevel4, model.CodeLevel5, model.CodeLevel6, model.Description,
                 model.TaxAmount, model.IncomeAmount);
             _repository.SaveSync();
             return true;
         }
         return false;
+    }
+
+    public CreateAndEditTopYarTmpViewModel GetById(long Id)
+    {
+        var result = _repository.GetTrackingSync(Id);
+        if (result != null)
+            return new CreateAndEditTopYarTmpViewModel()
+            {
+                Id = result.Id,
+                TrackingNo = result.TrackingNo,
+                TransactionDate = result.TransactionDate,
+                TransactionTime = result.TransactionTime,
+                RetrivalRef = result.RetrivalRef,
+                Amount = result.Amount,
+                PrincipalAmount = result.PrincipalAmount,
+                CardNo = result.CardNo,
+                Terminal = result.Terminal,
+                InstallationPlace = result.InstallationPlace,
+                ServiceCode = result.ServiceCode,
+                ServiceName = result.ServiceName,
+                ProvinceName = result.ProvinceName,
+                CertainCode = result.CertainCode,
+                CodeLevel4 = result.CodeLevel4,
+                CodeLevel5 = result.CodeLevel5,
+                CodeLevel6 = result.CodeLevel6,
+                CreationDate = result.CreationDate,
+                Description = result.Description,
+                FinancialDate = result.FinancialDate,
+                Iban = result.Iban,
+                IncomeAmount = result.IncomeAmount,
+                ProvinceCode = result.ProvinceCode,
+                SubProvince = result.SubProvince,
+                TaxAmount = result.TaxAmount
+            };
+        return null;
+    }
+
+    public TopYarTmpViewModel GetTopYarTmps(int pageId = 1, int take = 50, string? filterByRRN = "", string? filterByTrackingNo = "",
+        string? filterByTransactionDate = "", string? filterByIban = "", string? filterByAmount = "", string? filterByTerminal = "",
+            string? filterByServiceCode = "", string? filterByProvinceName = "", string filterBySubProvince = "")
+    {
+        var result = _repository.GetAll(); //lazyLoad;
+
+        if (result != null)
+        {
+            if (!string.IsNullOrEmpty(filterByRRN))
+            {
+                result = result.Where(u => u.RetrivalRef.Contains(filterByRRN)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filterByTrackingNo))
+            {
+                result = result.Where(u => u.TrackingNo.Contains(filterByTrackingNo)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filterByTransactionDate))
+            {
+                result = result.Where(u => u.TransactionDate.Contains(filterByTransactionDate)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filterByIban))
+            {
+                result = result.Where(u => u.Iban.Contains(filterByRRN)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filterByAmount))
+            {
+                result = result.Where(u => u.Amount.Contains(filterByAmount) || u.PrincipalAmount.Contains(filterByAmount)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filterByTerminal))
+            {
+                result = result.Where(u => u.Terminal.Contains(filterByTerminal)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filterByServiceCode))
+            {
+                result = result.Where(u => u.ServiceCode.Contains(filterByServiceCode)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filterByProvinceName))
+            {
+                result = result.Where(u => u.ProvinceName.Contains(filterByProvinceName)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filterBySubProvince))
+            {
+                result = result.Where(u => u.SubProvince.Contains(filterBySubProvince)).ToList();
+            }
+
+            int takeData = take;
+            int skip = (pageId - 1) * takeData;
+
+            TopYarTmpViewModel list = new TopYarTmpViewModel();
+            list.TopYarTmps = result.OrderByDescending(u => u.RetrivalRef).Skip(skip).Take(takeData).ToList();
+            list.PageCount = (int)Math.Ceiling(result.Count / (double)takeData);
+            list.CurrentPage = pageId;
+            list.TopYarTmpCounts = result.Count;
+            return list;
+        }
+        return new TopYarTmpViewModel();
+    }
+
+    public bool IsTopYarTmpExist(string retrivalRefNo)
+    {
+        return _repository.Exists(u => u.RetrivalRef == retrivalRefNo);
     }
 }

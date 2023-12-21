@@ -1,0 +1,207 @@
+﻿@page
+@model PlateDelivery.Web.Pages.Leon.TopYarTmps.CreateTopYarTmpModel
+@{
+    var Title = ViewBag.Title;
+}
+
+<form method="post">
+    <input type="hidden" asp-for="CreateTopYarTmpViewModel.CertainCode" />
+    <input type="hidden" asp-for="CreateTopYarTmpViewModel.IncomeAmount" />
+    <input type="hidden" asp-for="CreateTopYarTmpViewModel.TaxAmount" />
+    <input type="hidden" asp-for="CreateTopYarTmpViewModel.CodeLevel4" />
+    <input type="hidden" asp-for="CreateTopYarTmpViewModel.CodeLevel5" />
+    <input type="hidden" asp-for="CreateTopYarTmpViewModel.CodeLevel6" />
+    <input type="hidden" asp-for="CreateTopYarTmpViewModel.ProvinceCode" />
+    <input type="hidden" asp-for="CreateTopYarTmpViewModel.Description" />
+    <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>
+                    @Title
+                </h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="row">
+                    <div class="item form-group">
+                        <label asp-for="CreateTopYarTmpViewModel.ProvinceName" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateTopYarTmpViewModel.ProvinceName" class="form-control  " style="font-size:medium" placeholder="لطفا نام استان را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateTopYarTmpViewModel.ProvinceName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateTopYarTmpViewModel.SubProvince" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateTopYarTmpViewModel.SubProvince" class="form-control  " style="font-size:medium" placeholder="لطفا نام شهر / مرکز را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateTopYarTmpViewModel.SubProvince" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateTopYarTmpViewModel.RetrivalRef" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateTopYarTmpViewModel.RetrivalRef" class="form-control" onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا شماره مرجع را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateTopYarTmpViewModel.RetrivalRef" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateTopYarTmpViewModel.TrackingNo" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateTopYarTmpViewModel.TrackingNo" class="form-control" onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا شماره پیگیری را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateTopYarTmpViewModel.TrackingNo" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateTopYarTmpViewModel.TransactionDate" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateTopYarTmpViewModel.TransactionDate" class="form-control" onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا تاریخ تراکنش را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateTopYarTmpViewModel.TransactionDate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateTopYarTmpViewModel.TransactionTime" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateTopYarTmpViewModel.TransactionTime" class="form-control  " onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا زمان تراکنش را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateTopYarTmpViewModel.TransactionTime" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateTopYarTmpViewModel.FinancialDate" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateTopYarTmpViewModel.FinancialDate" class="form-control  " onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا تاریخ مالی را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateTopYarTmpViewModel.FinancialDate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateTopYarTmpViewModel.Iban" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateTopYarTmpViewModel.Iban" class="form-control  " style="font-size:medium" placeholder="لطفا شماره شبا را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateTopYarTmpViewModel.Iban" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateTopYarTmpViewModel.Amount" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateTopYarTmpViewModel.Amount" class="form-control  " onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا مبلغ را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateTopYarTmpViewModel.Amount" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateTopYarTmpViewModel.PrincipalAmount" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateTopYarTmpViewModel.PrincipalAmount" class="form-control  " onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا مبلغ اصلی را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateTopYarTmpViewModel.PrincipalAmount" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateTopYarTmpViewModel.CardNo" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateTopYarTmpViewModel.CardNo" class="form-control  " onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا شماره کارت را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateTopYarTmpViewModel.CardNo" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateTopYarTmpViewModel.Terminal" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateTopYarTmpViewModel.Terminal" class="form-control  " onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا شماره پایانه را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateTopYarTmpViewModel.Terminal" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateTopYarTmpViewModel.InstallationPlace" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateTopYarTmpViewModel.InstallationPlace" class="form-control  " style="font-size:medium" placeholder="لطفا محل نصب را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateTopYarTmpViewModel.InstallationPlace" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateTopYarTmpViewModel.ServiceName" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateTopYarTmpViewModel.ServiceName" class="form-control  " style="font-size:medium" placeholder="لطفا نام خدمت را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateTopYarTmpViewModel.ServiceName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label asp-for="CreateTopYarTmpViewModel.ServiceCode" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateTopYarTmpViewModel.ServiceCode" class="form-control  " onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا کد خدمت را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="CreateTopYarTmpViewModel.ServiceCode" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <hr class="col-md-12" />
+                    <div class="item form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12 col-md-offset-5">
+
+                            <input type="submit" class="btn btn-success" value="ثبت" />
+                            <a asp-page="Index" class="btn btn-warning">انصراف</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts
+{
+    <script>
+        function onlyNumberKey(evt) {
+
+            // Only ASCII character in that range allowed
+            var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+                return false;
+            return true;
+        }
+    </script>
+}
