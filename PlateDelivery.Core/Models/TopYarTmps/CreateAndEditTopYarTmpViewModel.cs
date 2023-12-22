@@ -1,7 +1,14 @@
-﻿using PlateDelivery.DataLayer.Entities.TopYarTmpAgg;
+﻿using Microsoft.AspNetCore.Http;
+using PlateDelivery.DataLayer.Entities.TopYarTmpAgg;
 using System.ComponentModel.DataAnnotations;
 
 namespace PlateDelivery.Core.Models.TopYarTmps;
+
+public class ImportTopYarViewModel
+{
+    public IFormFile TopYarFile { get; set; }
+}
+
 public class TopYarTmpViewModel
 {
     public List<TopYarTmp> TopYarTmps { get; set; }
@@ -58,7 +65,6 @@ public class CreateAndEditTopYarTmpViewModel : BaseDto
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string SubProvince { get; set; }
     [Display(Name = "کد استان")]
-    [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string ProvinceCode { get; set; }
     [Display(Name = "کد معین")]
     public string CertainCode { get; set; }

@@ -365,26 +365,21 @@ namespace PlateDelivery.DataLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CertainCode")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CodeLevel4")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CodeLevel5")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CodeLevel6")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FinancialDate")
@@ -396,7 +391,6 @@ namespace PlateDelivery.DataLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IncomeAmount")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("InstallationPlace")
@@ -408,11 +402,9 @@ namespace PlateDelivery.DataLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProvinceCode")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProvinceName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RetrivalRef")
@@ -428,11 +420,9 @@ namespace PlateDelivery.DataLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SubProvince")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TaxAmount")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Terminal")

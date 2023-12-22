@@ -10,7 +10,7 @@ public class TopYarTmp : BaseEntity
         string provinceCode, string certainCode, string codeLevel4, string codeLevel5, string codeLevel6, string description,
         string taxAmount, string incomeAmount)
     {
-        Guard(retrivalRef, transactionDate, iban, principalAmount, terminal, serviceCode, provinceName, subProvince);
+        Guard(retrivalRef, transactionDate, iban, principalAmount, terminal, serviceCode);
         RetrivalRef = retrivalRef;
         TrackingNo = trackingNo;
         TransactionDate = transactionDate;
@@ -42,7 +42,7 @@ public class TopYarTmp : BaseEntity
         string provinceCode, string certainCode, string codeLevel4, string codeLevel5, string codeLevel6, string description,
         string taxAmount, string incomeAmount)
     {
-        Guard(retrivalRef, transactionDate, iban, principalAmount, terminal, serviceCode, provinceName, subProvince);
+        Guard(retrivalRef, transactionDate, iban, principalAmount, terminal, serviceCode);
         RetrivalRef = retrivalRef;
         TrackingNo = trackingNo;
         TransactionDate = transactionDate;
@@ -69,7 +69,7 @@ public class TopYarTmp : BaseEntity
     }
 
     public static void Guard(string RetrivalRef, string TransactionDate, string Iban, string PrincipalAmount, string Terminal,
-        string ServiceCode, string ProvinceName, string SubProvince)
+        string ServiceCode)
     {
         NullOrEmptyDataException.CheckString(RetrivalRef, nameof(RetrivalRef));
         NullOrEmptyDataException.CheckString(TransactionDate, nameof(TransactionDate));
@@ -77,8 +77,6 @@ public class TopYarTmp : BaseEntity
         NullOrEmptyDataException.CheckString(PrincipalAmount, nameof(PrincipalAmount));
         NullOrEmptyDataException.CheckString(Terminal, nameof(Terminal));
         NullOrEmptyDataException.CheckString(ServiceCode, nameof(ServiceCode));
-        NullOrEmptyDataException.CheckString(ProvinceName, nameof(ProvinceName));
-        NullOrEmptyDataException.CheckString(SubProvince, nameof(SubProvince));
     }
 
     public string RetrivalRef { get; private set; }
@@ -94,14 +92,14 @@ public class TopYarTmp : BaseEntity
     public string InstallationPlace { get; private set; }
     public string ServiceCode { get; private set; }
     public string ServiceName { get; private set; }
-    public string ProvinceName { get; private set; }
-    public string SubProvince { get; private set; }
-    public string ProvinceCode { get; private set; }
-    public string CertainCode { get; private set; }
-    public string CodeLevel4 { get; private set; }
-    public string CodeLevel5 { get; private set; }
-    public string CodeLevel6 { get; private set; }
-    public string Description { get; private set; }
-    public string TaxAmount { get; private set; }
-    public string IncomeAmount { get; private set; }
+    public string? ProvinceName { get; private set; }
+    public string? SubProvince { get; private set; }
+    public string? ProvinceCode { get; private set; }
+    public string? CertainCode { get; private set; }
+    public string? CodeLevel4 { get; private set; }
+    public string? CodeLevel5 { get; private set; }
+    public string? CodeLevel6 { get; private set; }
+    public string? Description { get; private set; }
+    public string? TaxAmount { get; private set; }
+    public string? IncomeAmount { get; private set; }
 }

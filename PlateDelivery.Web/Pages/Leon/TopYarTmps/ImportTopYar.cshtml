@@ -1,0 +1,40 @@
+﻿@page
+@using PlateDelivery.Core.Security
+@model PlateDelivery.Web.Pages.Leon.TopYarTmps.ImportTopYarModel
+@{
+    ViewData["Title"] = "ایمپورت فایل تاپ یار";
+}
+
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>
+                @ViewData["Title"]
+            </h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li>
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+
+
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <div class="alert alert-success rounded text-danger">
+                فایل تاپ یار را جهت ایمپورت به بانک اطلاعاتی انتخاب نمایید .
+            </div>
+
+            <form enctype="multipart/form-data" method="post">
+                <p>
+                    <input asp-for="TopYarModel.TopYarFile" type="file" name="postedFile" class="form-control" />
+                    <span asp-validation-for="TopYarModel.TopYarFile" class="text-danger"></span>
+                </p>
+
+                <input type="submit" class="btn btn-success btn-round" value="بارگزاری" />
+                <a asp-page="Index" class="btn btn-info btn-round">انصراف</a>
+            </form>
+        </div>
+    </div>
+</div>
