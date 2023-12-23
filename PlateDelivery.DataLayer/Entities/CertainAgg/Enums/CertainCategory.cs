@@ -4,10 +4,10 @@ namespace PlateDelivery.DataLayer.Entities.CertainAgg.Enums;
 
 public enum CertainCategory
 {
-    [Description("نوع 1")]
+    [Description("کد معین بانک")]
     Primary = 1,
-    [Description("نوع 2")]
+    [Description("کد معین درآمد")]
     Income = 2,
-    [Description("نوع 3")]
+    [Description("کد معین مالیات")]
     Tax = 3
 }

@@ -182,5 +182,20 @@ namespace PlateDelivery.Web.Controllers
             ViewBag.Token = true;
             return Redirect("/Login");
         }
+
+        [HttpPost]
+        public JsonResult AutoComplete(string prefix)
+        {
+            var term = (from Provinces in _context.Provinces
+                        where Provinces.ProvinceName.StartsWith(prefix)
+                        select new
+                        {
+                            label = Provinces.ProvinceName,
+                            val = Provinces.ProvinceCode,
+                            sub = Provinces.SubProvince
+                        }).ToList();
+
+            return Json(term);
+        }
     }
 }

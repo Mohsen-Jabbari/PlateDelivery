@@ -1,4 +1,5 @@
 ﻿using PlateDelivery.DataLayer.Entities.CertainAgg;
+using PlateDelivery.DataLayer.Entities.CertainAgg.Enums;
 using PlateDelivery.DataLayer.Entities.ServiceCodingAgg;
 using System.ComponentModel.DataAnnotations;
 
@@ -13,6 +14,9 @@ public class CreateAndEditServiceCodeingViewModel : BaseDto
     [Display(Name = "کد خدمت")]
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string ServiceCode { get; set; }
+    [Display(Name = "کد معین درآمد")]
+    [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
+    public CertainCategory IncomeCertainId { get; set; }
     [Display(Name = "کد تفضیل سطح 4")]
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string CodeLevel4 { get; set; }

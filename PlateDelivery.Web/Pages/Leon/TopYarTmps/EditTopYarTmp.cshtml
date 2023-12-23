@@ -31,16 +31,27 @@
             </div>
             <div class="x_content">
                 <div class="row">
-                    
+
                     <div class="item form-group">
                         <label asp-for="EditTopYarTmpViewModel.ProvinceName" class="control-label col-md-7  ">
                         </label>
                         <div class="col-md-8">
-                            <input asp-for="EditTopYarTmpViewModel.ProvinceName" class="form-control  " style="font-size:medium" placeholder="لطفا نام خدمت را وارد کنید" type="text">
-                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
-                            <span asp-validation-for="EditTopYarTmpViewModel.ProvinceName" class="text-danger"></span>
+                            <input type="text" id="txtProvince" value="@(ViewData["Province"] as string)" class="form-control" style="font-size:medium" placeholder="لطفا نام استان را وارد نمایید">
+                            <span class="fa fa-bookmark form-control-feedback left" aria-hidden="true"></span>
+                            <input type="hidden" id="hfProvinceId" asp-for="EditTopYarTmpViewModel.ProvinceCode" />
                         </div>
                     </div>
+                    <label id="PId" style="color:white">-</label>
+
+                    @* <div class="item form-group">
+                    <label asp-for="EditTopYarTmpViewModel.ProvinceName" class="control-label col-md-7  ">
+                    </label>
+                    <div class="col-md-8">
+                    <input asp-for="EditTopYarTmpViewModel.ProvinceName" class="form-control  " style="font-size:medium" placeholder="لطفا نام خدمت را وارد کنید" type="text">
+                    <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                    <span asp-validation-for="EditTopYarTmpViewModel.ProvinceName" class="text-danger"></span>
+                    </div>
+                    </div> *@
 
                     <div class="item form-group">
                         <label asp-for="EditTopYarTmpViewModel.SubProvince" class="control-label col-md-7  ">
@@ -196,3 +207,39 @@
         </div>
     </div>
 </form>
+
+@section Scripts
+{
+    <script>
+        $(function () {
+            $("#txtProvince").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/Account/AutoComplete/',
+                        data: { "prefix": request.term },
+                        type: "POST",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return item;
+                            }))
+                        },
+                        error: function (response) {
+                            alert(response.responseText);
+                        },
+                        failure: function (response) {
+                            alert(response.responseText);
+                        }
+
+                    });
+                },
+                select: function (e, i) {
+                    $("#hfProvinceId").val(i.item.val);
+                    $("#EditTopYarTmpViewModel_SubProvince").val(i.item.sub);
+                },
+                minLength: 3,
+                appendTo: '#PId',
+                position: { my: "left top", at: "left bottom" }
+            });
+        });
+    </script>
+}

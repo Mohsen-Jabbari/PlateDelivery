@@ -15,6 +15,7 @@ public class TopYarTmpViewModel
     public int TopYarTmpCounts { get; set; }
     public int CurrentPage { get; set; }
     public int PageCount { get; set; }
+    public string Message { get; set; }
 }
 
 public class CreateAndEditTopYarTmpViewModel : BaseDto

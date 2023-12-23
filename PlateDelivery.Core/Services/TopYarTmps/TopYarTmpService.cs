@@ -100,60 +100,77 @@ internal class TopYarTmpService : ITopYarTmpService
 
         if (result != null)
         {
-            if (!string.IsNullOrEmpty(filterByRRN))
+            var nullProvince = result.Where(r => r.ProvinceName == null || r.SubProvince == null).ToList();
+            if (nullProvince == null)
             {
-                result = result.Where(u => u.RetrivalRef.Contains(filterByRRN)).ToList();
-            }
+                if (!string.IsNullOrEmpty(filterByRRN))
+                {
+                    result = result.Where(u => u.RetrivalRef.Contains(filterByRRN)).ToList();
+                }
 
-            if (!string.IsNullOrEmpty(filterByTrackingNo))
+                if (!string.IsNullOrEmpty(filterByTrackingNo))
+                {
+                    result = result.Where(u => u.TrackingNo.Contains(filterByTrackingNo)).ToList();
+                }
+
+                if (!string.IsNullOrEmpty(filterByTransactionDate))
+                {
+                    result = result.Where(u => u.TransactionDate.Contains(filterByTransactionDate)).ToList();
+                }
+
+                if (!string.IsNullOrEmpty(filterByIban))
+                {
+                    result = result.Where(u => u.Iban.Contains(filterByRRN)).ToList();
+                }
+
+                if (!string.IsNullOrEmpty(filterByAmount))
+                {
+                    result = result.Where(u => u.Amount.Contains(filterByAmount) || u.PrincipalAmount.Contains(filterByAmount)).ToList();
+                }
+
+                if (!string.IsNullOrEmpty(filterByTerminal))
+                {
+                    result = result.Where(u => u.Terminal.Contains(filterByTerminal)).ToList();
+                }
+
+                if (!string.IsNullOrEmpty(filterByServiceCode))
+                {
+                    result = result.Where(u => u.ServiceCode.Contains(filterByServiceCode)).ToList();
+                }
+
+                if (!string.IsNullOrEmpty(filterByProvinceName))
+                {
+                    result = result.Where(u => u.ProvinceName.Contains(filterByProvinceName)).ToList();
+                }
+
+                if (!string.IsNullOrEmpty(filterBySubProvince))
+                {
+                    result = result.Where(u => u.SubProvince.Contains(filterBySubProvince)).ToList();
+                }
+
+                int takeData = take;
+                int skip = (pageId - 1) * takeData;
+
+                TopYarTmpViewModel list = new TopYarTmpViewModel();
+                list.TopYarTmps = result.OrderByDescending(u => u.RetrivalRef).Skip(skip).Take(takeData).ToList();
+                list.PageCount = (int)Math.Ceiling(result.Count / (double)takeData);
+                list.CurrentPage = pageId;
+                list.TopYarTmpCounts = result.Count;
+                return list;
+            }
+            else
             {
-                result = result.Where(u => u.TrackingNo.Contains(filterByTrackingNo)).ToList();
+                int takeData = take;
+                int skip = (pageId - 1) * takeData;
+
+                TopYarTmpViewModel list = new TopYarTmpViewModel();
+                list.TopYarTmps = nullProvince.OrderByDescending(u => u.RetrivalRef).Skip(skip).Take(takeData).ToList();
+                list.PageCount = (int)Math.Ceiling(nullProvince.Count / (double)takeData);
+                list.CurrentPage = pageId;
+                list.TopYarTmpCounts = nullProvince.Count;
+                list.Message = "در داده های ورودی تعداد " + nullProvince.Count.ToString() + " رکورد بدون استان و شهر وجود دارد. لطفا اصلاح نمایید. ";
+                return list;
             }
-
-            if (!string.IsNullOrEmpty(filterByTransactionDate))
-            {
-                result = result.Where(u => u.TransactionDate.Contains(filterByTransactionDate)).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(filterByIban))
-            {
-                result = result.Where(u => u.Iban.Contains(filterByRRN)).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(filterByAmount))
-            {
-                result = result.Where(u => u.Amount.Contains(filterByAmount) || u.PrincipalAmount.Contains(filterByAmount)).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(filterByTerminal))
-            {
-                result = result.Where(u => u.Terminal.Contains(filterByTerminal)).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(filterByServiceCode))
-            {
-                result = result.Where(u => u.ServiceCode.Contains(filterByServiceCode)).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(filterByProvinceName))
-            {
-                result = result.Where(u => u.ProvinceName.Contains(filterByProvinceName)).ToList();
-            }
-
-            if (!string.IsNullOrEmpty(filterBySubProvince))
-            {
-                result = result.Where(u => u.SubProvince.Contains(filterBySubProvince)).ToList();
-            }
-
-            int takeData = take;
-            int skip = (pageId - 1) * takeData;
-
-            TopYarTmpViewModel list = new TopYarTmpViewModel();
-            list.TopYarTmps = result.OrderByDescending(u => u.RetrivalRef).Skip(skip).Take(takeData).ToList();
-            list.PageCount = (int)Math.Ceiling(result.Count / (double)takeData);
-            list.CurrentPage = pageId;
-            list.TopYarTmpCounts = result.Count;
-            return list;
         }
         return new TopYarTmpViewModel();
     }

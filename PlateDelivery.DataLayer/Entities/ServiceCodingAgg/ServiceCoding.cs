@@ -1,25 +1,30 @@
 ﻿using PlateDelivery.Common.CommonClasses;
 using PlateDelivery.Common.Exceptions;
+using PlateDelivery.DataLayer.Entities.CertainAgg.Enums;
 
 namespace PlateDelivery.DataLayer.Entities.ServiceCodingAgg;
 public class ServiceCoding : BaseEntity
 {
-    public ServiceCoding(string serviceName, string serviceFullName, string serviceCode, string codeLevel4, string codeLevel6)
+    public ServiceCoding(string serviceName, string serviceFullName, string serviceCode, string codeLevel4, 
+        string codeLevel6, CertainCategory incomeCertainId)
     {
         ServiceName = serviceName;
         ServiceFullName = serviceFullName;
         ServiceCode = serviceCode;
         CodeLevel4 = codeLevel4;
         CodeLevel6 = codeLevel6;
+        IncomeCertainId = incomeCertainId;
     }
 
-    public void Edit(string serviceName, string serviceFullName, string serviceCode, string codeLevel4, string codeLevel6)
+    public void Edit(string serviceName, string serviceFullName, string serviceCode, string codeLevel4, 
+        string codeLevel6, CertainCategory incomeCertainId)
     {
         ServiceName = serviceName;
         ServiceFullName = serviceFullName;
         ServiceCode = serviceCode;
         CodeLevel4 = codeLevel4;
         CodeLevel6 = codeLevel6;
+        IncomeCertainId = incomeCertainId;
     }
 
     private ServiceCoding()
@@ -39,6 +44,7 @@ public class ServiceCoding : BaseEntity
     public string ServiceName { get; private set; }
     public string ServiceFullName { get; private set; }
     public string ServiceCode { get; private set; }
+    public CertainCategory IncomeCertainId { get; private set; }
     public string CodeLevel4 { get; private set; }
     public string CodeLevel6 { get; private set; }
 }
