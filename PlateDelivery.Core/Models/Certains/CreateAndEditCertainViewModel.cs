@@ -24,3 +24,9 @@ public class CertainsViewModel
     public int CurrentPage { get; set; }
     public int PageCount { get; set; }
 }
+
+public class CertainDropDownListModel
+{
+    public long Id { get; set; }
+    public string Text { get; set; }
+}

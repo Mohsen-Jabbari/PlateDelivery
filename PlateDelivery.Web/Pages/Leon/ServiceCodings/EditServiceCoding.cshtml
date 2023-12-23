@@ -54,6 +54,15 @@
                     </div>
 
                     <div class="item form-group">
+                        <label asp-for="EditServiceCodingViewModel.CertainId" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <select asp-for="EditServiceCodingViewModel.CertainId" asp-items="@(ViewData["Category"] as SelectList)" class="form-control col-md-7 col-xs-12" style="font-size:medium"></select>
+                            <span class="text-danger" asp-validation-for="EditServiceCodingViewModel.CertainId"></span>
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
                         <label asp-for="EditServiceCodingViewModel.CodeLevel4" class="control-label col-md-7  ">
                         </label>
                         <div class="col-md-8">

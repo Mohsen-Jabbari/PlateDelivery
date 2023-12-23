@@ -78,7 +78,7 @@ internal class ProvinceService : IProvinceService
             int skip = (pageId - 1) * takeData;
 
             ProvincesViewModel list = new ProvincesViewModel();
-            list.Provinces = result.OrderByDescending(u => u.ProvinceName).Skip(skip).Take(takeData).ToList();
+            list.Provinces = result.OrderBy(u => u.ProvinceName).Skip(skip).Take(takeData).ToList();
             list.PageCount = (int)Math.Ceiling(result.Count / (double)takeData);
             list.CurrentPage = pageId;
             list.ProvincesCounts = result.Count;

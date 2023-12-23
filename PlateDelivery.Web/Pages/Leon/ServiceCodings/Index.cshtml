@@ -1,8 +1,10 @@
 ﻿@page
 @using PlateDelivery.Core.Convertors
+@using PlateDelivery.Core.Services.Certains
 @using PlateDelivery.Core.Services.ServiceCodings
 @model PlateDelivery.Web.Pages.Leon.ServiceCodings.IndexModel
 @inject IServiceCodingService ServiceCoding
+@inject ICertainService CertainService
 @{
     var Title = ViewBag.Title;
 }
@@ -86,13 +88,13 @@
 
                                         @foreach (var item in Model.ServiceCodingsViewModel.ServiceCodings)
                                         {
-
+                                            var certain = CertainService.GetById(item.CertainId);
                                             <tr role="row" class="odd">
                                                 <td class="hidden-xs">@rowCount</td>
                                                 <td>@item.ServiceName</td>
                                                 <td>@item.ServiceFullName</td>
                                                 <td>@item.ServiceCode</td>
-                                                <td>@item.IncomeCertainId</td>
+                                                <td>@certain.CertainName - @certain.CertainCode</td>
                                                 <td>@item.CodeLevel4</td>
                                                 <td>@item.CodeLevel6</td>
                                                 <td>@item.CreationDate.ToShamsi()</td>

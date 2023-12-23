@@ -16,7 +16,7 @@ public class CreateAndEditServiceCodeingViewModel : BaseDto
     public string ServiceCode { get; set; }
     [Display(Name = "کد معین درآمد")]
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
-    public CertainCategory IncomeCertainId { get; set; }
+    public long CertainId { get; set; }
     [Display(Name = "کد تفضیل سطح 4")]
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string CodeLevel4 { get; set; }

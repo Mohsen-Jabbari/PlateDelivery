@@ -18,7 +18,7 @@ internal class ServiceCodingService : IServiceCodingService
         if (!_repository.Exists(u => u.ServiceCode == model.ServiceCode))
         {
             var serviceCoding = new ServiceCoding(model.ServiceName, model.ServiceFullName, model.ServiceCode,
-                model.CodeLevel4, model.CodeLevel6, model.IncomeCertainId);
+                model.CodeLevel4, model.CodeLevel6, model.CertainId);
             _repository.Add(serviceCoding);
             _repository.SaveSync();
             return serviceCoding.Id;
@@ -44,7 +44,7 @@ internal class ServiceCodingService : IServiceCodingService
         if (oldServiceCoding != null)
         {
             oldServiceCoding.Edit(model.ServiceName, model.ServiceFullName, model.ServiceCode,
-                model.CodeLevel4, model.CodeLevel6, model.IncomeCertainId);
+                model.CodeLevel4, model.CodeLevel6, model.CertainId);
             _repository.SaveSync();
             return true;
         }
@@ -63,7 +63,7 @@ internal class ServiceCodingService : IServiceCodingService
                 CodeLevel4 = result.CodeLevel4,
                 CodeLevel6 = result.CodeLevel6,
                 ServiceName = result.ServiceName,
-                IncomeCertainId = result.IncomeCertainId,
+                CertainId = result.CertainId,
                 CreationDate = result.CreationDate
             };
         return null;

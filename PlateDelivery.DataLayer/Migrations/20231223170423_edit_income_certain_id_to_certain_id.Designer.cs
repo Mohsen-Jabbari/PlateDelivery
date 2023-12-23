@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PlateDelivery.DataLayer.Context;
 
@@ -11,9 +12,11 @@ using PlateDelivery.DataLayer.Context;
 namespace PlateDelivery.DataLayer.Migrations
 {
     [DbContext(typeof(PlateDeliveryDBContext))]
-    partial class PlateDeliveryDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231223170423_edit_income_certain_id_to_certain_id")]
+    partial class edit_income_certain_id_to_certain_id
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

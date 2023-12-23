@@ -6,25 +6,25 @@ namespace PlateDelivery.DataLayer.Entities.ServiceCodingAgg;
 public class ServiceCoding : BaseEntity
 {
     public ServiceCoding(string serviceName, string serviceFullName, string serviceCode, string codeLevel4, 
-        string codeLevel6, CertainCategory incomeCertainId)
+        string codeLevel6, long certainId)
     {
         ServiceName = serviceName;
         ServiceFullName = serviceFullName;
         ServiceCode = serviceCode;
         CodeLevel4 = codeLevel4;
         CodeLevel6 = codeLevel6;
-        IncomeCertainId = incomeCertainId;
+        CertainId = certainId;
     }
 
     public void Edit(string serviceName, string serviceFullName, string serviceCode, string codeLevel4, 
-        string codeLevel6, CertainCategory incomeCertainId)
+        string codeLevel6, long certainId)
     {
         ServiceName = serviceName;
         ServiceFullName = serviceFullName;
         ServiceCode = serviceCode;
         CodeLevel4 = codeLevel4;
         CodeLevel6 = codeLevel6;
-        IncomeCertainId = incomeCertainId;
+        CertainId = certainId;
     }
 
     private ServiceCoding()
@@ -44,7 +44,7 @@ public class ServiceCoding : BaseEntity
     public string ServiceName { get; private set; }
     public string ServiceFullName { get; private set; }
     public string ServiceCode { get; private set; }
-    public CertainCategory IncomeCertainId { get; private set; }
+    public long CertainId { get; private set; }
     public string CodeLevel4 { get; private set; }
     public string CodeLevel6 { get; private set; }
 }
