@@ -46,19 +46,23 @@
                         </form>
                     </div>
                     <hr />
-                    @if (Model.TopYarTmpViewModel.Message != null)
+                    @if (Model.TopYarTmpViewModel.ProvinceMessage != null)
                     {
-                        <span class="alert-danger">@Model.TopYarTmpViewModel.Message</span>
-                        <br />
-                        <br />
+                        <span class="alert-danger">@Model.TopYarTmpViewModel.ProvinceMessage</span>
                     }
+                    @if (Model.TopYarTmpViewModel.IbanMessage != null)
+                    {
+                        <span class="alert-danger">@Model.TopYarTmpViewModel.IbanMessage</span>
+                    }
+                    <br />
+                    <br />
 
                     <div class="row">
                         <div class="col-sm-12">
-                            <a href="/Leon/TopYarTmps/CreateTopYarTmp" class="btn btn-success">افزودن تراکنش جدید</a>
-                            <a href="/Leon/TopYarTmps/ImportTopYar" class="btn btn-success">بارگزاری فایل</a>
+                            @* <a href="/Leon/TopYarTmps/CreateTopYarTmp" class="btn btn-success">افزودن تراکنش جدید</a> *@
                             @if (Model.TopYarTmpViewModel.TopYarTmps.Count == 0)
                             {
+                                <a href="/Leon/TopYarTmps/ImportTopYar" class="btn btn-success">بارگزاری فایل</a>
                                 <div class="alert alert-danger ">
                                     رکوردی یافت نشد
                                 </div>
@@ -66,6 +70,20 @@
 
                             else
                             {
+                                <a href="/Leon/TopYarTmps/DeteleTmp" class="btn btn-danger">حذف دیتا</a>
+                                @if (Model.TopYarTmpViewModel.IbanMessage != null)
+                                {
+                                    <a href="/Leon/TopYarTmps/DeteleUnusedIban" class="btn btn-danger">حذف رکوردهای اضافی</a>
+                                }
+                                else if (Model.TopYarTmpViewModel.ProvinceMessage != null)
+                                {
+                                    
+                                }
+                                else
+                                {
+                                    <a href="/Leon/TopYarTmps/RegisterDoc" class="btn btn-primary">تبدیل به سند</a>
+                                }
+
                                 int rowCount = 1;
                                 <table id="datatable-checkbox" class="table table-striped table-bordered bulk_action dataTable no-footer" role="grid" aria-describedby="datatable-checkbox_info">
                                     <thead>

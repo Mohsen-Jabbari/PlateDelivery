@@ -15,7 +15,8 @@ public class TopYarTmpViewModel
     public int TopYarTmpCounts { get; set; }
     public int CurrentPage { get; set; }
     public int PageCount { get; set; }
-    public string Message { get; set; }
+    public string ProvinceMessage { get; set; }
+    public string IbanMessage { get; set; }
 }
 
 public class CreateAndEditTopYarTmpViewModel : BaseDto
@@ -60,25 +61,23 @@ public class CreateAndEditTopYarTmpViewModel : BaseDto
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string ServiceName { get; set; }
     [Display(Name = "نام استان")]
-    [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
-    public string ProvinceName { get; set; }
+    public string? ProvinceName { get; set; }
     [Display(Name = "نام شهر / مرکز")]
-    [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string SubProvince { get; set; }
     [Display(Name = "کد استان")]
-    public string ProvinceCode { get; set; }
+    public string? ProvinceCode { get; set; }
     [Display(Name = "کد معین")]
-    public string CertainCode { get; set; }
+    public string? CertainCode { get; set; }
     [Display(Name = "کد تفضیل 4")]
-    public string CodeLevel4 { get; set; }
+    public string? CodeLevel4 { get; set; }
     [Display(Name = "کد تفضیل 5")]
-    public string CodeLevel5 { get; set; }
+    public string? CodeLevel5 { get; set; }
     [Display(Name = "کد تفضیل 6")]
-    public string CodeLevel6 { get; set; }
+    public string? CodeLevel6 { get; set; }
     [Display(Name = "توضیحات سند")]
-    public string Description { get; set; }
+    public string? Description { get; set; }
     [Display(Name = "مبلغ مالیات")]
-    public string TaxAmount { get; set; }
+    public string? TaxAmount { get; set; }
     [Display(Name = "مبلغ درآمد")]
-    public string IncomeAmount { get; set; }
+    public string? IncomeAmount { get; set; }
 }

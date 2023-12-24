@@ -9,8 +9,22 @@ internal class TopYarTmpRepository : BaseRepository<TopYarTmp>, ITopYarTmpReposi
     {
     }
 
+    public void DeleteAllTopYarTmp()
+    {
+        var results = Context.TopYarTmps.ToList();
+        Context.TopYarTmps.RemoveRange(results);
+        Context.SaveChanges();
+    }
+
     public void DeleteTopYarTmp(long Id)
     {
         throw new NotImplementedException();
+    }
+
+    public void DeleteUnUsedTopYarTmp(List<string> UnUsedAccount)
+    {
+        var results = Context.TopYarTmps.Where(t => UnUsedAccount.Contains(t.Iban)).ToList();
+        Context.TopYarTmps.RemoveRange(results);
+        Context.SaveChanges();
     }
 }

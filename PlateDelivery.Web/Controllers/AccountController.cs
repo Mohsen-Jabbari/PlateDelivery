@@ -190,7 +190,7 @@ namespace PlateDelivery.Web.Controllers
                         where Provinces.ProvinceName.StartsWith(prefix)
                         select new
                         {
-                            label = Provinces.ProvinceName,
+                            label = Provinces.ProvinceName + " - " + Provinces.SubProvince,
                             val = Provinces.ProvinceCode,
                             sub = Provinces.SubProvince
                         }).ToList();

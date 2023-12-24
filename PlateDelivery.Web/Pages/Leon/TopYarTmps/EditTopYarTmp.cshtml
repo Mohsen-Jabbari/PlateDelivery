@@ -36,9 +36,9 @@
                         <label asp-for="EditTopYarTmpViewModel.ProvinceName" class="control-label col-md-7  ">
                         </label>
                         <div class="col-md-8">
-                            <input type="text" id="txtProvince" value="@(ViewData["Province"] as string)" class="form-control" style="font-size:medium" placeholder="لطفا نام استان را وارد نمایید">
+                            <input asp-for="EditTopYarTmpViewModel.ProvinceName" type="text" id="txtProvince" name="txtProvince" value="@(ViewData["Province"] as string)" class="form-control" style="font-size:medium" placeholder="لطفا نام استان را وارد نمایید">
                             <span class="fa fa-bookmark form-control-feedback left" aria-hidden="true"></span>
-                            <input type="hidden" id="hfProvinceId" asp-for="EditTopYarTmpViewModel.ProvinceCode" />
+                            <input type="hidden" id="hfProvinceId" name="hfProvinceId" asp-for="EditTopYarTmpViewModel.ProvinceCode" />
                         </div>
                     </div>
                     <label id="PId" style="color:white">-</label>
@@ -57,7 +57,7 @@
                         <label asp-for="EditTopYarTmpViewModel.SubProvince" class="control-label col-md-7  ">
                         </label>
                         <div class="col-md-8">
-                            <input asp-for="EditTopYarTmpViewModel.SubProvince" class="form-control  " style="font-size:medium" placeholder="لطفا نام کامل خدمت را وارد کنید" type="text">
+                            <input asp-for="EditTopYarTmpViewModel.SubProvince" class="form-control" style="font-size:medium" placeholder="لطفا نام کامل خدمت را وارد کنید" type="text">
                             <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
                             <span asp-validation-for="EditTopYarTmpViewModel.SubProvince" class="text-danger"></span>
                         </div>
@@ -234,6 +234,7 @@
                 },
                 select: function (e, i) {
                     $("#hfProvinceId").val(i.item.val);
+                    $("#EditTopYarTmpViewModel_ProvinceCode").val(i.item.val);
                     $("#EditTopYarTmpViewModel_SubProvince").val(i.item.sub);
                 },
                 minLength: 3,

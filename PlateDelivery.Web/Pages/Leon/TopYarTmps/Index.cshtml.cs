@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using PlateDelivery.Core.Models.TopYarTmps;
+using PlateDelivery.Core.Services.Accounts;
 using PlateDelivery.Core.Services.TopYarTmps;
 
 namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
@@ -9,10 +10,12 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
     public class IndexModel : PageModel
     {
         private readonly ITopYarTmpService _topYarTmpService;
+        private readonly IAccountService _accountService;
 
-        public IndexModel(ITopYarTmpService topYarTmpService)
+        public IndexModel(ITopYarTmpService topYarTmpService, IAccountService accountService)
         {
             _topYarTmpService = topYarTmpService;
+            _accountService = accountService;
         }
 
         public TopYarTmpViewModel TopYarTmpViewModel { get; set; }
@@ -99,6 +102,16 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
             TopYarTmpViewModel = _topYarTmpService.GetTopYarTmps(pageId, take, filterByRRN, filterByTrackingNo, filterByTransactionDate,
                     filterByIban, filterByAmount, filterByTerminal, filterByServiceCode,
                        filterByProvinceName, filterBySubProvince);
+            
+            //پیدا کردن شماره شبا های نامرتبط با موسسه
+            if(TopYarTmpViewModel.ProvinceMessage == null)
+            {
+                var accounts = _accountService.GetAccounts(1, 50, "").Accounts.Select(a=>a.Iban.Replace("\r\n","")).ToList();
+                var unUsedAccount = TopYarTmpViewModel.TopYarTmps.Where(t => !accounts.Contains(t.Iban)).Select(t => t.Iban).Distinct().ToList();
+                if (unUsedAccount.Count > 0)
+                    TopYarTmpViewModel.IbanMessage = "لطفا از طریق دکمه حذف اطلاعات اضافی نسبت به حذف حساب های نامرتبط با موسسه اقدام نمایید";
+            }
+            
 
             if (pageId > 1 && pageId != TopYarTmpViewModel.PageCount)
             {

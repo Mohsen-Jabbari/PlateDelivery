@@ -25,8 +25,11 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
         }
 
 
-        public IActionResult OnPost(long id)
+        public IActionResult OnPost(long id, string txtProvince, long hfProvinceId)
         {
+            string[] subs = txtProvince.Split(" - ");
+            EditTopYarTmpViewModel.ProvinceName = subs[0];
+            EditTopYarTmpViewModel.ProvinceCode = hfProvinceId.ToString();
             if (!ModelState.IsValid)
             {
                 EditTopYarTmpViewModel = _topYarTmpService.GetById(id);

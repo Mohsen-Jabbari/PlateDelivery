@@ -41,6 +41,16 @@ internal class TopYarTmpService : ITopYarTmpService
         return false;
     }
 
+    public void DeleteTopYarTmp()
+    {
+        _repository.DeleteAllTopYarTmp();
+    }
+
+    public void DeleteUnUsedRecords(List<string> UnUsedAccounts)
+    {
+        _repository.DeleteUnUsedTopYarTmp(UnUsedAccounts);
+    }
+
     public bool EditTopyarTmp(CreateAndEditTopYarTmpViewModel model)
     {
         var oldTopYarTmp = _repository.GetTrackingSync(model.Id);
@@ -101,7 +111,7 @@ internal class TopYarTmpService : ITopYarTmpService
         if (result != null)
         {
             var nullProvince = result.Where(r => r.ProvinceName == null || r.SubProvince == null).ToList();
-            if (nullProvince == null)
+            if (nullProvince.Count == 0)
             {
                 if (!string.IsNullOrEmpty(filterByRRN))
                 {
@@ -160,6 +170,7 @@ internal class TopYarTmpService : ITopYarTmpService
             }
             else
             {
+
                 int takeData = take;
                 int skip = (pageId - 1) * takeData;
 
@@ -168,11 +179,34 @@ internal class TopYarTmpService : ITopYarTmpService
                 list.PageCount = (int)Math.Ceiling(nullProvince.Count / (double)takeData);
                 list.CurrentPage = pageId;
                 list.TopYarTmpCounts = nullProvince.Count;
-                list.Message = "در داده های ورودی تعداد " + nullProvince.Count.ToString() + " رکورد بدون استان و شهر وجود دارد. لطفا اصلاح نمایید. ";
+                list.ProvinceMessage = "در داده های ورودی تعداد " + nullProvince.Count.ToString() + " رکورد بدون استان و شهر وجود دارد. لطفا اصلاح نمایید. ";
                 return list;
             }
         }
         return new TopYarTmpViewModel();
+    }
+
+    public TopYarTmpViewModel GetTopYarTmps()
+    {
+        var result = _repository.GetAll(); //lazyLoad;
+        TopYarTmpViewModel list = new TopYarTmpViewModel();
+        list.TopYarTmps = result.OrderByDescending(u => u.RetrivalRef).ToList();
+        list.TopYarTmpCounts = result.Count;
+        return list;
+    }
+
+    public TopYarTmpViewModel GetTopYarTmps(int pageId = 1, int take = 50)
+    {
+        var result = _repository.GetAll(); //lazyLoad;
+        int takeData = take;
+        int skip = (pageId - 1) * takeData;
+
+        TopYarTmpViewModel list = new TopYarTmpViewModel();
+        list.TopYarTmps = result.OrderByDescending(u => u.RetrivalRef).Skip(skip).Take(takeData).ToList();
+        list.PageCount = (int)Math.Ceiling(result.Count / (double)takeData);
+        list.CurrentPage = pageId;
+        list.TopYarTmpCounts = result.Count;
+        return list;
     }
 
     public bool IsTopYarTmpExist(string retrivalRefNo)

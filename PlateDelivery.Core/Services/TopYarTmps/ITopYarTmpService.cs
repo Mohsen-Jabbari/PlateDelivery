@@ -7,10 +7,14 @@ public interface ITopYarTmpService
     bool EditTopyarTmp(CreateAndEditTopYarTmpViewModel model);
     bool DeleteTopYarTmp(long Id);
     bool IsTopYarTmpExist(string retrivalRefNo);
+    void DeleteTopYarTmp();
+    void DeleteUnUsedRecords(List<string> UnUsedAccounts);
 
     TopYarTmpViewModel GetTopYarTmps(int pageId = 1, int take = 50,
                   string? filterByRRN = "", string? filterByTrackingNo = "", string? filterByTransactionDate = "",
                     string? filterByIban = "", string? filterByAmount = "", string? filterByTerminal = "", string? filterByServiceCode = "",
                        string? filterByProvinceName = "", string? filterBySubProvince = "");
+    TopYarTmpViewModel GetTopYarTmps(int pageId = 1, int take = 50);
+    TopYarTmpViewModel GetTopYarTmps();
     CreateAndEditTopYarTmpViewModel GetById(long Id);
 }

@@ -90,6 +90,7 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     dt.Rows[i][23] = DateTime.Now;
+                    dt.Rows[i][14] = Convert.ToDateTime(dt.Rows[i][14].ToString()).ToLongTimeString();
                 }
 
                 //Insert the Data read from the Excel file to Database Table.
