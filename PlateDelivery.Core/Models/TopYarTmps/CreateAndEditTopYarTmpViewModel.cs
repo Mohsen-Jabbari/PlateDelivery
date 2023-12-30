@@ -17,6 +17,7 @@ public class TopYarTmpViewModel
     public int PageCount { get; set; }
     public string ProvinceMessage { get; set; }
     public string IbanMessage { get; set; }
+    public string ServiceMessage { get; set; }
 }
 
 public class CreateAndEditTopYarTmpViewModel : BaseDto

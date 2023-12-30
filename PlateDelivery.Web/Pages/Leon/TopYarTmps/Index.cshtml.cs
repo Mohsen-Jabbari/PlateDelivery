@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using PlateDelivery.Core.Models.ServiceCodings;
 using PlateDelivery.Core.Models.TopYarTmps;
 using PlateDelivery.Core.Services.Accounts;
+using PlateDelivery.Core.Services.ServiceCodings;
 using PlateDelivery.Core.Services.TopYarTmps;
 
 namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
@@ -11,14 +13,17 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
     {
         private readonly ITopYarTmpService _topYarTmpService;
         private readonly IAccountService _accountService;
+        private readonly IServiceCodingService _serviceCodingService;
 
-        public IndexModel(ITopYarTmpService topYarTmpService, IAccountService accountService)
+        public IndexModel(ITopYarTmpService topYarTmpService, IAccountService accountService, IServiceCodingService serviceCodingService)
         {
             _topYarTmpService = topYarTmpService;
             _accountService = accountService;
+            _serviceCodingService = serviceCodingService;
         }
 
         public TopYarTmpViewModel TopYarTmpViewModel { get; set; }
+        public List<CreateAndEditServiceCodeingViewModel> UnregisteredServices;
         public void OnGet(int pageId = 1, int take = 50, string? filterByRRN = "", string? filterByTrackingNo = "", string? filterByTransactionDate = "",
                     string? filterByIban = "", string? filterByAmount = "", string? filterByTerminal = "", string? filterByServiceCode = "",
                        string? filterByProvinceName = "", string? filterBySubProvince = "")
@@ -106,6 +111,23 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
             //پیدا کردن شماره شبا های نامرتبط با موسسه
             if(TopYarTmpViewModel.ProvinceMessage == null)
             {
+                var services = _serviceCodingService.GetServiceCodings(1, 300, "", "").ServiceCodings.Select(s => s.ServiceCode).ToList();
+                var UnRegisteredService = TopYarTmpViewModel.TopYarTmps.Where(s => !services.Contains(s.ServiceCode)).Select(s => new { s.ServiceCode, s.ServiceName }).Distinct().ToList();
+                if (UnRegisteredService.Count > 0)
+                {
+                    UnregisteredServices = new();
+                    foreach(var service in UnRegisteredService)
+                    {
+                        UnregisteredServices.Add(new CreateAndEditServiceCodeingViewModel()
+                        {
+                            ServiceName = service.ServiceName,
+                            ServiceCode = service.ServiceCode
+                        });
+                    }
+                    TopYarTmpViewModel.ServiceMessage = "تعداد " + UnRegisteredService.Count + " خدمت در اطلاعات ثبت شده وجود دارد. لطفا نسبت به ثبت خدمت اقدام نمایید.";
+                }
+                    
+
                 var accounts = _accountService.GetAccounts(1, 50, "").Accounts.Select(a=>a.Iban.Replace("\r\n","")).ToList();
                 var unUsedAccount = TopYarTmpViewModel.TopYarTmps.Where(t => !accounts.Contains(t.Iban)).Select(t => t.Iban).Distinct().ToList();
                 if (unUsedAccount.Count > 0)
