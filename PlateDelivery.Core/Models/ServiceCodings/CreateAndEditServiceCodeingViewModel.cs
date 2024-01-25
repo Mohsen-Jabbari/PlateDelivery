@@ -9,7 +9,7 @@ public class CreateAndEditServiceCodeingViewModel : BaseDto
     [Display(Name = "نام خدمت")]
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string ServiceName { get; set; }
-    [Display(Name = "نام کامل خذمت")]
+    [Display(Name = "نام کامل خدمت")]
     public string ServiceFullName { get; set; }
     [Display(Name = "کد خدمت")]
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
@@ -23,6 +23,10 @@ public class CreateAndEditServiceCodeingViewModel : BaseDto
     [Display(Name = "کد تفضیل سطح 6")]
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string CodeLevel6 { get; set; }
+
+    [Display(Name = "مبلغ خدمت")]
+    [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
+    public long Amount { get; set; }
 }
 
 public class ServiceCodingsViewModel

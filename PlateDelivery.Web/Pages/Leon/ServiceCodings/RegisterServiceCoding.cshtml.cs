@@ -43,9 +43,10 @@ namespace PlateDelivery.Web.Pages.Leon.ServiceCodings
                 return Page();
             }
 
-            if (_serviceCodingService.IsServiceCodingExist(CreateServiceCodeingViewModel.ServiceCode))
+            if (_serviceCodingService
+                .IsServiceCodingExist(CreateServiceCodeingViewModel.ServiceCode, CreateServiceCodeingViewModel.CodeLevel4))
             {
-                ModelState.AddModelError("CreateServiceCodeingView.ServiceCode", "این مبلغ و خدمت قبلا در سیستم ثبت شده است");
+                ModelState.AddModelError("CreateServiceCodeingViewModel.ServiceCode", "این مبلغ و خدمت قبلا در سیستم ثبت شده است");
                 ViewData["Title"] = "ایجاد کد مبلغ و خدمت";
                 var groups = _certainService.GetIncomeCertain();
                 ViewData["Category"] = new SelectList(groups, "Id", "Text");

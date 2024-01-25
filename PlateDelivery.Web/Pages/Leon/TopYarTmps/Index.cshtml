@@ -131,9 +131,10 @@
                                     <table id="datatable-checkbox" class="table table-striped table-bordered bulk_action dataTable no-footer" role="grid" aria-describedby="datatable-checkbox_info">
                                         <thead>
                                             <tr role="row">
-                                                <th class="hidden-xs">ردیف</th>
-                                                <th>کد خدمت</th>
                                                 <th>عنوان خدمت</th>
+                                                <th>کد خدمت</th>
+                                                <th>مبلغ</th>
+                                                <th>عملیات</th>
                                             </tr>
                                         </thead>
 
@@ -146,6 +147,7 @@
                                                 <tr role="row" class="odd">
                                                     <td>@item.ServiceName</td>
                                                     <td>@item.ServiceCode</td>
+                                                    <td>@item.Amount.ToString("##,# ریال")</td>
                                                     <td>
                                                         <a href="/Leon/ServiceCodings/RegisterServiceCoding/@item.ServiceCode/@item.ServiceName" class="btn btn-warning btn-xs">ثبت سرویس</a>
                                                     </td>

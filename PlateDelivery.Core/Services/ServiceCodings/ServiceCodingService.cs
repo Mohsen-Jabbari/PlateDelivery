@@ -15,10 +15,10 @@ internal class ServiceCodingService : IServiceCodingService
 
     public long CreateServiceCoding(CreateAndEditServiceCodeingViewModel model)
     {
-        if (!_repository.Exists(u => u.ServiceCode == model.ServiceCode))
+        if (!_repository.Exists(u => u.ServiceCode == model.ServiceCode && u.CodeLevel4 == model.CodeLevel4))
         {
             var serviceCoding = new ServiceCoding(model.ServiceName, model.ServiceFullName, model.ServiceCode,
-                model.CodeLevel4, model.CodeLevel6, model.CertainId);
+                model.CodeLevel4, model.CodeLevel6, model.CertainId, model.Amount.ToString());
             _repository.Add(serviceCoding);
             _repository.SaveSync();
             return serviceCoding.Id;
@@ -44,7 +44,7 @@ internal class ServiceCodingService : IServiceCodingService
         if (oldServiceCoding != null)
         {
             oldServiceCoding.Edit(model.ServiceName, model.ServiceFullName, model.ServiceCode,
-                model.CodeLevel4, model.CodeLevel6, model.CertainId);
+                model.CodeLevel4, model.CodeLevel6, model.CertainId, model.Amount.ToString());
             _repository.SaveSync();
             return true;
         }
@@ -64,7 +64,8 @@ internal class ServiceCodingService : IServiceCodingService
                 CodeLevel6 = result.CodeLevel6,
                 ServiceName = result.ServiceName,
                 CertainId = result.CertainId,
-                CreationDate = result.CreationDate
+                CreationDate = result.CreationDate,
+                Amount = long.Parse(result.Amount)
             };
         return null;
     }
@@ -98,8 +99,8 @@ internal class ServiceCodingService : IServiceCodingService
         return new ServiceCodingsViewModel();
     }
 
-    public bool IsServiceCodingExist(string ServiceCode)
+    public bool IsServiceCodingExist(string ServiceCode, string CodeLevel4)
     {
-        return _repository.Exists(u => u.ServiceCode == ServiceCode);
+        return _repository.Exists(u => u.ServiceCode == ServiceCode && u.CodeLevel4 == CodeLevel4);
     }
 }

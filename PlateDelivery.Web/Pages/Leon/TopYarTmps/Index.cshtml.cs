@@ -107,33 +107,34 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
             TopYarTmpViewModel = _topYarTmpService.GetTopYarTmps(pageId, take, filterByRRN, filterByTrackingNo, filterByTransactionDate,
                     filterByIban, filterByAmount, filterByTerminal, filterByServiceCode,
                        filterByProvinceName, filterBySubProvince);
-            
+
             //پیدا کردن شماره شبا های نامرتبط با موسسه
-            if(TopYarTmpViewModel.ProvinceMessage == null)
+            if (TopYarTmpViewModel.ProvinceMessage == null)
             {
                 var services = _serviceCodingService.GetServiceCodings(1, 300, "", "").ServiceCodings.Select(s => s.ServiceCode).ToList();
-                var UnRegisteredService = TopYarTmpViewModel.TopYarTmps.Where(s => !services.Contains(s.ServiceCode)).Select(s => new { s.ServiceCode, s.ServiceName }).Distinct().ToList();
+                var UnRegisteredService = TopYarTmpViewModel.TopYarTmps.Where(s => !services.Contains(s.ServiceCode)).Select(s => new { s.ServiceCode, s.ServiceName, s.Amount }).Distinct().ToList();
                 if (UnRegisteredService.Count > 0)
                 {
                     UnregisteredServices = new();
-                    foreach(var service in UnRegisteredService)
+                    foreach (var service in UnRegisteredService)
                     {
                         UnregisteredServices.Add(new CreateAndEditServiceCodeingViewModel()
                         {
                             ServiceName = service.ServiceName,
-                            ServiceCode = service.ServiceCode
+                            ServiceCode = service.ServiceCode,
+                            Amount = long.Parse(service.Amount)
                         });
                     }
                     TopYarTmpViewModel.ServiceMessage = "تعداد " + UnRegisteredService.Count + " خدمت در اطلاعات ثبت شده وجود دارد. لطفا نسبت به ثبت خدمت اقدام نمایید.";
                 }
-                    
 
-                var accounts = _accountService.GetAccounts(1, 50, "").Accounts.Select(a=>a.Iban.Replace("\r\n","")).ToList();
+
+                var accounts = _accountService.GetAccounts(1, 50, "").Accounts.Select(a => a.Iban.Replace("\r\n", "")).ToList();
                 var unUsedAccount = TopYarTmpViewModel.TopYarTmps.Where(t => !accounts.Contains(t.Iban)).Select(t => t.Iban).Distinct().ToList();
                 if (unUsedAccount.Count > 0)
                     TopYarTmpViewModel.IbanMessage = "لطفا از طریق دکمه حذف اطلاعات اضافی نسبت به حذف حساب های نامرتبط با موسسه اقدام نمایید";
             }
-            
+
 
             if (pageId > 1 && pageId != TopYarTmpViewModel.PageCount)
             {

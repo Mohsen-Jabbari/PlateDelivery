@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using PlateDelivery.Core.Convertors;
 using PlateDelivery.Core.Models.ServiceCodings;
 using PlateDelivery.Core.Services.Certains;
 using PlateDelivery.Core.Services.ServiceCodings;
-using PlateDelivery.DataLayer.Entities.CertainAgg.Enums;
 
 namespace PlateDelivery.Web.Pages.Leon.ServiceCodings
 {
@@ -42,9 +40,10 @@ namespace PlateDelivery.Web.Pages.Leon.ServiceCodings
                 return Page();
             }
 
-            if (_serviceCodingService.IsServiceCodingExist(CreateServiceCodeingViewModel.ServiceCode))
+            if (_serviceCodingService
+                .IsServiceCodingExist(CreateServiceCodeingViewModel.ServiceCode, CreateServiceCodeingViewModel.CodeLevel4))
             {
-                ModelState.AddModelError("CreateServiceCodeingView.ServiceCode", "این مبلغ و خدمت قبلا در سیستم ثبت شده است");
+                ModelState.AddModelError("CreateServiceCodeingViewModel.ServiceCode", "این مبلغ و خدمت قبلا در سیستم ثبت شده است");
                 ViewData["Title"] = "ایجاد کد مبلغ و خدمت";
                 var groups = _certainService.GetIncomeCertain();
                 ViewData["Category"] = new SelectList(groups, "Id", "Text");

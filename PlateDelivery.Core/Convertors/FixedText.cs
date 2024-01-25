@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -42,6 +43,11 @@ namespace PlateDelivery.Core.Convertors
         public static string StripHTML(string input)
         {
             return Regex.Replace(input, "<.*?>", String.Empty);
+        }
+
+        public static string ToRial(long Value)
+        {
+            return Value.ToString("##,# ریال");
         }
     }
 }
