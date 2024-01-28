@@ -30,7 +30,7 @@ namespace PlateDelivery.Web.Pages.Leon.Provinces
                 return Page();
             }
 
-            if (_provinceService.IsProvinceExist(CreateProvinceViewModel.ProvinceCode))
+            if (_provinceService.IsProvinceExist(CreateProvinceViewModel.ProvinceCode, CreateProvinceViewModel.CodeLevel4))
             {
                 ModelState.AddModelError("CreateProvinceViewModel.ProvinceCode", "استان با این کد قبلا در سیستم ثبت شده است");
                 return Page();

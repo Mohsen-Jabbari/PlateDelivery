@@ -158,7 +158,20 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                         .ToList();
                         List<string> incompatibleMultpelxRRN = new();
                         TopYarTmpViewModel = _topYarTmpService.GetTopYarTmps();
-
+                        List<string> serviceToRemove = new();
+                        foreach (var srvc in newService)
+                        {
+                            var srvcCode = _serviceCodingService.GetByServiceCode(srvc);
+                            if (srvcCode != null)
+                            {
+                                if (!srvcCode.First().IncludeTax)
+                                    serviceToRemove.Add(srvc);
+                            }
+                        }
+                        foreach (var srvc in serviceToRemove)
+                        {
+                            newService.Remove(srvc);
+                        }
                         //باید مبلغ هاشون رو در مرحله بعد پبدا کنیم و جمع کنیم و با مبلغ تراکنش مطابقت بدیم
                         foreach (var item in newService)
                         {

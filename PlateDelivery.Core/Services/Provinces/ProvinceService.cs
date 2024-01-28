@@ -15,7 +15,7 @@ internal class ProvinceService : IProvinceService
 
     public long CreateProvince(CreateProvinceViewModel model)
     {
-        if (!_repository.Exists(u => u.ProvinceCode == model.ProvinceCode))
+        if (!_repository.Exists(u => u.ProvinceCode == model.ProvinceCode && u.CodeLevel4 == model.CodeLevel4))
         {
             var province = new Province(model.ProvinceName, model.SubProvince,
                 model.ProvinceCode, model.CodeLevel4);
@@ -89,8 +89,8 @@ internal class ProvinceService : IProvinceService
         return new ProvincesViewModel();
     }
 
-    public bool IsProvinceExist(string ProvinceCode)
+    public bool IsProvinceExist(string ProvinceCode, string CodeLevel4)
     {
-        return _repository.Exists(u => u.ProvinceCode == ProvinceCode);
+        return _repository.Exists(u => u.ProvinceCode == ProvinceCode && u.CodeLevel4 == CodeLevel4);
     }
 }

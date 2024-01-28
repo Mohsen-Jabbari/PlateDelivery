@@ -91,7 +91,8 @@ internal class ServiceCodingService : IServiceCodingService
                     ServiceName = item.ServiceName,
                     CertainId = item.CertainId,
                     CreationDate = item.CreationDate,
-                    Amount = long.Parse(item.Amount)
+                    Amount = long.Parse(item.Amount),
+                    IncludeTax = item.IncludeTax
                 });
             }
             return poorResult;
