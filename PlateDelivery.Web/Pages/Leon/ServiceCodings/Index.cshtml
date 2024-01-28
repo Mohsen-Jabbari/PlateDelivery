@@ -2,6 +2,7 @@
 @using PlateDelivery.Core.Convertors
 @using PlateDelivery.Core.Services.Certains
 @using PlateDelivery.Core.Services.ServiceCodings
+@using PlateDelivery.DataLayer.Entities.CertainAgg.Enums
 @model PlateDelivery.Web.Pages.Leon.ServiceCodings.IndexModel
 @inject IServiceCodingService ServiceCoding
 @inject ICertainService CertainService
@@ -72,15 +73,15 @@
                                     <thead>
                                         <tr role="row">
                                             <th style="width: 60px;" class="hidden-xs">ردیف</th>
-                                            <th style="width: 138px;">نام خدمت</th>
-                                            <th style="width: 138px;">نام کامل خدمت</th>
-                                            <th style="width: 138px;">کد خدمت</th>
-                                            <th style="width: 138px;">کد معین درآمد</th>
-                                            <th style="width: 138px;">کد تفضیل سطح 4</th>
-                                            <th style="width: 138px;">کد تفضیل سطح 6</th>
-                                            <th style="width: 138px;">مبلغ</th>
-                                            <th style="width: 138px;">تاریخ ثبت</th>
-                                            <th style="width: 138px;">عملیات</th>
+                                            <th style="width: 200px;">نام خدمت</th>
+                                            @* <th style="width: 138px;">نام کامل خدمت</th> *@
+                                            <th style="width: 60px;">کد خدمت</th>
+                                            <th style="width: 158px;">کد معین</th>
+                                            <th style="width: 50px;">سطح 4</th>
+                                            <th style="width: 50px;">سطح 6</th>
+                                            <th style="width: 60px;">مبلغ</th>
+                                            <th style="width: 120px;">مالیات ارزش افزوده</th>
+                                            <th style="width: 100px;">عملیات</th>
                                         </tr>
                                     </thead>
 
@@ -93,13 +94,31 @@
                                             <tr role="row" class="odd">
                                                 <td class="hidden-xs">@rowCount</td>
                                                 <td>@item.ServiceName</td>
-                                                <td>@item.ServiceFullName</td>
+                                                @* <td>@item.ServiceFullName</td> *@
                                                 <td>@item.ServiceCode</td>
-                                                <td>@certain.CertainName - @certain.CertainCode</td>
+                                                <td>
+                                                    @if (certain.Category == CertainCategory.Tax)
+                                                    {
+                                                        <span class="alert-danger" style="font-size:medium">@certain.CertainName - @certain.CertainCode</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="alert-success" style="font-size:medium">@certain.CertainName - @certain.CertainCode</span>
+                                                    }
+                                                </td>
                                                 <td>@item.CodeLevel4</td>
                                                 <td>@item.CodeLevel6</td>
                                                 <td>@item.Amount</td>
-                                                <td>@item.CreationDate.ToShamsi()</td>
+                                                <td>
+                                                    @if (item.IncludeTax)
+                                                    {
+                                                        <span class="alert-success" style="font-size:medium">دارد</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="alert-danger" style="font-size:medium">ندارد</span>
+                                                    }
+                                                </td>
                                                 <td>
                                                     <a href="/Leon/ServiceCodings/EditServiceCoding/@item.Id" class="btn btn-warning btn-xs">ویرایش</a>
                                                     <a href="/Leon/ServiceCodings/DeleteServiceCoding/@item.Id" class="btn btn-danger btn-xs">حذف</a>

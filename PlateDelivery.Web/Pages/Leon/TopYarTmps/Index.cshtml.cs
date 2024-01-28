@@ -4,6 +4,7 @@ using PlateDelivery.Core.Models.TopYarTmps;
 using PlateDelivery.Core.Services.Accounts;
 using PlateDelivery.Core.Services.ServiceCodings;
 using PlateDelivery.Core.Services.TopYarTmps;
+using PlateDelivery.DataLayer.Entities.AccountAgg;
 
 namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
 {
@@ -111,28 +112,77 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
             //پیدا کردن شماره شبا های نامرتبط با موسسه
             if (TopYarTmpViewModel.ProvinceMessage == null)
             {
-                var services = _serviceCodingService.GetServiceCodings(1, 300, "", "").ServiceCodings.Select(s => s.ServiceCode).ToList();
-                var UnRegisteredService = TopYarTmpViewModel.TopYarTmps.Where(s => !services.Contains(s.ServiceCode)).Select(s => new { s.ServiceCode, s.ServiceName, s.Amount }).Distinct().ToList();
-                if (UnRegisteredService.Count > 0)
-                {
-                    UnregisteredServices = new();
-                    foreach (var service in UnRegisteredService)
-                    {
-                        UnregisteredServices.Add(new CreateAndEditServiceCodeingViewModel()
-                        {
-                            ServiceName = service.ServiceName,
-                            ServiceCode = service.ServiceCode,
-                            Amount = long.Parse(service.Amount)
-                        });
-                    }
-                    TopYarTmpViewModel.ServiceMessage = "تعداد " + UnRegisteredService.Count + " خدمت در اطلاعات ثبت شده وجود دارد. لطفا نسبت به ثبت خدمت اقدام نمایید.";
-                }
-
+                #region بررسی شماره حساب های نامرتبط
 
                 var accounts = _accountService.GetAccounts(1, 50, "").Accounts.Select(a => a.Iban.Replace("\r\n", "")).ToList();
                 var unUsedAccount = TopYarTmpViewModel.TopYarTmps.Where(t => !accounts.Contains(t.Iban)).Select(t => t.Iban).Distinct().ToList();
                 if (unUsedAccount.Count > 0)
                     TopYarTmpViewModel.IbanMessage = "لطفا از طریق دکمه حذف اطلاعات اضافی نسبت به حذف حساب های نامرتبط با موسسه اقدام نمایید";
+
+
+                #endregion
+
+                if(TopYarTmpViewModel.IbanMessage == null)
+                {
+                    #region بررسی سرویس هایی که در تاپ یار هست ولی در سامانه ثبت نشده
+
+                    var services = _serviceCodingService.GetServiceCodings(1, 300, "", "").ServiceCodings.Select(s => s.ServiceCode).Distinct().ToList();
+                    TopYarTmpViewModel = _topYarTmpService.GetTopYarTmps();
+                    var UnRegisteredService = TopYarTmpViewModel.TopYarTmps.Where(s => !services.Contains(s.ServiceCode)).Select(s => new { s.ServiceCode, s.ServiceName, s.Amount }).Distinct().ToList();
+                    if (UnRegisteredService.Count > 0)
+                    {
+                        UnregisteredServices = new();
+                        foreach (var service in UnRegisteredService)
+                        {
+                            UnregisteredServices.Add(new CreateAndEditServiceCodeingViewModel()
+                            {
+                                ServiceName = service.ServiceName,
+                                ServiceCode = service.ServiceCode,
+                                Amount = long.Parse(service.Amount)
+                            });
+                        }
+                        TopYarTmpViewModel.ServiceMessage = "تعداد " + UnRegisteredService.Count + " خدمت در اطلاعات ثبت شده وجود دارد. لطفا نسبت به ثبت خدمت اقدام نمایید.";
+                    }
+
+                    #endregion
+
+
+
+                    #region قطعه کد زیر لیست خدماتی که تسهیم دارند رو نشون میده
+
+                    if (TopYarTmpViewModel.ServiceMessage == null)
+                    {
+                        var newService = _serviceCodingService.GetServiceCodings(1, 300, "", "").ServiceCodings.GroupBy(s => s.ServiceCode)
+                        .Where(group => group.Count() > 1)
+                        .Select(group => group.Key)
+                        .ToList();
+                        List<string> incompatibleMultpelxRRN = new();
+                        TopYarTmpViewModel = _topYarTmpService.GetTopYarTmps();
+
+                        //باید مبلغ هاشون رو در مرحله بعد پبدا کنیم و جمع کنیم و با مبلغ تراکنش مطابقت بدیم
+                        foreach (var item in newService)
+                        {
+                            var multiplexRecords = TopYarTmpViewModel.TopYarTmps.Where(s => s.ServiceCode == item).Select(s => new { s.RetrivalRef, s.ServiceCode, s.ServiceName, s.Amount }).ToList();
+                            var ServiceCode = _serviceCodingService.GetByServiceCode(item);
+                            foreach (var record in multiplexRecords)
+                            {
+                                long recordAmount = long.Parse(record.Amount);
+                                recordAmount = (recordAmount * 100) / 109;
+                                var serviceAmount = ServiceCode.Select(s => s.Amount).Sum();
+                                if (recordAmount != serviceAmount)
+                                    incompatibleMultpelxRRN.Add(record.RetrivalRef);
+                            }
+                        }
+                        if (incompatibleMultpelxRRN.Count > 0)
+                        {
+                            TopYarTmpViewModel = _topYarTmpService.GetTopYarTmps(incompatibleMultpelxRRN);
+                            TopYarTmpViewModel.MultiplexMessage = "تعداد " + TopYarTmpViewModel.TopYarTmps.Count + " رکورد از تراکنش های تسهیمی دارای مبلغ مغایر با اطلاعات ثبت شده در سامانه دارد";
+                        }
+                    }
+
+                    #endregion
+                }
+
             }
 
 

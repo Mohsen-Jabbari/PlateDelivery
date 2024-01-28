@@ -10,4 +10,5 @@ public interface IServiceCodingService
 
     ServiceCodingsViewModel GetServiceCodings(int pageId = 1, int take = 50, string filterByServiceName = "", string filterByServiceCode = "");
     CreateAndEditServiceCodeingViewModel GetById(long Id);
+    List<CreateAndEditServiceCodeingViewModel> GetByServiceCode(string ServiceCode);
 }

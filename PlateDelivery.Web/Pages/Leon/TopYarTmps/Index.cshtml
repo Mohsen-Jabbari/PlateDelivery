@@ -26,35 +26,44 @@
 
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div id="datatable-checkbox_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-                    <div class="row">
-                        <form>
-                            <div class="col-sm-12 col-lg-12 col-md-12 col-xs-12">
-                                <input type="text" name="filterByRRN" style="margin-top:5px" class="form-control" value="@ViewData["filterRRN"]" placeholder="جستجو بر اساس شماره مرجع" />
-                                <input type="text" name="filterByTrackingNo" style="margin-top:5px" class="form-control" value="@ViewData["filterTrackingNo"]" placeholder="جستجو بر اساس شماره پیگیری" />
-                                <input type="text" name="filterByTransactionDate" style="margin-top:5px" class="form-control" value="@ViewData["filterTransactionDate"]" placeholder="جستجو بر اساس تاریخ تراکنش" />
-                                <input type="text" name="filterByIban" style="margin-top:5px" class="form-control" value="@ViewData["filterIban"]" placeholder="جستجو بر اساس شماره شبا" />
-                                <input type="text" name="filterByAmount" style="margin-top:5px" class="form-control" value="@ViewData["filterAmount"]" placeholder="جستجو بر اساس مبلغ" />
-                                <input type="text" name="filterByTerminal" style="margin-top:5px" class="form-control" value="@ViewData["filterTerminal"]" placeholder="جستجو بر اساس شماره پایانه" />
-                                <input type="text" name="filterByServiceCode" style="margin-top:5px" class="form-control" value="@ViewData["filterServiceCode"]" placeholder="جستجو بر اساس کد خدمت" />
-                                <input type="text" name="filterByProvinceName" style="margin-top:5px" class="form-control" value="@ViewData["filterProvinceName"]" placeholder="جستجو بر اساس نام خدمت" />
-                                <input type="text" name="filterBySubProvince" style="margin-top:5px" class="form-control" value="@ViewData["filterSubProvince"]" placeholder="جستجو بر اساس شهر / مرکز" />
-                                <br />
-                                <br />                                <input type="submit" value="فیلتر کن" class="btn btn-success btn-round" />
-                                <a href="/Leon/TopYarTmps" class="btn btn-default btn-round">حذف فیلتر</a>
-                            </div>
+                    @if (Model.TopYarTmpViewModel.IbanMessage == null
+                    && Model.TopYarTmpViewModel.ServiceMessage == null
+                    && Model.TopYarTmpViewModel.MultiplexMessage == null)
+                    {
+                        <div class="row">
+                            <form>
+                                <div class="col-sm-12 col-lg-12 col-md-12 col-xs-12">
+                                    <input type="text" name="filterByRRN" style="margin-top:5px" class="form-control" value="@ViewData["filterRRN"]" placeholder="جستجو بر اساس شماره مرجع" />
+                                    <input type="text" name="filterByTrackingNo" style="margin-top:5px" class="form-control" value="@ViewData["filterTrackingNo"]" placeholder="جستجو بر اساس شماره پیگیری" />
+                                    <input type="text" name="filterByTransactionDate" style="margin-top:5px" class="form-control" value="@ViewData["filterTransactionDate"]" placeholder="جستجو بر اساس تاریخ تراکنش" />
+                                    <input type="text" name="filterByIban" style="margin-top:5px" class="form-control" value="@ViewData["filterIban"]" placeholder="جستجو بر اساس شماره شبا" />
+                                    <input type="text" name="filterByAmount" style="margin-top:5px" class="form-control" value="@ViewData["filterAmount"]" placeholder="جستجو بر اساس مبلغ" />
+                                    <input type="text" name="filterByTerminal" style="margin-top:5px" class="form-control" value="@ViewData["filterTerminal"]" placeholder="جستجو بر اساس شماره پایانه" />
+                                    <input type="text" name="filterByServiceCode" style="margin-top:5px" class="form-control" value="@ViewData["filterServiceCode"]" placeholder="جستجو بر اساس کد خدمت" />
+                                    <input type="text" name="filterByProvinceName" style="margin-top:5px" class="form-control" value="@ViewData["filterProvinceName"]" placeholder="جستجو بر اساس نام خدمت" />
+                                    <input type="text" name="filterBySubProvince" style="margin-top:5px" class="form-control" value="@ViewData["filterSubProvince"]" placeholder="جستجو بر اساس شهر / مرکز" />
+                                    <br />
+                                    <br />                                <input type="submit" value="فیلتر کن" class="btn btn-success btn-round" />
+                                    <a href="/Leon/TopYarTmps" class="btn btn-default btn-round">حذف فیلتر</a>
+                                </div>
 
-                        </form>
-                    </div>
+                            </form>
+                        </div>
+                    }
                     <hr />
                     @if (Model.TopYarTmpViewModel.ProvinceMessage != null)
                     {
                         <span class="alert-danger">@Model.TopYarTmpViewModel.ProvinceMessage</span>
                     }
-                    @if (Model.TopYarTmpViewModel.IbanMessage != null || Model.TopYarTmpViewModel.ServiceMessage != null)
+                    @if (Model.TopYarTmpViewModel.IbanMessage != null
+                    || Model.TopYarTmpViewModel.ServiceMessage != null
+                    || Model.TopYarTmpViewModel.MultiplexMessage != null)
                     {
                         <span class="alert-danger">@Model.TopYarTmpViewModel.IbanMessage</span>
                         <br />
                         <span class="alert-danger">@Model.TopYarTmpViewModel.ServiceMessage</span>
+                        <br />
+                        <span class="alert-danger">@Model.TopYarTmpViewModel.MultiplexMessage</span>
                     }
                     <br />
                     <br />
@@ -149,7 +158,7 @@
                                                     <td>@item.ServiceCode</td>
                                                     <td>@item.Amount.ToString("##,# ریال")</td>
                                                     <td>
-                                                        <a href="/Leon/ServiceCodings/RegisterServiceCoding/@item.ServiceCode/@item.ServiceName" class="btn btn-warning btn-xs">ثبت سرویس</a>
+                                                        <a href="/Leon/ServiceCodings/RegisterServiceCoding/@item.ServiceCode/@item.ServiceName/@item.Amount" class="btn btn-warning btn-xs">ثبت سرویس</a>
                                                     </td>
                                                 </tr>
                                                 rowCount++;
@@ -264,52 +273,57 @@
 
                         </div>
                     </div>
-                    <div class="row">
+                    @if (Model.TopYarTmpViewModel.IbanMessage == null
+                    && Model.TopYarTmpViewModel.ServiceMessage == null
+                    && Model.TopYarTmpViewModel.MultiplexMessage == null)
+                    {
+                        <div class="row">
 
-                        <div class="col-sm-5">
-                            <div class="dataTables_info" id="datatable-checkbox_info" role="status" aria-live="polite">نمایش @ViewData["PageID"] تا @ViewData["Take"] از @Model.TopYarTmpViewModel.TopYarTmpCounts رکورد</div>
-                        </div>
-                        <div class="col-sm-7">
+                            <div class="col-sm-5">
+                                <div class="dataTables_info" id="datatable-checkbox_info" role="status" aria-live="polite">نمایش @ViewData["PageID"] تا @ViewData["Take"] از @Model.TopYarTmpViewModel.TopYarTmpCounts رکورد</div>
+                            </div>
+                            <div class="col-sm-7">
 
-                            <div class="btn-group">
-                                @if (Model.TopYarTmpViewModel.CurrentPage > 1)
-                                {
-
-                                    <a class="btn btn-default" href="/Leon/TopYarTmps?pageId=@(Model.TopYarTmpViewModel.CurrentPage-1)">قبلی</a>
-
-                                    <a class="btn btn-default" href="/Leon/TopYarTmps?pageId=1">اولین صفحه</a>
-
-
-                                }
-
-                                @if (Model.TopYarTmpViewModel.CurrentPage + 4 <= Model.TopYarTmpViewModel.PageCount)
-                                {
-                                    @for (int i = Model.TopYarTmpViewModel.CurrentPage; i <= Model.TopYarTmpViewModel.CurrentPage + 4; i++)
+                                <div class="btn-group">
+                                    @if (Model.TopYarTmpViewModel.CurrentPage > 1)
                                     {
 
-                                        <a href="/Leon/TopYarTmps?pageId=@i&frrn=@ViewData["filterRRN"]&ftn=@ViewData["filterTrackingNo"]&ftd=@ViewData["filterTransactionDate"]&fiban=@ViewData["filterIban"]&famnt=@ViewData["filterAmount"]&ftrmnl=@ViewData["filterTerminal"]&fsc=@ViewData["filterServiceCode"]&fpn=@ViewData["filterProvinceName"]&fsp=@ViewData["filterSubProvince"]" class="btn btn-default @((i==Model.TopYarTmpViewModel.CurrentPage)? "btn btn-info" : "")">@i</a>
+                                        <a class="btn btn-default" href="/Leon/TopYarTmps?pageId=@(Model.TopYarTmpViewModel.CurrentPage-1)">قبلی</a>
+
+                                        <a class="btn btn-default" href="/Leon/TopYarTmps?pageId=1">اولین صفحه</a>
+
 
                                     }
-                                }
-                                else
-                                {
-                                    for (int i = Model.TopYarTmpViewModel.CurrentPage; i <= Model.TopYarTmpViewModel.PageCount; i++)
+
+                                    @if (Model.TopYarTmpViewModel.CurrentPage + 4 <= Model.TopYarTmpViewModel.PageCount)
                                     {
-                                        <a href="/Leon/TopYarTmps?pageId=@i&&frrn=@ViewData["filterRRN"]&ftn=@ViewData["filterTrackingNo"]&ftd=@ViewData["filterTransactionDate"]&fiban=@ViewData["filterIban"]&famnt=@ViewData["filterAmount"]&ftrmnl=@ViewData["filterTerminal"]&fsc=@ViewData["filterServiceCode"]&fpn=@ViewData["filterProvinceName"]&fsp=@ViewData["filterSubProvince"]" class="btn btn-default @((i==Model.TopYarTmpViewModel.CurrentPage)? "btn btn-info" : "")">@i</a>
+                                        @for (int i = Model.TopYarTmpViewModel.CurrentPage; i <= Model.TopYarTmpViewModel.CurrentPage + 4; i++)
+                                        {
+
+                                            <a href="/Leon/TopYarTmps?pageId=@i&frrn=@ViewData["filterRRN"]&ftn=@ViewData["filterTrackingNo"]&ftd=@ViewData["filterTransactionDate"]&fiban=@ViewData["filterIban"]&famnt=@ViewData["filterAmount"]&ftrmnl=@ViewData["filterTerminal"]&fsc=@ViewData["filterServiceCode"]&fpn=@ViewData["filterProvinceName"]&fsp=@ViewData["filterSubProvince"]" class="btn btn-default @((i==Model.TopYarTmpViewModel.CurrentPage)? "btn btn-info" : "")">@i</a>
+
+                                        }
                                     }
-                                }
+                                    else
+                                    {
+                                        for (int i = Model.TopYarTmpViewModel.CurrentPage; i <= Model.TopYarTmpViewModel.PageCount; i++)
+                                        {
+                                            <a href="/Leon/TopYarTmps?pageId=@i&&frrn=@ViewData["filterRRN"]&ftn=@ViewData["filterTrackingNo"]&ftd=@ViewData["filterTransactionDate"]&fiban=@ViewData["filterIban"]&famnt=@ViewData["filterAmount"]&ftrmnl=@ViewData["filterTerminal"]&fsc=@ViewData["filterServiceCode"]&fpn=@ViewData["filterProvinceName"]&fsp=@ViewData["filterSubProvince"]" class="btn btn-default @((i==Model.TopYarTmpViewModel.CurrentPage)? "btn btn-info" : "")">@i</a>
+                                        }
+                                    }
 
 
-                                @if (Model.TopYarTmpViewModel.CurrentPage < Model.TopYarTmpViewModel.PageCount)
-                                {
+                                    @if (Model.TopYarTmpViewModel.CurrentPage < Model.TopYarTmpViewModel.PageCount)
+                                    {
 
-                                    <a class="btn btn-default" href="/Leon/TopYarTmps?pageId=@(Model.TopYarTmpViewModel.CurrentPage + 1)">بعدی</a>
-                                    <a class="btn btn-default" href="/Leon/TopYarTmps?pageId=@(Model.TopYarTmpViewModel.PageCount)">اخرین صفحه</a>
+                                        <a class="btn btn-default" href="/Leon/TopYarTmps?pageId=@(Model.TopYarTmpViewModel.CurrentPage + 1)">بعدی</a>
+                                        <a class="btn btn-default" href="/Leon/TopYarTmps?pageId=@(Model.TopYarTmpViewModel.PageCount)">اخرین صفحه</a>
 
-                                }
+                                    }
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>

@@ -14,10 +14,6 @@ internal class ServiceCodingConfiguration : IEntityTypeConfiguration<ServiceCodi
 
         builder.HasIndex(b => b.ServiceCode);
 
-        builder.HasIndex(b => b.CodeLevel4);
-
-        builder.HasIndex(b => b.CodeLevel6);
-
         builder.Property(b => b.ServiceName)
             .IsRequired();
 
@@ -25,12 +21,6 @@ internal class ServiceCodingConfiguration : IEntityTypeConfiguration<ServiceCodi
             .IsRequired();
 
         builder.Property(b => b.ServiceCode)
-            .IsRequired();
-
-        builder.Property(b => b.CodeLevel4)
-            .IsRequired();
-
-        builder.Property(b => b.CodeLevel6)
             .IsRequired();
     }
 }

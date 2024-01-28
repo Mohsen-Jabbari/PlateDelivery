@@ -18,15 +18,16 @@ public class CreateAndEditServiceCodeingViewModel : BaseDto
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public long CertainId { get; set; }
     [Display(Name = "کد تفضیل سطح 4")]
-    [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
-    public string CodeLevel4 { get; set; }
+    public string? CodeLevel4 { get; set; }
     [Display(Name = "کد تفضیل سطح 6")]
-    [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
-    public string CodeLevel6 { get; set; }
+    public string? CodeLevel6 { get; set; }
 
     [Display(Name = "مبلغ خدمت")]
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public long Amount { get; set; }
+
+    [Display(Name = "مالیات ارزش افزوده")]
+    public bool IncludeTax { get; set; }
 }
 
 public class ServiceCodingsViewModel

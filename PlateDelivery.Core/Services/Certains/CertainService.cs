@@ -95,7 +95,7 @@ internal class CertainService : ICertainService
         List<CertainDropDownListModel> result = new();
         foreach (var certain in Certains)
         {
-            if (certain.Category == CertainCategory.Income)
+            if (certain.Category == CertainCategory.Income || certain.Category == CertainCategory.Tax)
                 result.Add(new CertainDropDownListModel()
                 {
                     Id = certain.Id,

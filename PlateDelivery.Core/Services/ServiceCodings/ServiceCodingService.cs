@@ -1,6 +1,7 @@
 ﻿using PlateDelivery.Core.Models.ServiceCodings;
 using PlateDelivery.DataLayer.Entities.ServiceCodingAgg;
 using PlateDelivery.DataLayer.Entities.ServiceCodingAgg.Repository;
+using System.Linq;
 
 namespace PlateDelivery.Core.Services.ServiceCodings;
 
@@ -18,7 +19,7 @@ internal class ServiceCodingService : IServiceCodingService
         if (!_repository.Exists(u => u.ServiceCode == model.ServiceCode && u.CodeLevel4 == model.CodeLevel4))
         {
             var serviceCoding = new ServiceCoding(model.ServiceName, model.ServiceFullName, model.ServiceCode,
-                model.CodeLevel4, model.CodeLevel6, model.CertainId, model.Amount.ToString());
+                model.CodeLevel4, model.CodeLevel6, model.CertainId, model.Amount.ToString(), model.IncludeTax);
             _repository.Add(serviceCoding);
             _repository.SaveSync();
             return serviceCoding.Id;
@@ -44,7 +45,7 @@ internal class ServiceCodingService : IServiceCodingService
         if (oldServiceCoding != null)
         {
             oldServiceCoding.Edit(model.ServiceName, model.ServiceFullName, model.ServiceCode,
-                model.CodeLevel4, model.CodeLevel6, model.CertainId, model.Amount.ToString());
+                model.CodeLevel4, model.CodeLevel6, model.CertainId, model.Amount.ToString(), model.IncludeTax);
             _repository.SaveSync();
             return true;
         }
@@ -65,8 +66,36 @@ internal class ServiceCodingService : IServiceCodingService
                 ServiceName = result.ServiceName,
                 CertainId = result.CertainId,
                 CreationDate = result.CreationDate,
-                Amount = long.Parse(result.Amount)
+                Amount = long.Parse(result.Amount),
+                IncludeTax = result.IncludeTax
             };
+        return null;
+    }
+
+    public List<CreateAndEditServiceCodeingViewModel> GetByServiceCode(string ServiceCode)
+    {
+        var lazyResult = _repository.GetAll();
+        var result = lazyResult.Where(r => r.ServiceCode == ServiceCode).ToList();
+        List<CreateAndEditServiceCodeingViewModel> poorResult = new();
+        if (result != null)
+        {
+            foreach (var item in result)
+            {
+                poorResult.Add(new CreateAndEditServiceCodeingViewModel()
+                {
+                    Id = item.Id,
+                    ServiceCode = item.ServiceCode,
+                    ServiceFullName = item.ServiceFullName,
+                    CodeLevel4 = item.CodeLevel4,
+                    CodeLevel6 = item.CodeLevel6,
+                    ServiceName = item.ServiceName,
+                    CertainId = item.CertainId,
+                    CreationDate = item.CreationDate,
+                    Amount = long.Parse(item.Amount)
+                });
+            }
+            return poorResult;
+        }
         return null;
     }
 

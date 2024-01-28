@@ -17,7 +17,8 @@ internal class ProvinceService : IProvinceService
     {
         if (!_repository.Exists(u => u.ProvinceCode == model.ProvinceCode))
         {
-            var province = new Province(model.ProvinceName, model.SubProvince, model.ProvinceCode);
+            var province = new Province(model.ProvinceName, model.SubProvince,
+                model.ProvinceCode, model.CodeLevel4);
             _repository.Add(province);
             _repository.SaveSync();
             return province.Id;
@@ -42,7 +43,8 @@ internal class ProvinceService : IProvinceService
         var oldProvince = _repository.GetTrackingSync(model.Id);
         if (oldProvince != null)
         {
-            oldProvince.Edit(model.ProvinceName, model.SubProvince, model.ProvinceCode);
+            oldProvince.Edit(model.ProvinceName, model.SubProvince, model.ProvinceCode
+                , model.CodeLevel4);
             _repository.SaveSync();
             return true;
         }

@@ -50,6 +50,14 @@
                             <span asp-validation-for="CreateProvinceViewModel.ProvinceCode" class="text-danger"></span>
                         </div>
                     </div>
+                    <div class="item form-group">
+                        <label asp-for="CreateProvinceViewModel.CodeLevel4" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="CreateProvinceViewModel.CodeLevel4" class="form-control" style="font-size:medium" onkeypress="return onlyNumberKey(event)" placeholder="لطفا کد استان یا مرکز را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                        </div>
+                    </div>
                     <hr class="col-md-12" />
                     <div class="item form-group">
                         <div class="col-md-12 col-sm-12 col-xs-12 col-md-offset-5">

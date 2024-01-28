@@ -190,6 +190,9 @@ namespace PlateDelivery.DataLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<string>("CodeLevel4")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
@@ -315,15 +318,16 @@ namespace PlateDelivery.DataLayer.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("CodeLevel4")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CodeLevel6")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IncludeTax")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ServiceCode")
                         .IsRequired()
@@ -338,10 +342,6 @@ namespace PlateDelivery.DataLayer.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CodeLevel4");
-
-                    b.HasIndex("CodeLevel6");
 
                     b.HasIndex("Id")
                         .IsUnique();

@@ -6,7 +6,7 @@ namespace PlateDelivery.DataLayer.Entities.ServiceCodingAgg;
 public class ServiceCoding : BaseEntity
 {
     public ServiceCoding(string serviceName, string serviceFullName, string serviceCode, string codeLevel4,
-        string codeLevel6, long certainId, string amount)
+        string codeLevel6, long certainId, string amount, bool includeTax)
     {
         ServiceName = serviceName;
         ServiceFullName = serviceFullName;
@@ -15,10 +15,11 @@ public class ServiceCoding : BaseEntity
         CodeLevel6 = codeLevel6;
         CertainId = certainId;
         Amount = amount;
+        IncludeTax = includeTax;
     }
 
     public void Edit(string serviceName, string serviceFullName, string serviceCode, string codeLevel4, 
-        string codeLevel6, long certainId, string amount)
+        string codeLevel6, long certainId, string amount, bool includeTax)
     {
         ServiceName = serviceName;
         ServiceFullName = serviceFullName;
@@ -27,6 +28,7 @@ public class ServiceCoding : BaseEntity
         CodeLevel6 = codeLevel6;
         CertainId = certainId;
         Amount = amount;
+        IncludeTax = includeTax;
     }
 
     private ServiceCoding()
@@ -35,13 +37,11 @@ public class ServiceCoding : BaseEntity
     }
 
     public static void Guard(string ServiceName, string ServiceFullName, string ServiceCode, 
-        string CodeLevel4, string CodeLevel6, string Amount)
+        string Amount)
     {
         NullOrEmptyDataException.CheckString(ServiceName, nameof(ServiceName));
         NullOrEmptyDataException.CheckString(ServiceFullName, nameof(ServiceFullName));
         NullOrEmptyDataException.CheckString(ServiceCode, nameof(ServiceCode));
-        NullOrEmptyDataException.CheckString(CodeLevel4, nameof(CodeLevel4));
-        NullOrEmptyDataException.CheckString(CodeLevel6, nameof(CodeLevel6));
         NullOrEmptyDataException.CheckString(Amount, nameof(Amount));
     }
 
@@ -49,7 +49,8 @@ public class ServiceCoding : BaseEntity
     public string ServiceFullName { get; private set; }
     public string ServiceCode { get; private set; }
     public long CertainId { get; private set; }
-    public string CodeLevel4 { get; private set; }
-    public string CodeLevel6 { get; private set; }
+    public string? CodeLevel4 { get; private set; }
+    public string? CodeLevel6 { get; private set; }
     public string Amount { get; private set; }
+    public bool IncludeTax { get; private set; }
 }

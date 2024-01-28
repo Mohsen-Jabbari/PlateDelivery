@@ -1,4 +1,5 @@
-﻿using PlateDelivery.Core.Models.TopYarTmps;
+﻿using Azure;
+using PlateDelivery.Core.Models.TopYarTmps;
 using PlateDelivery.DataLayer.Entities.TopYarTmpAgg;
 using PlateDelivery.DataLayer.Entities.TopYarTmpAgg.Repository;
 
@@ -205,6 +206,16 @@ internal class TopYarTmpService : ITopYarTmpService
         list.TopYarTmps = result.OrderByDescending(u => u.RetrivalRef).Skip(skip).Take(takeData).ToList();
         list.PageCount = (int)Math.Ceiling(result.Count / (double)takeData);
         list.CurrentPage = pageId;
+        list.TopYarTmpCounts = result.Count;
+        return list;
+    }
+
+    public TopYarTmpViewModel GetTopYarTmps(List<string> rrn)
+    {
+        var result = _repository.GetAll(); //lazyLoad;
+        TopYarTmpViewModel list = new TopYarTmpViewModel();
+        list.TopYarTmps = result.OrderByDescending(u => u.RetrivalRef)
+                    .Where(u => rrn.Contains(u.RetrivalRef)).ToList();
         list.TopYarTmpCounts = result.Count;
         return list;
     }

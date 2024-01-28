@@ -55,7 +55,7 @@ public class User : BaseEntity
     public void AddToken(string hashJwtToken, string hashRefreshToken, DateTime tokenExpireDate, DateTime refreshTokenExpireDate, string device)
     {
         var activeTokenCount = Tokens.Count(c => c.RefreshTokenExpireDate > DateTime.Now);
-        if (activeTokenCount == 3)
+        if (activeTokenCount == 10)
             throw new InvalidDataException("امکان استفاده از 4 سیستم همزمان وجود ندارد");
         var token = new UserToken(hashJwtToken, hashRefreshToken, tokenExpireDate, refreshTokenExpireDate, device)
         {

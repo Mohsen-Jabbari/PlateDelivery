@@ -23,6 +23,8 @@ public class CreateProvinceViewModel : BaseDto
     [Display(Name = "کد استان یا مرکز")]
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string ProvinceCode { get; set; }
+    [Display(Name = "کد سطح 4")]
+    public string? CodeLevel4 { get; set; }
 }
 
 public class EditProvinceViewModel : BaseDto
@@ -36,4 +38,6 @@ public class EditProvinceViewModel : BaseDto
     [Display(Name = "کد استان یا مرکز")]
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string ProvinceCode { get; set; }
+    [Display(Name = "کد سطح 4")]
+    public string? CodeLevel4 { get; set; }
 }
