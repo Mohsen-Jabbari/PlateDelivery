@@ -78,7 +78,7 @@ namespace PlateDelivery.Web.Pages.Leon.ServiceCodings
 
             CreateServiceCodeingViewModel.CertainId = category;
             long id = _serviceCodingService.CreateServiceCoding(CreateServiceCodeingViewModel);
-            return RedirectToPage("./Index", new { page = "TopYarTmps" });
+            return RedirectToPage("/Leon/TopYarTmps/Index");
         }
     }
 }

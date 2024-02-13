@@ -196,6 +196,19 @@ internal class TopYarTmpService : ITopYarTmpService
         return list;
     }
 
+    public TopYarTmpViewModel GetTopYarTmpsForDocument()
+    {
+        var result = _repository.GetAll(); //lazyLoad;
+        TopYarTmpViewModel list = new()
+        {
+            TopYarTmps = result.OrderByDescending(u => u.ProvinceCode)
+                                            .ThenBy(u => u.Terminal)
+                                                .ThenBy(u => u.RetrivalRef).ToList(),
+            TopYarTmpCounts = result.Count
+        };
+        return list;
+    }
+
     public TopYarTmpViewModel GetTopYarTmps(int pageId = 1, int take = 50)
     {
         var result = _repository.GetAll(); //lazyLoad;

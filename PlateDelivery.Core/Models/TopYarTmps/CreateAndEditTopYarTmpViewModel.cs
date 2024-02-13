@@ -1,13 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using PlateDelivery.DataLayer.Entities.TopYarTmpAgg;
+﻿using PlateDelivery.DataLayer.Entities.TopYarTmpAgg;
 using System.ComponentModel.DataAnnotations;
 
 namespace PlateDelivery.Core.Models.TopYarTmps;
-
-public class ImportTopYarViewModel
-{
-    public IFormFile TopYarFile { get; set; }
-}
 
 public class TopYarTmpViewModel
 {

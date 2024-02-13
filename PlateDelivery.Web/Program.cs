@@ -10,6 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+//builder.Services.AddRazorPages().AddRazorPagesOptions(option =>
+//{
+//    option.Conventions.AddPageRoute("/Index", "Leon/TopYarTmps");
+//});
 builder.Services.AddControllers();
 
 #region Jwt Token Configuration

@@ -16,6 +16,7 @@ public interface ITopYarTmpService
                        string? filterByProvinceName = "", string? filterBySubProvince = "");
     TopYarTmpViewModel GetTopYarTmps(int pageId = 1, int take = 50);
     TopYarTmpViewModel GetTopYarTmps();
+    TopYarTmpViewModel GetTopYarTmpsForDocument();
     TopYarTmpViewModel GetTopYarTmps(List<string> rrn);
     CreateAndEditTopYarTmpViewModel GetById(long Id);
 }

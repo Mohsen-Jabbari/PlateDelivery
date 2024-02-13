@@ -34,4 +34,9 @@
     <ProjectReference Include="..\PlateDelivery.DataLayer\PlateDelivery.DataLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Documents\" />
+    <Folder Include="Services\Documents\" />
+  </ItemGroup>
+
 </Project>

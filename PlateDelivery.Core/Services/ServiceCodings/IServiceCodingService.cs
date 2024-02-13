@@ -9,6 +9,7 @@ public interface IServiceCodingService
     bool IsServiceCodingExist(string ServiceCode, string CodeLevel4);
 
     ServiceCodingsViewModel GetServiceCodings(int pageId = 1, int take = 50, string filterByServiceName = "", string filterByServiceCode = "");
+    ServiceCodingsViewModel GetServiceCodings();
     CreateAndEditServiceCodeingViewModel GetById(long Id);
     List<CreateAndEditServiceCodeingViewModel> GetByServiceCode(string ServiceCode);
 }

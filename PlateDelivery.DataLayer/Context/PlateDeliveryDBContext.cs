@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PlateDelivery.DataLayer.Entities.AccountAgg;
 using PlateDelivery.DataLayer.Entities.CertainAgg;
+using PlateDelivery.DataLayer.Entities.DocumentAgg;
 using PlateDelivery.DataLayer.Entities.OkAgg;
 using PlateDelivery.DataLayer.Entities.PermissionAgg;
 using PlateDelivery.DataLayer.Entities.ProvinceAgg;
@@ -31,6 +32,7 @@ public class PlateDeliveryDBContext : DbContext
     public DbSet<Province> Provinces { get; set; }
     public DbSet<ServiceCoding> ServiceCodings { get; set; }
     public DbSet<TopYarTmp> TopYarTmps { get; set; }
+    public DbSet<Document> Documents { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

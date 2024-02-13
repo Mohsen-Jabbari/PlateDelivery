@@ -122,7 +122,7 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
 
                 #endregion
 
-                if(TopYarTmpViewModel.IbanMessage == null)
+                if (TopYarTmpViewModel.IbanMessage == null)
                 {
                     #region بررسی سرویس هایی که در تاپ یار هست ولی در سامانه ثبت نشده
 
@@ -145,8 +145,6 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                     }
 
                     #endregion
-
-
 
                     #region قطعه کد زیر لیست خدماتی که تسهیم دارند رو نشون میده
 
@@ -190,6 +188,13 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                         {
                             TopYarTmpViewModel = _topYarTmpService.GetTopYarTmps(incompatibleMultpelxRRN);
                             TopYarTmpViewModel.MultiplexMessage = "تعداد " + TopYarTmpViewModel.TopYarTmps.Count + " رکورد از تراکنش های تسهیمی دارای مبلغ مغایر با اطلاعات ثبت شده در سامانه دارد";
+                        }
+
+                        else//دیتا برای سند زدن اوکی هست
+                        {
+                            TopYarTmpViewModel = _topYarTmpService.GetTopYarTmps(pageId, take, filterByRRN, filterByTrackingNo, filterByTransactionDate,
+                                filterByIban, filterByAmount, filterByTerminal, filterByServiceCode,
+                                filterByProvinceName, filterBySubProvince);
                         }
                     }
 

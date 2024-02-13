@@ -100,6 +100,20 @@ internal class ServiceCodingService : IServiceCodingService
         return null;
     }
 
+    public ServiceCodingsViewModel GetServiceCodings()
+    {
+        var result = _repository.GetAll(); //lazyLoad;
+
+        if (result != null)
+        {
+            ServiceCodingsViewModel list = new ServiceCodingsViewModel();
+            list.ServiceCodings = result.OrderByDescending(u => u.ServiceCode).ToList();
+            list.ServiceCodingsCounts = result.Count;
+            return list;
+        }
+        return new ServiceCodingsViewModel();
+    }
+
     public ServiceCodingsViewModel GetServiceCodings(int pageId = 1, int take = 50, string filterByServiceName = "", string filterByServiceCode = "")
     {
         var result = _repository.GetAll(); //lazyLoad;
