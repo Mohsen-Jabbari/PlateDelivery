@@ -3,5 +3,5 @@
 namespace PlateDelivery.DataLayer.Entities.DocumentAgg.Repository;
 public interface IDocumentRepository : IBaseRepository<Document>
 {
-
+    long GetMaxOrder();
 }

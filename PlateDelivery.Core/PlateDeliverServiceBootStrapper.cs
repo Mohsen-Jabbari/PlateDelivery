@@ -2,6 +2,7 @@
 using PlateDelivery.Core.Convertors;
 using PlateDelivery.Core.Services.Accounts;
 using PlateDelivery.Core.Services.Certains;
+using PlateDelivery.Core.Services.Documents;
 using PlateDelivery.Core.Services.Permissions;
 using PlateDelivery.Core.Services.Provinces;
 using PlateDelivery.Core.Services.Representations;
@@ -25,5 +26,6 @@ public static class PlateDeliverServiceBootStrapper
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IServiceCodingService, ServiceCodingService>();
         services.AddScoped<ITopYarTmpService, TopYarTmpService>();
+        services.AddScoped<IDocumentService, DocumentService>();
     }
 }

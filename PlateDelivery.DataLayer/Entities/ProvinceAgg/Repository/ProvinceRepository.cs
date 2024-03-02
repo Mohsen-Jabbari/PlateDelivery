@@ -13,4 +13,23 @@ internal class ProvinceRepository : BaseRepository<Province>, IProvinceRepositor
     {
         throw new NotImplementedException();
     }
+
+    public Province? GetProvinceByNameAndSubName(string ProvinceName, string SubProvince)
+    {
+        var province = Context.Provinces
+            .Where(p => p.ProvinceName == ProvinceName.Trim()).ToList();
+        if (province != null)
+        {
+            if(province.Where(p => p.SubProvince == SubProvince.Trim()).Any())
+            {
+                return province.Where(p => p.SubProvince == SubProvince.Trim()).FirstOrDefault();
+            }
+
+            else
+            {
+                return province.Where(p => p.CodeLevel4 == null).FirstOrDefault();
+            }
+        }
+        return null;
+    }
 }

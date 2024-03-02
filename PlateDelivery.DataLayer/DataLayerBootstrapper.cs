@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PlateDelivery.DataLayer.Context;
 using PlateDelivery.DataLayer.Entities.AccountAgg.Repository;
 using PlateDelivery.DataLayer.Entities.CertainAgg.Repository;
+using PlateDelivery.DataLayer.Entities.DocumentAgg.Repository;
 using PlateDelivery.DataLayer.Entities.OkAgg.Repository;
 using PlateDelivery.DataLayer.Entities.PermissionAgg.Repository;
 using PlateDelivery.DataLayer.Entities.ProvinceAgg.Repository;
@@ -27,6 +28,7 @@ public static class DataLayerBootstrapper
         services.AddTransient<IProvinceRepository, ProvinceRepository>();
         services.AddTransient<IServiceCodingRepository, ServiceCodingRepository>();
         services.AddTransient<ITopYarTmpRepository, TopYarTmpRepository>();
+        services.AddTransient<IDocumentRepository, DocumentRepository>();
 
         services.AddTransient(_ => new DapperContext.DapperContext(connectionString));
         services.AddDbContext<PlateDeliveryDBContext>(option =>

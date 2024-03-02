@@ -1,5 +1,4 @@
-﻿using Azure;
-using PlateDelivery.Core.Models.TopYarTmps;
+﻿using PlateDelivery.Core.Models.TopYarTmps;
 using PlateDelivery.DataLayer.Entities.TopYarTmpAgg;
 using PlateDelivery.DataLayer.Entities.TopYarTmpAgg.Repository;
 
@@ -32,14 +31,7 @@ internal class TopYarTmpService : ITopYarTmpService
 
     public bool DeleteTopYarTmp(long Id)
     {
-        var topYarTmp = _repository.GetTrackingSync(Id);
-        if (topYarTmp != null)
-        {
-            _repository.DeleteTopYarTmp(Id);
-            _repository.SaveSync();
-            return true;
-        }
-        return false;
+        return _repository.DeleteTopYarTmp(Id);
     }
 
     public void DeleteTopYarTmp()
@@ -203,7 +195,7 @@ internal class TopYarTmpService : ITopYarTmpService
         {
             TopYarTmps = result.OrderByDescending(u => u.ProvinceCode)
                                             .ThenBy(u => u.Terminal)
-                                                .ThenBy(u => u.RetrivalRef).ToList(),
+                                                .ThenBy(u => u.ServiceCode).ToList(),
             TopYarTmpCounts = result.Count
         };
         return list;

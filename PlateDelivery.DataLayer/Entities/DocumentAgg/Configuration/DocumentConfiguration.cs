@@ -7,6 +7,8 @@ internal class DocumentConfiguration : IEntityTypeConfiguration<Document>
     public void Configure(EntityTypeBuilder<Document> builder)
     {
         builder.HasIndex(b => b.Id).IsUnique();
+        
+        builder.HasIndex(b => b.Order);
 
         builder.HasIndex(b => b.RetrivalRef);
 

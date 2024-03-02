@@ -3,13 +3,14 @@
 namespace PlateDelivery.DataLayer.Entities.DocumentAgg;
 public class Document : BaseEntity
 {
-    public Document(string retrivalRef, string trackingNo, string transactionDate,
+    public Document(long order, string retrivalRef, string trackingNo, string transactionDate,
         string transactionTime, string financialDate, string iban, string amount,
         string principalAmount, string cardNo, string terminal, string installationPlace,
         string serviceCode, string serviceName, string? provinceName, string? subProvince,
         string? provinceCode, string? certainCode, string? codeLevel4, string? codeLevel5,
         string? codeLevel6, string? description, string? debt, string? credit)
     {
+        Order = order;
         RetrivalRef = retrivalRef;
         TrackingNo = trackingNo;
         TransactionDate = transactionDate;
@@ -35,13 +36,14 @@ public class Document : BaseEntity
         Credit = credit;
     }
 
-    public void Edit(string retrivalRef, string trackingNo, string transactionDate,
+    public void Edit(long order, string retrivalRef, string trackingNo, string transactionDate,
         string transactionTime, string financialDate, string iban, string amount,
         string principalAmount, string cardNo, string terminal, string installationPlace,
         string serviceCode, string serviceName, string? provinceName, string? subProvince,
         string? provinceCode, string? certainCode, string? codeLevel4, string? codeLevel5,
         string? codeLevel6, string? description, string? debt, string? credit)
     {
+        Order = order;
         RetrivalRef = retrivalRef;
         TrackingNo = trackingNo;
         TransactionDate = transactionDate;
@@ -67,6 +69,7 @@ public class Document : BaseEntity
         Credit = credit;
     }
 
+    public long Order { get; private set; }
     public string RetrivalRef { get; private set; }
     public string TrackingNo { get; private set; }
     public string TransactionDate { get; private set; }

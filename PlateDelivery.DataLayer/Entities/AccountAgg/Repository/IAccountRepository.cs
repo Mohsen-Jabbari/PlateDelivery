@@ -4,4 +4,5 @@ namespace PlateDelivery.DataLayer.Entities.AccountAgg.Repository;
 public interface IAccountRepository : IBaseRepository<Account>
 {
     void DeleteAccount(long Id);
+    Account? GetByIban(string Iban);
 }

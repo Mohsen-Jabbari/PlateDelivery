@@ -13,4 +13,9 @@ internal class AccountRepository : BaseRepository<Account>, IAccountRepository
     {
         throw new NotImplementedException();
     }
+
+    public Account? GetByIban(string Iban)
+    {
+        return Context.Accounts.Where(a => a.Iban.Trim() == Iban.Trim()).FirstOrDefault();
+    }
 }

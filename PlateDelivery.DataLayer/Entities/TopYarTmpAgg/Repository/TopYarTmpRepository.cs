@@ -16,9 +16,16 @@ internal class TopYarTmpRepository : BaseRepository<TopYarTmp>, ITopYarTmpReposi
         Context.SaveChanges();
     }
 
-    public void DeleteTopYarTmp(long Id)
+    public bool DeleteTopYarTmp(long Id)
     {
-        throw new NotImplementedException();
+        var item = Context.TopYarTmps.FirstOrDefault(x => x.Id == Id);
+        if (item != null)
+        {
+            Context.TopYarTmps.Remove(item);
+            Context.SaveChanges();
+            return true;
+        }
+        return false;
     }
 
     public void DeleteUnUsedTopYarTmp(List<string> UnUsedAccount)
