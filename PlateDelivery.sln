@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlateDelivery.DataLayer", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlateDelivery.Web", "PlateDelivery.Web\PlateDelivery.Web.csproj", "{5DA78B10-E426-4AB4-9668-5D765D8D26A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlateDelivery.Common", "PlateDelivery.Common\PlateDelivery.Common.csproj", "{52DA474E-6E28-4B5E-8072-0945C5A170CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlateDelivery.Common", "PlateDelivery.Common\PlateDelivery.Common.csproj", "{52DA474E-6E28-4B5E-8072-0945C5A170CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlateDelivery.Config", "PlateDelivery.Config\PlateDelivery.Config.csproj", "{5E37165C-4C5E-4E86-9844-BCABE482144D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlateDelivery.Config", "PlateDelivery.Config\PlateDelivery.Config.csproj", "{5E37165C-4C5E-4E86-9844-BCABE482144D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

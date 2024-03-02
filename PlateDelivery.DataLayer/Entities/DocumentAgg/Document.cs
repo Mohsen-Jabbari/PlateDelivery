@@ -1,4 +1,5 @@
 ﻿using PlateDelivery.Common.CommonClasses;
+using PlateDelivery.DataLayer.Entities.DocumentAgg.Enums;
 
 namespace PlateDelivery.DataLayer.Entities.DocumentAgg;
 public class Document : BaseEntity
@@ -8,7 +9,7 @@ public class Document : BaseEntity
         string principalAmount, string cardNo, string terminal, string installationPlace,
         string serviceCode, string serviceName, string? provinceName, string? subProvince,
         string? provinceCode, string? certainCode, string? codeLevel4, string? codeLevel5,
-        string? codeLevel6, string? description, string? debt, string? credit)
+        string? codeLevel6, string? description, string? debt, string? credit, DocumentYears year, DocumentMonth month)
     {
         Order = order;
         RetrivalRef = retrivalRef;
@@ -34,6 +35,8 @@ public class Document : BaseEntity
         Description = description;
         Debt = debt;
         Credit = credit;
+        Year = year;
+        Month = month;
     }
 
     public void Edit(long order, string retrivalRef, string trackingNo, string transactionDate,
@@ -41,7 +44,7 @@ public class Document : BaseEntity
         string principalAmount, string cardNo, string terminal, string installationPlace,
         string serviceCode, string serviceName, string? provinceName, string? subProvince,
         string? provinceCode, string? certainCode, string? codeLevel4, string? codeLevel5,
-        string? codeLevel6, string? description, string? debt, string? credit)
+        string? codeLevel6, string? description, string? debt, string? credit, DocumentYears year, DocumentMonth month)
     {
         Order = order;
         RetrivalRef = retrivalRef;
@@ -67,8 +70,12 @@ public class Document : BaseEntity
         Description = description;
         Debt = debt;
         Credit = credit;
+        Year = year;
+        Month = month;
     }
 
+    public DocumentYears Year { get; private set; }
+    public DocumentMonth Month { get; private set; }
     public long Order { get; private set; }
     public string RetrivalRef { get; private set; }
     public string TrackingNo { get; private set; }

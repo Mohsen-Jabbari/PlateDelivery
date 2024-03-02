@@ -1,9 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PlateDelivery.DataLayer.Entities.DocumentAgg.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace PlateDelivery.Core.Models.Documents;
 public class CreateAndEditDocumentViewModel
 {
     public long Order { get; set; }
+    public DocumentYears Year { get; set; }
+    public DocumentMonth Month { get; set; }
 
     [Display(Name = "شماره مرجع")]
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]

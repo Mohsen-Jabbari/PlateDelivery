@@ -23,6 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\TopYarTmps\DocumentMonth.cs" />
+    <Compile Remove="Models\TopYarTmps\DocumentYears.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MD.PersianDateTime.Core" Version="2.3.5" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />

@@ -10,6 +10,10 @@ internal class DocumentConfiguration : IEntityTypeConfiguration<Document>
         
         builder.HasIndex(b => b.Order);
 
+        builder.HasIndex(b => b.Year);
+
+        builder.HasIndex(b => b.Month);
+
         builder.HasIndex(b => b.RetrivalRef);
 
         builder.HasIndex(b => b.Terminal);
