@@ -8,4 +8,5 @@ public interface IDocumentRepository : IBaseRepository<Document>
     DocumentYears GetYear(string thisDate);
     DocumentMonth GetMonth(string thisDate);
     IQueryable<Document> GetSummary();
+    IQueryable<Document> GetDocumentByDate(string docDate);
 }

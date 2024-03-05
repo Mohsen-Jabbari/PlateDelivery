@@ -29,9 +29,9 @@
                         <form>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 سال
-                                <select name="Year" id="Year" asp-for="DocumentYears" asp-items="@(ViewData["DocumentYear"] as SelectList)" class="form-control"></select>
+                                <select name="Year" id="Year" asp-for="DocumentYears" asp-items="@(ViewData["DocumentYear"] as SelectList)" class="form-control dropdown"></select>
                                 ماه
-                                <select name="Month" id="Month" asp-for="DocumentMonth" asp-items="@(ViewData["DocumentMonth"] as SelectList)" class="form-control"></select>
+                                <select name="Month" id="Month" asp-for="DocumentMonth" asp-items="@(ViewData["DocumentMonth"] as SelectList)" class="form-control dropdown"></select>
                                 <input type="submit" value="فیلتر کن" class="btn btn-success btn-round" />
                                 <a href="/Leon/TopYarTmps/ExportDocument/" class="btn btn-default btn-round">حذف فیلتر</a>
                             </div>
@@ -51,6 +51,7 @@
                                             <th style="width: 30px;">ردیف</th>
                                             <th style="width: 70px;">سال</th>
                                             <th style="width: 50px;">ماه</th>
+                                            <th style="width: 50px;">روز</th>
                                             <th style="width: 100px;">دریافت فایل اسناد</th>
                                         </tr>
                                     </thead>
@@ -65,6 +66,7 @@
                                                 <td>@rowCount</td>
                                                 <td>@item.Year.GetDescription()</td>
                                                 <td>@item.Month.GetDescription()</td>
+                                                <td>@item.DocumentDate.Substring(6, 2)</td>
                                                 <td>
                                                     <a href="/Leon/TopYarTmps/ExportExcel/@item.DocumentDate" class="btn btn-info btn-xs">دریافت خروجی اکسل</a>
                                                 </td>

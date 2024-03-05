@@ -10,8 +10,8 @@ namespace PlateDelivery.Core.Convertors
     {
         public static string ToShamsi(this DateTime value)
         {
-            PersianCalendar pc=new PersianCalendar();
-            return pc.GetYear(value).ToString() + "/" + pc.GetMonth(value).ToString("00") + "/"+
+            PersianCalendar pc = new PersianCalendar();
+            return pc.GetYear(value).ToString() + "/" + pc.GetMonth(value).ToString("00") + "/" +
                    pc.GetDayOfMonth(value).ToString("00") + " ساعت   " + pc.GetHour(value).ToString("00") + ":" + pc.GetMinute(value).ToString("00");
 
         }
@@ -41,7 +41,7 @@ namespace PlateDelivery.Core.Convertors
         public static string GetShamsiMonthName(string Month)
         {
             string MonthName = string.Empty;
-            switch(Month)
+            switch (Month)
             {
                 case "1":
                     MonthName = "فروردین";
@@ -178,5 +178,13 @@ namespace PlateDelivery.Core.Convertors
             else return " ";
         }
 
+        public static string ToStdDate(this string? value)
+        {
+            string year = value[..4].Trim();
+            string month = value.Substring(4, 2).Trim();
+            string day = value.Substring(6, 2).Trim();
+
+            return string.Concat(year, "/", month, "/", day);
+        }
     }
 }

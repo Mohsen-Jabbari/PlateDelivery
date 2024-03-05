@@ -10,6 +10,11 @@ internal class DocumentRepository : BaseRepository<Document>, IDocumentRepositor
     {
     }
 
+    public IQueryable<Document> GetDocumentByDate(string docDate)
+    {
+        return Context.Documents.Where(d => d.TransactionDate == docDate);
+    }
+
     public long GetMaxOrder()
     {
         var maxOrder = Context.Documents.Select(d => d.Order).ToList();

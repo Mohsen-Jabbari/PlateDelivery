@@ -7,6 +7,7 @@ using PlateDelivery.DataLayer.Entities.DocumentAgg.Enums;
 using PlateDelivery.DataLayer.Entities.DocumentAgg.Repository;
 using PlateDelivery.DataLayer.Entities.ProvinceAgg.Repository;
 using PlateDelivery.DataLayer.Entities.ServiceCodingAgg;
+using PlateDelivery.DataLayer.Entities.ServiceCodingAgg.Repository;
 using PlateDelivery.DataLayer.Entities.TopYarTmpAgg;
 
 namespace PlateDelivery.Core.Services.Documents;
@@ -17,15 +18,17 @@ internal class DocumentService : IDocumentService
     private readonly IProvinceRepository _provinceRepository;
     private readonly ICertainRepository _certainRepository;
     private readonly IAccountRepository _accountRepository;
+    private readonly IServiceCodingRepository _serviceCodingRepository;
 
     public DocumentService(IDocumentRepository repository,
         IProvinceRepository provinceRepository, ICertainRepository certainRepository,
-        IAccountRepository accountRepository)
+        IAccountRepository accountRepository, IServiceCodingRepository serviceCodingRepository)
     {
         _repository = repository;
         _provinceRepository = provinceRepository;
         _certainRepository = certainRepository;
         _accountRepository = accountRepository;
+        _serviceCodingRepository = serviceCodingRepository;
     }
 
     //سند عادی یک سطر بانک یک سطر درآمد یک سطر مالیات
@@ -451,6 +454,44 @@ internal class DocumentService : IDocumentService
     public bool EditDocument(CreateAndEditDocumentViewModel model)
     {
         throw new NotImplementedException();
+    }
+
+    public DocumentViewModel GetDocumentsByDocDate(string docDate, int pageId = 1, int take = 10)
+    {
+        IQueryable<Document> result = _repository.GetDocumentByDate(docDate);
+
+        int takeData = take;
+        int skip = (pageId - 1) * takeData;
+
+        DocumentViewModel list = new();
+        list.PageCount = (int)Math.Ceiling(result.Count() / (double)takeData);
+        list.CurrentPage = pageId;
+        list.PageCount = (int)Math.Ceiling(result.Count() / (double)takeData);
+        list.Documents = result.OrderBy(u => u.Year).OrderBy(u => u.Month).Skip(skip).Take(takeData).ToList();
+        list.DocumentCounts = result.GroupBy(u => u.Order).Count();
+        return list;
+    }
+
+    public List<Document> GetDocumentsByDocDate(string docDate)
+    {
+        IQueryable<Document> result = _repository.GetDocumentByDate(docDate);
+        return result.ToList();
+    }
+
+    public List<Document> GetDocumentsByDocDateForTax(string docDate)
+    {
+        IQueryable<Document> result = _repository.GetDocumentByDate(docDate);
+        result = result.Where(r => r.CertainCode == "10101");
+        
+        var taxService = _serviceCodingRepository.GetAll();
+        taxService = taxService.Where(s => s.IncludeTax == false && s.CodeLevel6 == null).ToList();
+        var taxArrey = taxService.Select(s => s.ServiceCode).ToArray();
+        var list = result.ToList();
+        var listToDelete = list.Where(r => taxArrey.Contains(r.ServiceCode)).ToList();
+        var taxAmount = taxService.Where(s => s.CodeLevel6 == null).Select(s => s.Amount).ToList();
+        listToDelete = listToDelete.Where(l => taxAmount.Contains(l.Amount)).ToList();
+        list = list.Except(listToDelete).ToList();
+        return list;
     }
 
     public SummaryExportDocumentViewModel GetMainHeadListOfDocumentsForExport(int pageId = 1, int take = 10, DocumentYears Year = DocumentYears.NotSelected, DocumentMonth Month = DocumentMonth.NotSelected)
