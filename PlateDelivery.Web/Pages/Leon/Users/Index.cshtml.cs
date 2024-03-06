@@ -1,18 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using PlateDelivery.Core.Models;
+using PlateDelivery.Core.Security;
 using PlateDelivery.Core.Services.Users;
 
 namespace PlateDelivery.Web.Pages.Leon.Users
 {
-    //[UserRoleChecker]
-    //[TestPermissionChecker(new int[] { 1, 10 }, 7)]
+    [UserRoleChecker]
+    [PermissionChecker(2, 1)]
     public class IndexModel : PageModel
     {
         private readonly IUserService _userService;
         public UsersViewModel UsersViewModel { get; set; }
         public IndexModel(IUserService userService) => _userService = userService;
 
-        
+
         public void OnGet(int pageId = 1, int take = 5, string filterByLastName = "", string filterByUserName = "")
         {
             if (Request.Query.ContainsKey("fl"))

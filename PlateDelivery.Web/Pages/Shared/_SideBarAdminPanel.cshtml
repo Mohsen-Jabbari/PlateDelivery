@@ -6,6 +6,12 @@
 @inject IUserService UserService
 @{
     SideBarAdminPanelViewModel user = await UserService.GetSideBarAdminPanelData(User.GetUserId());
+    var userData = await UserService.GetUserById(User.GetUserId());
+    long userRole = 0;
+    if (userData.UserRoles.Any())
+    {
+        userRole = userData.UserRoles.Select(ur => ur.RoleId).FirstOrDefault();
+    }
 }
 
 <div class="col-md-3 left_col hidden-print">
@@ -42,27 +48,30 @@
                                 <a href="/Leon/Index"><i class="fa fa-dashboard"></i> داشبورد</a>
 
                             </li>
-                            <li>
+                            @* <li>
                                 <a><i class="fa fa-edit"></i> اطلاعات پروفایل <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
                                     <li><a href="/Leon/Profile">مشاهده پروفایل</a></li>
                                     <li><a href="/Leon/EditProfile">ویرایش پروفایل</a></li>
                                     <li><a href="/Leon/ChangePassword">ویرایش کلمه عبور</a></li>
                                 </ul>
-                            </li>
-                            <li>
-                                <a>
-                                    <i class="fa fa-users"></i> مدیریت کاربران<span class="fa fa-chevron-down"></span>
-                                </a>
-                                <ul class="nav child_menu">
-                                    <li><a href="/Leon/Users/">لیست کاربران</a></li>
-                                    <li><a href="/Leon/Users/ListDeleteUsers">کاربران حذف شده</a></li>
-                                    <li><a href="/Leon/Roles/">مدیریت نقش ها</a></li>
-                                    <li><a href="/Leon/Permissions/">مدیریت مجوزها</a></li>
-                                    <li><a href="/Leon/FailedLogin/">مدیریت لاگین های اشتباه</a></li>
+                            </li> *@
+                            @if(userRole == 1)
+                            {
+                                <li>
+                                    <a>
+                                        <i class="fa fa-users"></i> مدیریت کاربران<span class="fa fa-chevron-down"></span>
+                                    </a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="/Leon/Users/">لیست کاربران</a></li>
+                                        <li><a href="/Leon/Users/ListDeleteUsers">کاربران حذف شده</a></li>
+                                        <li><a href="/Leon/Roles/">مدیریت نقش ها</a></li>
+                                        <li><a href="/Leon/Permissions/">مدیریت مجوزها</a></li>
+                                        <li><a href="/Leon/FailedLogin/">مدیریت لاگین های اشتباه</a></li>
 
-                                </ul>
-                            </li>
+                                    </ul>
+                                </li>
+                            }
                             <li>
                                 <a>
                                     <i class="fa fa-user-secret"></i>استان و شهر<span class="fa fa-chevron-down"></span>
@@ -103,65 +112,6 @@
                                     <li><a href="/Leon/TopYarTmps/">لیست دیتای تاپ یار</a></li>
                                     <li><a href="/Leon/TopYarTmps/ExportDocument">تهیه فایل سند</a></li>
                                 </ul>
-                            </li>
-                            @* <li>
-                                <a>
-                                    <i class="fa fa-university"></i>مدیریت آموزشگاهها<span class="fa fa-chevron-down"></span>
-                                </a>
-                                <ul class="nav child_menu">
-                                    <li><a href="/Leon/NewAcademies/">لیست مجتمع ها</a></li>
-                                    <li><a href="/Leon/NewAcademies/ListDeleteComplex/">لیست مجتمع های حذف شده</a></li>
-                                    <li><a href="/Leon/NewAcademies/Academy/">لیست آموزشگاهها</a></li>
-                                    <li><a href="/Leon/Academies/Province">لیست استانها</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="/Leon/Servers/" onclick="f()"><i class="fa fa-server"></i> مدیریت سرور ها</a>
-                            </li>
-                            <li>
-                                <a>
-                                    <i class="fa fa-users"></i>مدیریت کلاس ها<span class="fa fa-chevron-down"></span>
-                                </a>
-                                <ul class="nav child_menu">
-                                    <li><a href="/Leon/RhgClass/">لیست کلاس ها</a></li>
-                                    <li><a href="/Leon/RhgClass/ArchivedClass/">لیست کلاس های خاتمه یافته</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a>
-                                    <i class="fa fa-paper-plane"></i>گزارشات<span class="fa fa-chevron-down"></span>
-                                </a>
-
-                                <ul class="nav child_menu">
-                                    <li><a href="/Leon/Report/">گزارش آماری</a></li>
-                                    <li><a href="/Leon/Report/SurvayReport">گزارش نظرسنجی</a></li>
-                                    <li><a href="/Leon/Report/TeacherCalculation">گزارش کارکرد مدرسان</a></li>
-                                    <li><a href="/Leon/Shoplog/shoplog">گزارش وقایع فروشگاه</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a>
-                                    <i class="fa fa-pie-chart"></i>مدیریت آمار<span class="fa fa-chevron-down"></span>
-                                </a>
-                                <ul class="nav child_menu">
-                                    <li><a href="/Leon/Statistic/">اطلاعات شعب</a></li>
-                                    <li>
-                                        <a>
-                                            <i class="fa fa-line-chart"></i>آمار آموزشگاه<span class="fa fa-chevron-down"></span>
-                                        </a>
-                                        <ul class="nav child_menu">
-                                            <li><a href="/Leon/AcademyStatistics/StatisticsCertificate">مجوز ایجاد آمار عملکرد</a></li>
-                                            <li><a href="/Leon/AcademyStatistics/">آمار عملکرد ماهیانه</a></li>
-                                            <li><a href="/Leon/AcademyStatistics/ListOfArchived/">بایگانی آمار عملکرد ماهیانه</a>
-                                            <li><a href="/Leon/AcademyStatistics/ExportExcel/">خروجی اکسل آمار عملکرد</a>
-                                        </ul>
-                                    </li>
-                                </ul>
-                    </li> *@
-                            <li>
-                                <a href="/Leon/ImportData/">
-                                    <i class="fa fa-shopping-basket"></i>بروز رسانی اطلاعات
-                                </a>
                             </li>
                         </ul>
                     </div>

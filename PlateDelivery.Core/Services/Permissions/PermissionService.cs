@@ -1,8 +1,11 @@
-﻿using PlateDelivery.Core.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using PlateDelivery.Core.Models;
 using PlateDelivery.DataLayer.Entities.PermissionAgg;
 using PlateDelivery.DataLayer.Entities.PermissionAgg.Repository;
 using PlateDelivery.DataLayer.Entities.RoleAgg;
 using PlateDelivery.DataLayer.Entities.RoleAgg.Repository;
+using PlateDelivery.DataLayer.Entities.UserAgg.Repository;
+using System.Reflection;
 
 namespace PlateDelivery.Core.Services.Permissions;
 
@@ -10,11 +13,14 @@ internal class PermissionService : IPermissionService
 {
     private readonly IPermissionRepository _permissionRepository;
     private readonly IRoleRepository _roleRepository;
+    private readonly IUserRepository _userRepository;
 
-    public PermissionService(IPermissionRepository permissionRepository, IRoleRepository roleRepository)
+    public PermissionService(IPermissionRepository permissionRepository, IRoleRepository roleRepository,
+        IUserRepository userRepository)
     {
         _permissionRepository = permissionRepository;
         _roleRepository = roleRepository;
+        _userRepository = userRepository;
     }
 
     public long AddPermission(string permissionName, long? parentId)
@@ -78,12 +84,46 @@ internal class PermissionService : IPermissionService
         return false;
     }
 
-    public bool CheckPermission(long permissionId, string mobile)
+    public bool CheckPermission(long roleId, long permissionId, long userId)
     {
-        throw new NotImplementedException();
+        var user = _userRepository.GetTrackingSync(userId);
+        if (user != null)
+        {
+            var UserRole = user.UserRoles
+            .Where(u => u.UserId == userId && u.RoleId == roleId).Select(u => u.RoleId).FirstOrDefault();
+            if (UserRole < 0)
+                return false;
+
+            var Role = _roleRepository.GetTrackingSync(roleId);
+            if (Role != null)
+            {
+                var RolesPermission = Role.RolePermissions
+                .Where(p => p.PermissionId == permissionId && p.RoleId == UserRole).Select(p => p.RoleId).ToList();
+                if (!RolesPermission.Any())
+                    return false;
+                else
+                    return true;
+            }
+            else
+                return false;
+        }
+        else
+            return false;
     }
 
-
+    public bool CheckUserIsRole(long userId)
+    {
+        var user = _userRepository.GetTrackingSync(userId);
+        if (user != null)
+        {
+            bool userRoles = user.UserRoles.Any();
+            if (userRoles)
+                return true;
+            else
+                return false;
+        }
+        return false;
+    }
 
 
 
@@ -133,4 +173,6 @@ internal class PermissionService : IPermissionService
             permissions.Add(permission.PermissionId);
         return permissions;
     }
+
+
 }

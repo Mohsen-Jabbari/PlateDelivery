@@ -1,6 +1,5 @@
 ﻿using PlateDelivery.DataLayer._Utilities;
 using PlateDelivery.DataLayer.Context;
-using PlateDelivery.DataLayer.DapperContext;
 
 namespace PlateDelivery.DataLayer.Entities.UserAgg.Repository;
 

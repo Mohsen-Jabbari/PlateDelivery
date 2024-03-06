@@ -141,7 +141,7 @@ public class ExportExcelModel : PageModel
                 int part = i + 1;
                 wb.Worksheets.Add(dt, "بخش " + part.ToString());
 
-                
+
             }
             using MemoryStream stream = new();
             wb.SaveAs(stream);
@@ -159,14 +159,14 @@ public class ExportExcelModel : PageModel
             dt.Columns.AddRange(new DataColumn[3] {
                                         new("مبلغ"),
                                         new("تاریخ"),
-                                        new("شرح"),
+                                        new("شرح")
                                          });
 
             foreach (var item in DocumentsForExport)
             {
                 dt.Rows.Add(item.Debt,
                             item.TransactionDate.ToStdDate(),
-                            item.Description);
+                            item.Description + " با کد پیگیری " + item.RetrivalRef);
             }
 
             dt.DefaultView.Sort = "مبلغ";

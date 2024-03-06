@@ -2,12 +2,13 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PlateDelivery.Common.CommonClasses;
 using PlateDelivery.Core.Models.Users;
+using PlateDelivery.Core.Security;
 using PlateDelivery.Core.Services.Users;
 
 namespace PlateDelivery.Web.Pages.Leon.Users
 {
-    //[UserRoleChecker]
-    //[TestPermissionChecker(new int[] { 1, 10 }, 10)]
+    [UserRoleChecker]
+    [PermissionChecker(2, 1)]
     public class DeleteUserModel : PageModel
     {
         private IUserService _userService;

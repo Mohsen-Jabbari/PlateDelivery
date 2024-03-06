@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PlateDelivery.Core.Models.Users;
+using PlateDelivery.Core.Security;
 using PlateDelivery.Core.Services.Roles;
 using PlateDelivery.Core.Services.Users;
 
 namespace PlateDelivery.Web.Pages.Leon.Users
 {
-    //[UserRoleChecker]
-    //[TestPermissionChecker(new int[] { 1, 10 }, 9)]
+    [UserRoleChecker]
+    [PermissionChecker(2, 1)]
     public class EditUserModel : PageModel
     {
         private readonly IUserService _userService;

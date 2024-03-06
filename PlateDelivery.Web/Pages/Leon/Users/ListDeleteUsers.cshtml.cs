@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using PlateDelivery.Core.Models;
+using PlateDelivery.Core.Security;
 using PlateDelivery.Core.Services.Users;
 
 namespace PlateDelivery.Web.Pages.Leon.Users
 {
-    //[UserRoleChecker]
-    //[TestPermissionChecker(new int[] { 1, 10 }, 11)]
+    [UserRoleChecker]
+    [PermissionChecker(3, 1)]
     public class ListDeleteUsersModel : PageModel
     {
         private IUserService _userService;

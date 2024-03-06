@@ -23,5 +23,6 @@ public interface IPermissionService
 
     List<long> RolePermissions(long roleId);
     void EditRolePermissions(long roleId, List<long> permissions);
-    bool CheckPermission(long permissionId, string mobile);
+    bool CheckPermission(long roleId, long permissionId, long userId);
+    bool CheckUserIsRole(long userId);
 }

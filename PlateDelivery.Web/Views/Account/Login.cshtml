@@ -88,7 +88,7 @@
                 <form asp-action="Login" method="post">
 
                     <label>نام کاربری</label>
-                    <input type="text" asp-for="UserName" placeholder="لطفا نام کاربری را وارد نمایید" onkeypress="return onlyNumberKey(event)" maxlength="11">
+                    <input type="text" asp-for="UserName" placeholder="لطفا نام کاربری را وارد نمایید" onkeypress="return onlyNumberKey(event)" maxlength="9">
                     <span asp-validation-for="UserName"></span>
 
                     <label>کلمه عبور</label>
