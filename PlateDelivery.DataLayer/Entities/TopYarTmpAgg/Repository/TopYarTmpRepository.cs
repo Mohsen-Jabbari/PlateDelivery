@@ -28,6 +28,18 @@ internal class TopYarTmpRepository : BaseRepository<TopYarTmp>, ITopYarTmpReposi
         return false;
     }
 
+    public bool DeleteTopYarTmp(List<long> Ids)
+    {
+        var items = Context.TopYarTmps.Where(x => Ids.Contains(x.Id)).ToList();
+        if (items != null)
+        {
+            Context.TopYarTmps.RemoveRange(items);
+            Context.SaveChanges();
+            return true;
+        }
+        return false;
+    }
+
     public void DeleteUnUsedTopYarTmp(List<string> UnUsedAccount)
     {
         var results = Context.TopYarTmps.Where(t => UnUsedAccount.Contains(t.Iban)).ToList();

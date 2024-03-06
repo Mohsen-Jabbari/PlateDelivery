@@ -39,9 +39,16 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
         {
             ServiceCodingsViewModel = _serviceCodingService.GetServiceCodings();
             TopYarTmpViewModel = _topYarTmpService.GetTopYarTmpsForDocument();
+            List<long> Ids = new();
+            long MaxOrder = _documentService.GetMaxOrder();
+            if (MaxOrder == 0)
+                MaxOrder = 0;
+            else
+                MaxOrder--;
 
             foreach (var item in TopYarTmpViewModel.TopYarTmps)
             {
+                MaxOrder++;
                 //پیدا کردن رکورد کامل سرویس مربوط به تراکنش
                 var serviceCode = ServiceCodingsViewModel.ServiceCodings
                     .Where(s => s.ServiceCode == item.ServiceCode).ToList();
@@ -60,9 +67,10 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                             var service = serviceCode.FirstOrDefault();
                             if (service != null)
                             {
-                                long order = _documentService.CreateDocument(item, service);
+                                long order = _documentService.CreateDocument(item, service, MaxOrder);
                                 if (order > 0)
-                                    _topYarTmpService.DeleteTopYarTmp(item.Id);
+                                    Ids.Add(item.Id);
+                                //    _topYarTmpService.DeleteTopYarTmp(item.Id);
                             }
                             break;
 
@@ -73,9 +81,10 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                             if (serviceCode.Where(s => s.IncludeTax).Any())
                             {
                                 //if True Register document with 5 rows
-                                long order = _documentService.CreateDocument(item, serviceCode);
+                                long order = _documentService.CreateDocument(item, serviceCode, MaxOrder);
                                 if (order > 0)
-                                    _topYarTmpService.DeleteTopYarTmp(item.Id);
+                                    Ids.Add(item.Id);
+                                //    _topYarTmpService.DeleteTopYarTmp(item.Id);
                             }
 
                             if (serviceCode.Where(s => s.Amount == item.Amount && !s.IncludeTax).Any())
@@ -87,16 +96,18 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                 {
                                     if (selectedService.CodeLevel6 != null)
                                     {
-                                        long order = _documentService.CreateIncomeDocument(item, selectedService);
+                                        long order = _documentService.CreateIncomeDocument(item, selectedService, MaxOrder);
                                         if (order > 0)
-                                            _topYarTmpService.DeleteTopYarTmp(item.Id);
+                                            Ids.Add(item.Id);
+                                        //    _topYarTmpService.DeleteTopYarTmp(item.Id);
                                     }
 
                                     else
                                     {
-                                        long order = _documentService.CreateTaxDocument(item, selectedService);
+                                        long order = _documentService.CreateTaxDocument(item, selectedService, MaxOrder);
                                         if (order > 0)
-                                            _topYarTmpService.DeleteTopYarTmp(item.Id);
+                                            Ids.Add(item.Id);
+                                        //    _topYarTmpService.DeleteTopYarTmp(item.Id);
                                     }
                                 }
                             }
@@ -104,6 +115,8 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                     }
                 }
             }
+            _documentService.SaveChanges();
+            _topYarTmpService.DeleteTopYarTmp(Ids);
             return RedirectToPage("Index");
         }
     }

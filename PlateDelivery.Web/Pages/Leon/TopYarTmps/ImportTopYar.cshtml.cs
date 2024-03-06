@@ -89,7 +89,7 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
 
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    dt.Rows[i][23] = DateTime.Now;
+                    dt.Rows[i][16] = DateTime.Now;
                     dt.Rows[i][14] = Convert.ToDateTime(dt.Rows[i][14].ToString()).ToLongTimeString();
                 }
 
@@ -119,13 +119,6 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                         sqlBulkCopy.ColumnMappings.Add("ProvinceName", "ProvinceName");
                         sqlBulkCopy.ColumnMappings.Add("SubProvince", "SubProvince");
                         sqlBulkCopy.ColumnMappings.Add("ProvinceCode", "ProvinceCode");
-                        sqlBulkCopy.ColumnMappings.Add("CertainCode", "CertainCode");
-                        sqlBulkCopy.ColumnMappings.Add("CodeLevel4", "CodeLevel4");
-                        sqlBulkCopy.ColumnMappings.Add("CodeLevel5", "CodeLevel5");
-                        sqlBulkCopy.ColumnMappings.Add("CodeLevel6", "CodeLevel6");
-                        sqlBulkCopy.ColumnMappings.Add("Description", "Description");
-                        sqlBulkCopy.ColumnMappings.Add("TaxAmount", "TaxAmount");
-                        sqlBulkCopy.ColumnMappings.Add("IncomeAmount", "IncomeAmount");
                         sqlBulkCopy.ColumnMappings.Add("CreationDate", "CreationDate");
 
                         con.Open();

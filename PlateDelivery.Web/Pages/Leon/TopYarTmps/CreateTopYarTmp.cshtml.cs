@@ -19,17 +19,7 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
 
         public void OnGet()
         {
-            CreateTopYarTmpViewModel = new CreateAndEditTopYarTmpViewModel()
-            {
-                CertainCode = "0",
-                IncomeAmount = "0",
-                TaxAmount = "0",
-                CodeLevel4 = "0",
-                CodeLevel5 = "0",
-                CodeLevel6 = "0",
-                ProvinceCode = "0",
-                Description = "0"
-            };
+            CreateTopYarTmpViewModel = new CreateAndEditTopYarTmpViewModel() { ProvinceCode = "0" };
             ViewData["Title"] = "ایجاد دیتای تاپ یار";
         }
 

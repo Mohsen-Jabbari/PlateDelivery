@@ -32,12 +32,12 @@ internal class DocumentService : IDocumentService
     }
 
     //سند عادی یک سطر بانک یک سطر درآمد یک سطر مالیات
-    public long CreateDocument(TopYarTmp topYar, ServiceCoding service)
+    public long CreateDocument(TopYarTmp topYar, ServiceCoding service, long maxOrder)
     {
         if (!_repository.Exists(y => y.RetrivalRef == topYar.RetrivalRef
                 && y.ServiceCode == topYar.ServiceCode && y.Amount == topYar.Amount))
         {
-            var maxOrder = _repository.GetMaxOrder();
+            //var maxOrder = _repository.GetMaxOrder();
             if (maxOrder == 0)
             {
                 List<Document> documents = new();
@@ -85,7 +85,7 @@ internal class DocumentService : IDocumentService
                 documents.Add(taxRecord);
 
                 _repository.AddRange(documents);
-                _repository.SaveSync();
+                //_repository.SaveSync();
                 return bankRecord.Order;
             }
             else if (maxOrder > 0)
@@ -135,7 +135,7 @@ internal class DocumentService : IDocumentService
                 documents.Add(taxRecord);
 
                 _repository.AddRange(documents);
-                _repository.SaveSync();
+                //_repository.SaveSync();
                 return bankRecord.Order;
             }
         }
@@ -143,12 +143,12 @@ internal class DocumentService : IDocumentService
     }
 
     //سند 5 سطری. برای مواردی که تسهیم دارند. باید یک سطر بانک 2 سطر درآمد و 2 سطر مالیات باشد
-    public long CreateDocument(TopYarTmp topYar, List<ServiceCoding> services)
+    public long CreateDocument(TopYarTmp topYar, List<ServiceCoding> services, long maxOrder)
     {
         if (!_repository.Exists(y => y.RetrivalRef == topYar.RetrivalRef
                 && y.ServiceCode == topYar.ServiceCode && y.Amount == topYar.Amount))
         {
-            var maxOrder = _repository.GetMaxOrder();
+            //var maxOrder = _repository.GetMaxOrder();
             if (maxOrder == 0)
             {
                 List<Document> documents = new();
@@ -202,7 +202,7 @@ internal class DocumentService : IDocumentService
                 }
 
                 _repository.AddRange(documents);
-                _repository.SaveSync();
+                //_repository.SaveSync();
                 return bankRecord.Order;
             }
             else if (maxOrder > 0)
@@ -257,7 +257,7 @@ internal class DocumentService : IDocumentService
                 }
 
                 _repository.AddRange(documents);
-                _repository.SaveSync();
+                //_repository.SaveSync();
                 return bankRecord.Order;
             }
         }
@@ -265,12 +265,12 @@ internal class DocumentService : IDocumentService
     }
 
     //برای حالتی است که رکورد فقط درآمد خالص است و مالیات جداگانه در گزارش تاپ یار آمده است
-    public long CreateIncomeDocument(TopYarTmp topYar, ServiceCoding service)
+    public long CreateIncomeDocument(TopYarTmp topYar, ServiceCoding service, long maxOrder)
     {
         if (!_repository.Exists(y => y.RetrivalRef == topYar.RetrivalRef
                 && y.ServiceCode == topYar.ServiceCode && y.Amount == topYar.Amount))
         {
-            var maxOrder = _repository.GetMaxOrder();
+            //var maxOrder = _repository.GetMaxOrder();
             if (maxOrder == 0)
             {
                 List<Document> documents = new();
@@ -307,7 +307,7 @@ internal class DocumentService : IDocumentService
                 documents.Add(incomeRecord);
 
                 _repository.AddRange(documents);
-                _repository.SaveSync();
+                //_repository.SaveSync();
                 return bankRecord.Order;
             }
             else if (maxOrder > 0)
@@ -346,7 +346,7 @@ internal class DocumentService : IDocumentService
                 documents.Add(incomeRecord);
 
                 _repository.AddRange(documents);
-                _repository.SaveSync();
+                //_repository.SaveSync();
                 return bankRecord.Order;
             }
         }
@@ -354,12 +354,12 @@ internal class DocumentService : IDocumentService
     }
 
     //برای حالتی است که رکورد فقط مالیات است و درآمد جداگانه در گزارش تاپ یار آمده است
-    public long CreateTaxDocument(TopYarTmp topYar, ServiceCoding service)
+    public long CreateTaxDocument(TopYarTmp topYar, ServiceCoding service, long maxOrder)
     {
         if (!_repository.Exists(y => y.RetrivalRef == topYar.RetrivalRef
                 && y.ServiceCode == topYar.ServiceCode && y.Amount == topYar.Amount))
         {
-            var maxOrder = _repository.GetMaxOrder();
+            //var maxOrder = _repository.GetMaxOrder();
             if (maxOrder == 0)
             {
                 List<Document> documents = new();
@@ -398,7 +398,7 @@ internal class DocumentService : IDocumentService
                 documents.Add(taxRecord);
 
                 _repository.AddRange(documents);
-                _repository.SaveSync();
+                //_repository.SaveSync();
                 return bankRecord.Order;
             }
             else if (maxOrder > 0)
@@ -439,7 +439,7 @@ internal class DocumentService : IDocumentService
                 documents.Add(taxRecord);
 
                 _repository.AddRange(documents);
-                _repository.SaveSync();
+                //_repository.SaveSync();
                 return bankRecord.Order;
             }
         }
@@ -468,7 +468,7 @@ internal class DocumentService : IDocumentService
         list.CurrentPage = pageId;
         list.PageCount = (int)Math.Ceiling(result.Count() / (double)takeData);
         list.Documents = result.OrderBy(u => u.Year).OrderBy(u => u.Month).Skip(skip).Take(takeData).ToList();
-        list.DocumentCounts = result.GroupBy(u => u.Order).Count();
+        list.DocumentCounts = result.Distinct().GroupBy(u => u.Order).Count();
         return list;
     }
 
@@ -530,5 +530,15 @@ internal class DocumentService : IDocumentService
         }
         list.SummaryCounts = list.SummaryDocuments.Count;
         return list;
+    }
+
+    public long GetMaxOrder()
+    {
+        return _repository.GetMaxOrder();
+    }
+
+    public void SaveChanges()
+    {
+        _repository.SaveSync();
     }
 }

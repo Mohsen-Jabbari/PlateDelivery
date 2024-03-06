@@ -54,7 +54,8 @@ public class ExportExcelModel : PageModel
             var Orders = DocumentsForExport.Select(d => d.Order).Distinct().ToList();
             List<List<long>> partitions = Orders.partition(4000);
 
-            for(int i = 0; i < partitions.Count; i++)
+            using XLWorkbook wb = new();
+            for (int i = 0; i < partitions.Count; i++)
             {
                 List<long> partition = partitions[i];
 
@@ -137,17 +138,18 @@ public class ExportExcelModel : PageModel
 
                 dt.DefaultView.Sort = "کد معین";
                 dt = dt.DefaultView.ToTable();
+                int part = i + 1;
+                wb.Worksheets.Add(dt, "بخش " + part.ToString());
 
-                using XLWorkbook wb = new();
-                wb.Worksheets.Add(dt);
-                using MemoryStream stream = new();
-                wb.SaveAs(stream);
-                return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    "فایل اسناد مورخ " + DocDate.ToStdDate() + " بخش " + i.ToString() + ".xlsx");
+                
             }
+            using MemoryStream stream = new();
+            wb.SaveAs(stream);
+            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "فایل اسناد مورخ " + DocDate.ToStdDate() + ".xlsx");
         }
 
-        else if(ExportType == ExcelExportType.TaxType)
+        else if (ExportType == ExcelExportType.TaxType)
         {
             ViewData["DocDate"] = DocDate;
             DocumentsForExport = _documentService.GetDocumentsByDocDateForTax(DocDate);
@@ -178,7 +180,7 @@ public class ExportExcelModel : PageModel
                 "فایل اداره مالیات مورخ " + DocDate.ToStdDate() + ".xlsx");
         }
 
-        else if(ExportType == ExcelExportType.GeneralType)
+        else if (ExportType == ExcelExportType.GeneralType)
         {
             ViewData["DocDate"] = DocDate;
             DocumentsForExport = _documentService.GetDocumentsByDocDate(DocDate);

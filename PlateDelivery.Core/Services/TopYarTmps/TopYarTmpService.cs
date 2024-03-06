@@ -19,9 +19,7 @@ internal class TopYarTmpService : ITopYarTmpService
         {
             var topYarTmp = new TopYarTmp(model.RetrivalRef, model.TrackingNo, model.TransactionDate, model.TransactionTime,
                 model.FinancialDate, model.Iban, model.Amount, model.PrincipalAmount, model.CardNo, model.Terminal,
-                model.InstallationPlace, model.ServiceCode, model.ServiceName, model.ProvinceName, model.SubProvince,
-                model.ProvinceCode, model.CertainCode, model.CodeLevel4, model.CodeLevel5, model.CodeLevel6, model.Description,
-                model.TaxAmount, model.IncomeAmount);
+                model.InstallationPlace, model.ServiceCode, model.ServiceName, model.ProvinceName, model.SubProvince, model.ProvinceCode);
             _repository.Add(topYarTmp);
             _repository.SaveSync();
             return topYarTmp.Id;
@@ -32,6 +30,11 @@ internal class TopYarTmpService : ITopYarTmpService
     public bool DeleteTopYarTmp(long Id)
     {
         return _repository.DeleteTopYarTmp(Id);
+    }
+
+    public bool DeleteTopYarTmp(List<long> Ids)
+    {
+        return _repository.DeleteTopYarTmp(Ids);
     }
 
     public void DeleteTopYarTmp()
@@ -51,9 +54,7 @@ internal class TopYarTmpService : ITopYarTmpService
         {
             oldTopYarTmp.Edit(model.RetrivalRef, model.TrackingNo, model.TransactionDate, model.TransactionTime,
                 model.FinancialDate, model.Iban, model.Amount, model.PrincipalAmount, model.CardNo, model.Terminal,
-                model.InstallationPlace, model.ServiceCode, model.ServiceName, model.ProvinceName, model.SubProvince,
-                model.ProvinceCode, model.CertainCode, model.CodeLevel4, model.CodeLevel5, model.CodeLevel6, model.Description,
-                model.TaxAmount, model.IncomeAmount);
+                model.InstallationPlace, model.ServiceCode, model.ServiceName, model.ProvinceName, model.SubProvince, model.ProvinceCode);
             _repository.SaveSync();
             return true;
         }
@@ -79,18 +80,11 @@ internal class TopYarTmpService : ITopYarTmpService
                 ServiceCode = result.ServiceCode,
                 ServiceName = result.ServiceName,
                 ProvinceName = result.ProvinceName,
-                CertainCode = result.CertainCode,
-                CodeLevel4 = result.CodeLevel4,
-                CodeLevel5 = result.CodeLevel5,
-                CodeLevel6 = result.CodeLevel6,
                 CreationDate = result.CreationDate,
-                Description = result.Description,
                 FinancialDate = result.FinancialDate,
                 Iban = result.Iban,
-                IncomeAmount = result.IncomeAmount,
-                ProvinceCode = result.ProvinceCode,
                 SubProvince = result.SubProvince,
-                TaxAmount = result.TaxAmount
+                ProvinceCode = result.ProvinceCode,
             };
         return null;
     }
@@ -194,7 +188,7 @@ internal class TopYarTmpService : ITopYarTmpService
         TopYarTmpViewModel list = new()
         {
             TopYarTmps = result.OrderByDescending(u => u.ProvinceCode)
-                                            .ThenBy(u => u.Terminal)
+                                        .ThenBy(u => u.Terminal)
                                                 .ThenBy(u => u.ServiceCode).ToList(),
             TopYarTmpCounts = result.Count
         };

@@ -62,18 +62,4 @@ public class CreateAndEditTopYarTmpViewModel : BaseDto
     public string SubProvince { get; set; }
     [Display(Name = "کد استان")]
     public string? ProvinceCode { get; set; }
-    [Display(Name = "کد معین")]
-    public string? CertainCode { get; set; }
-    [Display(Name = "کد تفضیل 4")]
-    public string? CodeLevel4 { get; set; }
-    [Display(Name = "کد تفضیل 5")]
-    public string? CodeLevel5 { get; set; }
-    [Display(Name = "کد تفضیل 6")]
-    public string? CodeLevel6 { get; set; }
-    [Display(Name = "توضیحات سند")]
-    public string? Description { get; set; }
-    [Display(Name = "مبلغ مالیات")]
-    public string? TaxAmount { get; set; }
-    [Display(Name = "مبلغ درآمد")]
-    public string? IncomeAmount { get; set; }
 }

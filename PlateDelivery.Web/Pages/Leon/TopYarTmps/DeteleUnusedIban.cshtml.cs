@@ -22,7 +22,7 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
         public TopYarTmpViewModel TopYarTmpViewModel { get; set; }
         public void OnGet(int pageId = 1, int take = 50)
         {
-            ViewData["Title"] = "حذف رکوردهای نا =مرتبط با موسسه";
+            ViewData["Title"] = "حذف رکوردهای نامرتبط با موسسه";
             TopYarTmpViewModel = _topYarTmpService.GetTopYarTmps();
             //پیدا کردن شماره شبا های نامرتبط با موسسه
             if (TopYarTmpViewModel.ProvinceMessage == null)

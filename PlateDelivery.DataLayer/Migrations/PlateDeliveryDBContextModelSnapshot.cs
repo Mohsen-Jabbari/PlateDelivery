@@ -497,23 +497,8 @@ namespace PlateDelivery.DataLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CertainCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CodeLevel4")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CodeLevel5")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CodeLevel6")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FinancialDate")
                         .IsRequired()
@@ -521,9 +506,6 @@ namespace PlateDelivery.DataLayer.Migrations
 
                     b.Property<string>("Iban")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("IncomeAmount")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("InstallationPlace")
@@ -553,9 +535,6 @@ namespace PlateDelivery.DataLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SubProvince")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TaxAmount")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Terminal")

@@ -6,6 +6,7 @@ public interface ITopYarTmpService
     long CreateTopYarTmp(CreateAndEditTopYarTmpViewModel model);
     bool EditTopyarTmp(CreateAndEditTopYarTmpViewModel model);
     bool DeleteTopYarTmp(long Id);
+    bool DeleteTopYarTmp(List<long> Ids);
     bool IsTopYarTmpExist(string retrivalRefNo);
     void DeleteTopYarTmp();
     void DeleteUnUsedRecords(List<string> UnUsedAccounts);

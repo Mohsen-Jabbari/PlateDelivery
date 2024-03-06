@@ -7,8 +7,7 @@ public class TopYarTmp : BaseEntity
     public TopYarTmp(string retrivalRef, string trackingNo, string transactionDate, string transactionTime,
         string financialDate, string iban, string amount, string principalAmount, string cardNo, string terminal,
         string installationPlace, string serviceCode, string serviceName, string provinceName, string subProvince,
-        string provinceCode, string certainCode, string codeLevel4, string codeLevel5, string codeLevel6, string description,
-        string taxAmount, string incomeAmount)
+        string provinceCode)
     {
         Guard(retrivalRef, transactionDate, iban, principalAmount, terminal, serviceCode);
         RetrivalRef = retrivalRef;
@@ -27,20 +26,12 @@ public class TopYarTmp : BaseEntity
         ProvinceName = provinceName;
         SubProvince = subProvince;
         ProvinceCode = provinceCode;
-        CertainCode = certainCode;
-        CodeLevel4 = codeLevel4;
-        CodeLevel5 = codeLevel5;
-        CodeLevel6 = codeLevel6;
-        Description = description;
-        TaxAmount = taxAmount;
-        IncomeAmount = incomeAmount;
     }
 
     public void Edit(string retrivalRef, string trackingNo, string transactionDate, string transactionTime,
         string financialDate, string iban, string amount, string principalAmount, string cardNo, string terminal,
         string installationPlace, string serviceCode, string serviceName, string provinceName, string subProvince,
-        string provinceCode, string certainCode, string codeLevel4, string codeLevel5, string codeLevel6, string description,
-        string taxAmount, string incomeAmount)
+        string provinceCode)
     {
         Guard(retrivalRef, transactionDate, iban, principalAmount, terminal, serviceCode);
         RetrivalRef = retrivalRef;
@@ -59,13 +50,6 @@ public class TopYarTmp : BaseEntity
         ProvinceName = provinceName;
         SubProvince = subProvince;
         ProvinceCode = provinceCode;
-        CertainCode = certainCode;
-        CodeLevel4 = codeLevel4;
-        CodeLevel5 = codeLevel5;
-        CodeLevel6 = codeLevel6;
-        Description = description;
-        TaxAmount = taxAmount;
-        IncomeAmount = incomeAmount;
     }
 
     public static void Guard(string RetrivalRef, string TransactionDate, string Iban, string PrincipalAmount, string Terminal,
@@ -95,11 +79,4 @@ public class TopYarTmp : BaseEntity
     public string? ProvinceName { get; private set; }
     public string? SubProvince { get; private set; }
     public string? ProvinceCode { get; private set; }
-    public string? CertainCode { get; private set; }
-    public string? CodeLevel4 { get; private set; }
-    public string? CodeLevel5 { get; private set; }
-    public string? CodeLevel6 { get; private set; }
-    public string? Description { get; private set; }
-    public string? TaxAmount { get; private set; }
-    public string? IncomeAmount { get; private set; }
 }
