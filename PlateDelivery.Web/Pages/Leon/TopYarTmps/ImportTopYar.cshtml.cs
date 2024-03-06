@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
 using PlateDelivery.Core.Models.TopYarTmps;
+using PlateDelivery.Core.Services.Documents;
 using PlateDelivery.Core.Services.TopYarTmps;
 using System.Data;
 using System.Data.OleDb;
@@ -13,15 +14,18 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
     public class ImportTopYarModel : PageModel
     {
         private readonly ITopYarTmpService _topYarTmpService;
+        private readonly IDocumentService _documentService;
         private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _environment;
         private readonly IConfiguration _configuration;
 
         public ImportTopYarModel(ITopYarTmpService topYarTmpService,
-            Microsoft.AspNetCore.Hosting.IHostingEnvironment environment, IConfiguration configuration)
+            Microsoft.AspNetCore.Hosting.IHostingEnvironment environment, IConfiguration configuration,
+            IDocumentService documentService)
         {
             _topYarTmpService = topYarTmpService;
             _environment = environment;
             _configuration = configuration;
+            _documentService = documentService;
         }
 
         [BindProperty]
@@ -127,7 +131,14 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                     }
                 }
             }
-
+            var importedData = _topYarTmpService.GetFirstTopYarRecord();
+            if (importedData != null)
+            {
+                if (_documentService.IsDocumentDateExists(importedData))
+                {
+                    _topYarTmpService.DeleteTopYarTmp();
+                }
+            }
             return RedirectToPage("Index");
         }
     }

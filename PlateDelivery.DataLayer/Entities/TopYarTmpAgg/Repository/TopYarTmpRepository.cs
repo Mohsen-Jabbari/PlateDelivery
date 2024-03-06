@@ -46,4 +46,12 @@ internal class TopYarTmpRepository : BaseRepository<TopYarTmp>, ITopYarTmpReposi
         Context.TopYarTmps.RemoveRange(results);
         Context.SaveChanges();
     }
+
+    public TopYarTmp GetTopYarTmpFirstRecord()
+    {
+        var result = Context.TopYarTmps.FirstOrDefault();
+        if (result != null)
+            return result;
+        return null;
+    }
 }

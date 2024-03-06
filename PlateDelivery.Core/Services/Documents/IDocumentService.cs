@@ -21,4 +21,5 @@ public interface IDocumentService
     List<Document> GetDocumentsByDocDate(string docDate);
     List<Document> GetDocumentsByDocDateForTax(string docDate);
     long GetMaxOrder();
+    bool IsDocumentDateExists(string docDate);
 }

@@ -1,4 +1,5 @@
-﻿using PlateDelivery.Core.Models.TopYarTmps;
+﻿using PlateDelivery.Core.Convertors;
+using PlateDelivery.Core.Models.TopYarTmps;
 using PlateDelivery.DataLayer.Entities.TopYarTmpAgg;
 using PlateDelivery.DataLayer.Entities.TopYarTmpAgg.Repository;
 
@@ -222,5 +223,13 @@ internal class TopYarTmpService : ITopYarTmpService
     public bool IsTopYarTmpExist(string retrivalRefNo)
     {
         return _repository.Exists(u => u.RetrivalRef == retrivalRefNo);
+    }
+
+    public string GetFirstTopYarRecord()
+    {
+        var result = _repository.GetTopYarTmpFirstRecord();
+        if (result != null)
+            return result.TransactionDate.Trim();
+        return null;
     }
 }

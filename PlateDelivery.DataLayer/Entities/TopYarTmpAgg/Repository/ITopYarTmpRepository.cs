@@ -7,4 +7,5 @@ public interface ITopYarTmpRepository : IBaseRepository<TopYarTmp>
     bool DeleteTopYarTmp(List<long> Ids);
     void DeleteAllTopYarTmp();
     void DeleteUnUsedTopYarTmp(List<string> UnUsedAccount);
+    TopYarTmp GetTopYarTmpFirstRecord();
 }

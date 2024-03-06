@@ -537,6 +537,13 @@ internal class DocumentService : IDocumentService
         return _repository.GetMaxOrder();
     }
 
+    public bool IsDocumentDateExists(string docDate)
+    {
+        if(_repository.GetDocumentByDate(docDate).Any())
+            return true;
+        return false;
+    }
+
     public void SaveChanges()
     {
         _repository.SaveSync();

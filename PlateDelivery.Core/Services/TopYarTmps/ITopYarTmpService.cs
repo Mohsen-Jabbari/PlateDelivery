@@ -20,4 +20,5 @@ public interface ITopYarTmpService
     TopYarTmpViewModel GetTopYarTmpsForDocument();
     TopYarTmpViewModel GetTopYarTmps(List<string> rrn);
     CreateAndEditTopYarTmpViewModel GetById(long Id);
+    string GetFirstTopYarRecord();
 }
