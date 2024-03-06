@@ -47,7 +47,7 @@ public class User : BaseEntity
     public void SetIsDeleteFalse()
     {
         IsDelete = false;
-        IsActive= true;
+        IsActive = true;
     }
 
     #region Token
@@ -56,12 +56,17 @@ public class User : BaseEntity
     {
         var activeTokenCount = Tokens.Count(c => c.RefreshTokenExpireDate > DateTime.Now);
         if (activeTokenCount == 10)
-            throw new InvalidDataException("امکان استفاده از 4 سیستم همزمان وجود ندارد");
+            throw new InvalidDataException("امکان استفاده از 10 سیستم همزمان وجود ندارد");
         var token = new UserToken(hashJwtToken, hashRefreshToken, tokenExpireDate, refreshTokenExpireDate, device)
         {
             UserId = Id
         };
         Tokens.Add(token);
+        var deActiveToken = Tokens.Where(c => c.RefreshTokenExpireDate < DateTime.Now).ToList();
+        foreach (var item in deActiveToken)
+        {
+            Tokens.Remove(item);
+        }
     }
 
     public string RemoveToken(long tokenId)

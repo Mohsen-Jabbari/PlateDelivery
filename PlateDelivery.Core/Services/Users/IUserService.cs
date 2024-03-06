@@ -12,12 +12,14 @@ public interface IUserService
     Task<bool> SetActive(long UserId);
     Task<bool> LogOut(string JwtToken);
     bool IsUserNameExitsts(string UserName);
+    void RemoveExpiredTokens();
 
     Task<User> GetUserById(long UserId);
     EditUserViewModel GetUserByIdForEdit(long UserId);
     UserDto Login(string UserName);
     Task<User> AddToken(UserToken token, long UserId);
     Task<UserTokenDto?> GetUserTokenByJwtToken(string JwtToken);
+    //List<UserTokenDto>? GetExpiredToken();
 
     #region SideBar
     Task<SideBarAdminPanelViewModel> GetSideBarAdminPanelData(long UserId);

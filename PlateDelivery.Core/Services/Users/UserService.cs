@@ -128,6 +128,14 @@ public class UserService : IUserService
         return await connection.QueryFirstOrDefaultAsync<UserTokenDto?>(sql, new { hashJwtToken = HashJwtToken });
     }
 
+    //public List<UserTokenDto>? GetExpiredToken()
+    //{
+    //    using var connection = _dapperContext.CreateConnection();
+    //    var sql = $"SELECT * FROM {_dapperContext.Tokens} Where RefreshTokenExpireDate < @dateNow";
+    //    var result = connection.Query<UserTokenDto?>(sql, new { dateNow = DateTime.Now });
+    //    return result.ToList();
+    //}
+
     public UserDto Login(string UserName)
     {
         var user = _userRepository.GetUserByUserName(UserName);
@@ -368,6 +376,13 @@ public class UserService : IUserService
             }
         }
         return new List<string>();
+    }
+
+    public void RemoveExpiredTokens()
+    {
+        using var connection = _dapperContext.CreateConnection();
+        var sql = $"DELETE FROM {_dapperContext.Tokens} Where RefreshTokenExpireDate < @dateNow";
+        connection.QueryFirstOrDefault<UserTokenDto?>(sql, new { dateNow = DateTime.Now });
     }
 
     #endregion

@@ -72,8 +72,18 @@ namespace PlateDelivery.Web.Controllers
             }
 
             login.UserId = user.Id;
+
+
+            #region Remove Expired tokens
+
+            //var expiredTokens = _userService.GetExpiredToken();
+            _userService.RemoveExpiredTokens();
+
+            #endregion
+
+
             var tokenString = AddTokenAndGenerateJwt(login);
-            if(tokenString.Id > 0)
+            if (tokenString.Id > 0)
             {
                 var token = tokenString.Token;
                 var refreshToken = tokenString.RefreshToken;
@@ -92,7 +102,7 @@ namespace PlateDelivery.Web.Controllers
                 return View();
             }
 
-            else if(tokenString.Id == -1)
+            else if (tokenString.Id == -1)
             {
                 ViewBag.IsSuccess = false;
                 ViewBag.Failure = tokenString.Token;
@@ -116,7 +126,7 @@ namespace PlateDelivery.Web.Controllers
 
             var hashJwt = Sha256Hasher.Hash(token);
             var hashRefreshToken = Sha256Hasher.Hash(refreshToken);
-            var tokenGenerate = new UserToken(hashJwt,refreshToken, DateTime.Now.AddHours(12), DateTime.Now.AddHours(24), device);
+            var tokenGenerate = new UserToken(hashJwt, refreshToken, DateTime.Now.AddHours(12), DateTime.Now.AddHours(24), device);
 
             try
             {
@@ -137,8 +147,8 @@ namespace PlateDelivery.Web.Controllers
                     Id = tokenResult.Result.Id
                 };
             }
-            
-            
+
+
             catch (Exception ex)
             {
                 return new UserTokenResponseDto()
@@ -152,7 +162,7 @@ namespace PlateDelivery.Web.Controllers
                 };
             }
 
-            
+
         }
         private void SyncUser(string token)
         {
