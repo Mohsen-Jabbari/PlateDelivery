@@ -94,7 +94,6 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     dt.Rows[i][16] = DateTime.Now;
-                    dt.Rows[i][14] = Convert.ToDateTime(dt.Rows[i][14].ToString()).ToLongTimeString();
                 }
 
                 //Insert the Data read from the Excel file to Database Table.
@@ -137,6 +136,8 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                 if (_documentService.IsDocumentDateExists(importedData))
                 {
                     _topYarTmpService.DeleteTopYarTmp();
+                    ModelState.AddModelError("TopYarModel.TopYarFile", "برای این روز قبلا سند حسابداری ایجاد شده است");
+                    return Page();
                 }
             }
             return RedirectToPage("Index");

@@ -89,10 +89,17 @@ app.Use(async (context, next) =>
     }
 });
 
+
 app.UseAuthentication();
+app.UseCors("PlateDeliveryWeb");
 app.UseAuthorization();
 app.MapRazorPages();
 app.MapControllerRoute("Default", "{controller=Home}/{action=Index}/{id?}");
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
 
 using (var scope = app.Services.CreateScope())
 {
