@@ -180,8 +180,8 @@ internal class DocumentService : IDocumentService
                 foreach (var service in services)
                 {
                     var ServiceCertain = _certainRepository.Get(service.CertainId);
-                    decimal income = (decimal.Parse(service.Amount) * 109) / 100;
-                    decimal tax = decimal.Round(income) - decimal.Parse(service.Amount);
+                    decimal income = (decimal.Parse(service.Amount) * 100) / 109;
+                    decimal tax = decimal.Parse(service.Amount) - decimal.Round(income);
 
                     //income record
                     var incomeRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
@@ -189,7 +189,7 @@ internal class DocumentService : IDocumentService
                         , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
                         , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
                         , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
-                        province.ProvinceCode, service.CodeLevel6, description, "0", service.Amount, year, month);
+                        province.ProvinceCode, service.CodeLevel6, description, "0", decimal.Round(income).ToString(), year, month);
                     documents.Add(incomeRecord);
                     //tax record
                     var taxRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
@@ -235,8 +235,8 @@ internal class DocumentService : IDocumentService
                 foreach (var service in services)
                 {
                     var ServiceCertain = _certainRepository.Get(service.CertainId);
-                    decimal income = (decimal.Parse(service.Amount) * 109) / 100;
-                    decimal tax = decimal.Round(income) - decimal.Parse(service.Amount);
+                    decimal income = (decimal.Parse(service.Amount) * 100) / 109;
+                    decimal tax = decimal.Parse(service.Amount) - decimal.Round(income);
 
                     //income record
                     var incomeRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
@@ -244,7 +244,7 @@ internal class DocumentService : IDocumentService
                         , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
                         , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
                         , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
-                        province.ProvinceCode, service.CodeLevel6, description, "0", service.Amount, year, month);
+                        province.ProvinceCode, service.CodeLevel6, description, "0", decimal.Round(income).ToString(), year, month);
                     documents.Add(incomeRecord);
                     //tax record
                     var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
@@ -482,7 +482,7 @@ internal class DocumentService : IDocumentService
     {
         IQueryable<Document> result = _repository.GetDocumentByDate(docDate);
         result = result.Where(r => r.CertainCode == "10101");
-        
+
         var taxService = _serviceCodingRepository.GetAll();
         taxService = taxService.Where(s => s.IncludeTax == false && s.CodeLevel6 == null).ToList();
         var taxArrey = taxService.Select(s => s.ServiceCode).ToArray();
@@ -539,7 +539,7 @@ internal class DocumentService : IDocumentService
 
     public bool IsDocumentDateExists(string docDate)
     {
-        if(_repository.GetDocumentByDate(docDate).Any())
+        if (_repository.GetDocumentByDate(docDate).Any())
             return true;
         return false;
     }

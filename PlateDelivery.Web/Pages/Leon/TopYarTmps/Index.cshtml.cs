@@ -4,7 +4,6 @@ using PlateDelivery.Core.Models.TopYarTmps;
 using PlateDelivery.Core.Services.Accounts;
 using PlateDelivery.Core.Services.ServiceCodings;
 using PlateDelivery.Core.Services.TopYarTmps;
-using PlateDelivery.DataLayer.Entities.AccountAgg;
 
 namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
 {
@@ -162,7 +161,11 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                             var srvcCode = _serviceCodingService.GetByServiceCode(srvc);
                             if (srvcCode != null)
                             {
-                                if (!srvcCode.First().IncludeTax)
+                                if (srvcCode.Where(s => !s.IncludeTax).Select(s => s.IncludeTax).Count() > 1)
+                                    serviceToRemove.Add(srvc);
+
+                                if (srvcCode.Count > 1 && srvcCode.Where(s => !s.IncludeTax).Any()
+                                                && srvcCode.Where(s => s.IncludeTax).Any())
                                     serviceToRemove.Add(srvc);
                             }
                         }
@@ -178,7 +181,6 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                             foreach (var record in multiplexRecords)
                             {
                                 long recordAmount = long.Parse(record.Amount);
-                                recordAmount = (recordAmount * 100) / 109;
                                 var serviceAmount = ServiceCode.Select(s => s.Amount).Sum();
                                 if (recordAmount != serviceAmount)
                                     incompatibleMultpelxRRN.Add(record.RetrivalRef);

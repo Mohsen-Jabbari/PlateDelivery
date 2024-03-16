@@ -111,7 +111,8 @@ internal class TopYarTmpService : ITopYarTmpService
 
         if (result != null)
         {
-            var nullProvince = result.Where(r => r.ProvinceName == null || r.SubProvince == null).ToList();
+            var nullProvince = result.Where(r => r.ProvinceName == null || r.ProvinceName == string.Empty ||
+            r.SubProvince == null || r.SubProvince == string.Empty).ToList();
             if (nullProvince.Count == 0)
             {
                 if (!string.IsNullOrEmpty(filterByRRN))
