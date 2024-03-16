@@ -78,7 +78,9 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                         case 2:
 
                             //chack that IncludeTax is True or False
-                            if (serviceCode.Where(s => s.IncludeTax).Any())
+                            //چک کردن اینکه آیا دو تا رکورد مقدار بولین مالیات 1 دارند
+                            var trueTax = serviceCode.Select(s => s.IncludeTax).ToList();
+                            if (!trueTax.Contains(false))
                             {
                                 //if True Register document with 5 rows
                                 long order = _documentService.CreateDocument(item, serviceCode, MaxOrder);
@@ -87,22 +89,47 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                 //    _topYarTmpService.DeleteTopYarTmp(item.Id);
                             }
 
-                            if (serviceCode.Where(s => s.Amount == item.Amount && !s.IncludeTax).Any())
+                            //یعنی حداقل یکی از وضعیت مالیات ها صفر است
+                            if (trueTax.Contains(false))
                             {
-                                //if False check amount with ServiceCode and register 2 rows document
-                                var selectedService = serviceCode
-                                            .Where(s => s.Amount == item.Amount).SingleOrDefault();
-                                if (selectedService != null)
+                                //برای حالتی است که دو تا فیلد های بولین مالیات صفر است
+                                if (serviceCode.Where(s => !s.IncludeTax).Select(s => s.IncludeTax).Count() > 1)
                                 {
-                                    if (selectedService.CodeLevel6 != null)
+                                    var selectedService = serviceCode
+                                            .Where(s => s.Amount == item.Amount).SingleOrDefault();
+                                    if (selectedService != null)
                                     {
-                                        long order = _documentService.CreateIncomeDocument(item, selectedService, MaxOrder);
+                                        if (selectedService.CodeLevel6 != null)
+                                        {
+                                            long order = _documentService.CreateIncomeDocument(item, selectedService, MaxOrder);
+                                            if (order > 0)
+                                                Ids.Add(item.Id);
+                                            //    _topYarTmpService.DeleteTopYarTmp(item.Id);
+                                        }
+
+                                        else
+                                        {
+                                            long order = _documentService.CreateTaxDocument(item, selectedService, MaxOrder);
+                                            if (order > 0)
+                                                Ids.Add(item.Id);
+                                            //    _topYarTmpService.DeleteTopYarTmp(item.Id);
+                                        }
+                                    }
+                                }
+                                //در این حالت یکی از فیلدهای مالیات صفر است و دیگری 1
+                                else
+                                {
+                                    var selectedService = serviceCode
+                                            .Where(s => s.Amount == item.Amount).SingleOrDefault();
+                                    if (selectedService != null && selectedService.IncludeTax)
+                                    {
+                                        long order = _documentService.CreateDocument(item, selectedService, MaxOrder);
                                         if (order > 0)
                                             Ids.Add(item.Id);
                                         //    _topYarTmpService.DeleteTopYarTmp(item.Id);
                                     }
 
-                                    else
+                                    else if (selectedService != null && !selectedService.IncludeTax)
                                     {
                                         long order = _documentService.CreateTaxDocument(item, selectedService, MaxOrder);
                                         if (order > 0)

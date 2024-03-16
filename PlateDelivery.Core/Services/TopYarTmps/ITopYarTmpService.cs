@@ -4,6 +4,7 @@ namespace PlateDelivery.Core.Services.TopYarTmps;
 public interface ITopYarTmpService
 {
     long CreateTopYarTmp(CreateAndEditTopYarTmpViewModel model);
+    void CreateTopYarTmpList(List<CreateAndEditTopYarTmpViewModel> models);
     bool EditTopyarTmp(CreateAndEditTopYarTmpViewModel model);
     bool DeleteTopYarTmp(long Id);
     bool DeleteTopYarTmp(List<long> Ids);
@@ -21,4 +22,5 @@ public interface ITopYarTmpService
     TopYarTmpViewModel GetTopYarTmps(List<string> rrn);
     CreateAndEditTopYarTmpViewModel GetById(long Id);
     string GetFirstTopYarRecord();
+    List<CreateAndEditTopYarTmpViewModel> ReadDataFromExcel(string filePath);
 }

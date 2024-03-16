@@ -59,7 +59,7 @@ public class CreateAndEditTopYarTmpViewModel : BaseDto
     [Display(Name = "نام استان")]
     public string? ProvinceName { get; set; }
     [Display(Name = "نام شهر / مرکز")]
-    public string SubProvince { get; set; }
+    public string? SubProvince { get; set; }
     [Display(Name = "کد استان")]
     public string? ProvinceCode { get; set; }
 }

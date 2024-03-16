@@ -1,4 +1,5 @@
-﻿using PlateDelivery.Core.Convertors;
+﻿using OfficeOpenXml;
+using PlateDelivery.Core.Convertors;
 using PlateDelivery.Core.Models.TopYarTmps;
 using PlateDelivery.DataLayer.Entities.TopYarTmpAgg;
 using PlateDelivery.DataLayer.Entities.TopYarTmpAgg.Repository;
@@ -26,6 +27,18 @@ internal class TopYarTmpService : ITopYarTmpService
             return topYarTmp.Id;
         }
         return -1;
+    }
+
+    public void CreateTopYarTmpList(List<CreateAndEditTopYarTmpViewModel> models)
+    {
+        foreach (var model in models)
+        {
+            var topYarTmp = new TopYarTmp(model.RetrivalRef, model.TrackingNo, model.TransactionDate, model.TransactionTime,
+                model.FinancialDate, model.Iban, model.Amount, model.PrincipalAmount, model.CardNo, model.Terminal,
+                model.InstallationPlace, model.ServiceCode, model.ServiceName, model.ProvinceName, model.SubProvince, model.ProvinceCode);
+            _repository.Add(topYarTmp);
+        }
+        _repository.SaveSync();
     }
 
     public bool DeleteTopYarTmp(long Id)
@@ -231,5 +244,44 @@ internal class TopYarTmpService : ITopYarTmpService
         if (result != null)
             return result.TransactionDate.Trim();
         return null;
+    }
+
+    public List<CreateAndEditTopYarTmpViewModel> ReadDataFromExcel(string filePath)
+    {
+        var topYar = new List<CreateAndEditTopYarTmpViewModel>();
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        using (var package = new ExcelPackage(new FileInfo(filePath)))
+        {
+            var worksheet = package.Workbook.Worksheets[0]; // Assuming the data is in the first worksheet
+
+            for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
+            {
+                var tmp = new CreateAndEditTopYarTmpViewModel
+                {
+                    RetrivalRef = worksheet.Cells[row, 1].Value.ToString(),
+                    TrackingNo = worksheet.Cells[row, 2].Value.ToString(),
+                    TransactionDate = worksheet.Cells[row, 3].Value.ToString(),
+                    FinancialDate = worksheet.Cells[row, 4].Value.ToString(),
+                    Iban = worksheet.Cells[row, 5].Value.ToString(),
+                    Amount = worksheet.Cells[row, 6].Value.ToString(),
+                    PrincipalAmount = worksheet.Cells[row, 7].Value.ToString(),
+                    CardNo = worksheet.Cells[row, 8].Value.ToString(),
+                    Terminal = worksheet.Cells[row, 9].Value.ToString(),
+                    InstallationPlace = worksheet.Cells[row, 10].Value.ToString(),
+                    ServiceCode = worksheet.Cells[row, 11].Value.ToString(),
+                    ServiceName = worksheet.Cells[row, 12].Value.ToString(),
+                    ProvinceName = (string)(worksheet.Cells[row, 13].Value ?? null),
+                    SubProvince = (string)(worksheet.Cells[row, 14].Value ?? null),
+                    TransactionTime = worksheet.Cells[row, 15].Value.ToString(),
+                    ProvinceCode = "",
+                    CreationDate = DateTime.Now,
+                    // Map other properties accordingly
+                };
+
+                topYar.Add(tmp);
+            }
+        }
+
+        return topYar;
     }
 }

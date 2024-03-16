@@ -54,6 +54,7 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                 }
 
                 //Save the uploaded Excel file.
+
                 string fileName = Path.GetFileName(postedFile.FileName);
                 string filePath = Path.Combine(path, fileName);
                 using (FileStream stream = new(filePath, FileMode.Create))
@@ -61,74 +62,83 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                     postedFile.CopyTo(stream);
                 }
 
+                #region old excel approach
+
+
                 //Read the connection string for the Excel file.
-                string conString = _configuration.GetConnectionString("ExcelConnection");
-                DataTable dt = new();
-                conString = string.Format(conString, filePath);
+                
+                //string conString = _configuration.GetConnectionString("ExcelConnection");
+                //DataTable dt = new();
+                //conString = string.Format(conString, filePath);
 
-                using (OleDbConnection connExcel = new(conString))
-                {
-                    using (OleDbCommand cmdExcel = new())
-                    {
-                        using (OleDbDataAdapter odaExcel = new())
-                        {
-                            cmdExcel.Connection = connExcel;
+                //using (OleDbConnection connExcel = new(conString))
+                //{
+                //    using (OleDbCommand cmdExcel = new())
+                //    {
+                //        using (OleDbDataAdapter odaExcel = new())
+                //        {
+                //            cmdExcel.Connection = connExcel;
 
-                            //Get the name of First Sheet.
-                            connExcel.Open();
-                            DataTable dtExcelSchema;
-                            dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
-                            string sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
-                            connExcel.Close();
+                //            //Get the name of First Sheet.
+                //            connExcel.Open();
+                //            DataTable dtExcelSchema;
+                //            dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                //            string sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+                //            connExcel.Close();
 
-                            //Read Data from First Sheet.
-                            connExcel.Open();
-                            cmdExcel.CommandText = "SELECT * From [" + sheetName + "]";
-                            odaExcel.SelectCommand = cmdExcel;
-                            odaExcel.Fill(dt);
-                            connExcel.Close();
-                        }
-                    }
-                }
+                //            //Read Data from First Sheet.
+                //            connExcel.Open();
+                //            cmdExcel.CommandText = "SELECT * From [" + sheetName + "]";
+                //            odaExcel.SelectCommand = cmdExcel;
+                //            odaExcel.Fill(dt);
+                //            connExcel.Close();
+                //        }
+                //    }
+                //}
 
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    dt.Rows[i][16] = DateTime.Now;
-                }
+                //for (int i = 0; i < dt.Rows.Count; i++)
+                //{
+                //    dt.Rows[i][16] = DateTime.Now;
+                //    dt.Rows[i][14] = DateTime.Now;
+                //}
 
                 //Insert the Data read from the Excel file to Database Table.
-                conString = _configuration.GetConnectionString("DefaultConnection");
-                using (SqlConnection con = new(conString))
-                {
-                    using (SqlBulkCopy sqlBulkCopy = new(con))
-                    {
-                        //Set the database table name.
-                        sqlBulkCopy.DestinationTableName = "dbo.TopYarTmps";
+                //conString = _configuration.GetConnectionString("DefaultConnection");
+                //using (SqlConnection con = new(conString))
+                //{
+                //    using (SqlBulkCopy sqlBulkCopy = new(con))
+                //    {
+                //        //Set the database table name.
+                //        sqlBulkCopy.DestinationTableName = "dbo.TopYarTmps";
 
-                        //[OPTIONAL]: Map the Excel columns with that of the database table.
-                        sqlBulkCopy.ColumnMappings.Add("RetrivalRef", "RetrivalRef");
-                        sqlBulkCopy.ColumnMappings.Add("TrackingNo", "TrackingNo");
-                        sqlBulkCopy.ColumnMappings.Add("TransactionDate", "TransactionDate");
-                        sqlBulkCopy.ColumnMappings.Add("TransactionTime", "TransactionTime");
-                        sqlBulkCopy.ColumnMappings.Add("FinancialDate", "FinancialDate");
-                        sqlBulkCopy.ColumnMappings.Add("Iban", "Iban");
-                        sqlBulkCopy.ColumnMappings.Add("Amount", "Amount");
-                        sqlBulkCopy.ColumnMappings.Add("PrincipalAmount", "PrincipalAmount");
-                        sqlBulkCopy.ColumnMappings.Add("CardNo", "CardNo");
-                        sqlBulkCopy.ColumnMappings.Add("Terminal", "Terminal");
-                        sqlBulkCopy.ColumnMappings.Add("InstallationPlace", "InstallationPlace");
-                        sqlBulkCopy.ColumnMappings.Add("ServiceCode", "ServiceCode");
-                        sqlBulkCopy.ColumnMappings.Add("ServiceName", "ServiceName");
-                        sqlBulkCopy.ColumnMappings.Add("ProvinceName", "ProvinceName");
-                        sqlBulkCopy.ColumnMappings.Add("SubProvince", "SubProvince");
-                        sqlBulkCopy.ColumnMappings.Add("ProvinceCode", "ProvinceCode");
-                        sqlBulkCopy.ColumnMappings.Add("CreationDate", "CreationDate");
+                //        //[OPTIONAL]: Map the Excel columns with that of the database table.
+                //        sqlBulkCopy.ColumnMappings.Add("RetrivalRef", "RetrivalRef");
+                //        sqlBulkCopy.ColumnMappings.Add("TrackingNo", "TrackingNo");
+                //        sqlBulkCopy.ColumnMappings.Add("TransactionDate", "TransactionDate");
+                //        sqlBulkCopy.ColumnMappings.Add("FinancialDate", "FinancialDate");
+                //        sqlBulkCopy.ColumnMappings.Add("Iban", "Iban");
+                //        sqlBulkCopy.ColumnMappings.Add("Amount", "Amount");
+                //        sqlBulkCopy.ColumnMappings.Add("PrincipalAmount", "PrincipalAmount");
+                //        sqlBulkCopy.ColumnMappings.Add("CardNo", "CardNo");
+                //        sqlBulkCopy.ColumnMappings.Add("Terminal", "Terminal");
+                //        sqlBulkCopy.ColumnMappings.Add("InstallationPlace", "InstallationPlace");
+                //        sqlBulkCopy.ColumnMappings.Add("ServiceCode", "ServiceCode");
+                //        sqlBulkCopy.ColumnMappings.Add("ServiceName", "ServiceName");
+                //        sqlBulkCopy.ColumnMappings.Add("ProvinceName", "ProvinceName");
+                //        sqlBulkCopy.ColumnMappings.Add("SubProvince", "SubProvince");
+                //        sqlBulkCopy.ColumnMappings.Add("TransactionTime", "TransactionTime");
+                //        sqlBulkCopy.ColumnMappings.Add("ProvinceCode", "ProvinceCode");
+                //        sqlBulkCopy.ColumnMappings.Add("CreationDate", "CreationDate");
 
-                        con.Open();
-                        sqlBulkCopy.WriteToServer(dt);
-                        con.Close();
-                    }
-                }
+                //        con.Open();
+                //        sqlBulkCopy.WriteToServer(dt);
+                //        con.Close();
+                //    }
+                //}
+                #endregion
+
+                var models = _topYarTmpService.ReadDataFromExcel(filePath);
+                _topYarTmpService.CreateTopYarTmpList(models);
             }
             var importedData = _topYarTmpService.GetFirstTopYarRecord();
             if (importedData != null)
