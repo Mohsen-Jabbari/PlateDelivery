@@ -5,6 +5,7 @@ using PlateDelivery.Core.Services.Accounts;
 using PlateDelivery.Core.Services.ServiceCodings;
 using PlateDelivery.Core.Services.TopYarTmps;
 using PlateDelivery.DataLayer.Entities.TopYarTmpAgg;
+using System.Linq;
 
 namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
 {
@@ -175,6 +176,7 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                     .Select(group => new { ServiceCode = group.Key, Amount = group.Sum(s => long.Parse(s.Amount)) })
                                                                                                                     .ToList();
                             List<string> incompatibleRRN = new();
+                            List<string> srv = new();
                             TopYarTmpViewModel = _topYarTmpService.GetTopYarTmps();
 
                             foreach (var srvc in newService)
@@ -182,16 +184,19 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                 //در این قسمت باید بررسی کنیم خدماتی که بیشتر از یک رکورد دارند آیا جمع مبالغشون
                                 //با مبلغ تراکنش برابر هست یا نه
                                 //اگر برابر نبود یعنی مبلغ خدمت عوض شده و باید اون خدمات لیست شوند
-                                if (TopYarTmpViewModel.TopYarTmps.Any(s => s.ServiceCode == srvc.ServiceCode && long.Parse(s.Amount) != srvc.Amount))
+                                if (TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode})
+                                    .Any(group => group.Key.ServiceCode == srvc.ServiceCode && group.Sum(group => long.Parse(group.Amount)) != srvc.Amount))
                                 {
-                                    incompatibleRRN.AddRange(TopYarTmpViewModel.TopYarTmps.Where(s => s.ServiceCode == srvc.ServiceCode).Select(s => s.RetrivalRef).ToList());
+                                    incompatibleRRN.Add(TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
+                                        .Where(group => group.Key.ServiceCode == srvc.ServiceCode && group.Sum(group => long.Parse(group.Amount)) != srvc.Amount).Select(s => s.Key.RetrivalRef).First());
+                                    srv.Add(srvc.ServiceCode);
                                 }
                             }
 
                             if (incompatibleRRN.Count > 0)
                             {
                                 TopYarTmpViewModel = _topYarTmpService.GetTopYarTmps(incompatibleRRN);
-                                TopYarTmpViewModel.MultiplexMessage = "تعداد " + TopYarTmpViewModel.TopYarTmps.Count + " رکورد از تراکنش دارای مبلغ مغایر با خدمت های ثبت شده در سامانه دارند";
+                                TopYarTmpViewModel.MultiplexMessage = "تعداد " + TopYarTmpViewModel.TopYarTmps.Count + " رکورد از تراکنش ها دارای مبلغ مغایر با خدمت های ثبت شده در سامانه دارند";
                             }
 
                             else//دیتا برای سند زدن اوکی هست

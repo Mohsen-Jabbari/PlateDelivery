@@ -16,7 +16,7 @@ internal class ServiceCodingService : IServiceCodingService
 
     public long CreateServiceCoding(CreateAndEditServiceCodeingViewModel model)
     {
-        if (!_repository.Exists(u => u.ServiceCode == model.ServiceCode && u.CodeLevel4 == model.CodeLevel4))
+        if (!_repository.Exists(u => u.ServiceCode == model.ServiceCode && u.CodeLevel4 == model.CodeLevel4 && u.CertainId == model.CertainId))
         {
             var serviceCoding = new ServiceCoding(model.ServiceName, model.ServiceFullName, model.ServiceCode,
                 model.CodeLevel4, model.CodeLevel6, model.CertainId, model.Amount.ToString(), model.IncludeTax);
@@ -143,8 +143,8 @@ internal class ServiceCodingService : IServiceCodingService
         return new ServiceCodingsViewModel();
     }
 
-    public bool IsServiceCodingExist(string ServiceCode, string CodeLevel4)
+    public bool IsServiceCodingExist(string ServiceCode, string CodeLevel4, long CertainId)
     {
-        return _repository.Exists(u => u.ServiceCode == ServiceCode && u.CodeLevel4 == CodeLevel4);
+        return _repository.Exists(u => u.ServiceCode == ServiceCode && u.CodeLevel4 == CodeLevel4 && u.CertainId == CertainId);
     }
 }

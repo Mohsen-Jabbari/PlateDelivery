@@ -47,7 +47,7 @@ namespace PlateDelivery.Web.Pages.Leon.ServiceCodings
             }
 
             if (_serviceCodingService
-                .IsServiceCodingExist(CreateServiceCodeingViewModel.ServiceCode, CreateServiceCodeingViewModel.CodeLevel4))
+                .IsServiceCodingExist(CreateServiceCodeingViewModel.ServiceCode, CreateServiceCodeingViewModel.CodeLevel4, CreateServiceCodeingViewModel.CertainId))
             {
                 ModelState.AddModelError("CreateServiceCodeingViewModel.ServiceCode", "این مبلغ و خدمت قبلا در سیستم ثبت شده است");
                 ViewData["Title"] = "ایجاد کد مبلغ و خدمت";

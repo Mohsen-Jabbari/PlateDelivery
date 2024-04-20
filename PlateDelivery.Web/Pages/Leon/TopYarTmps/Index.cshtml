@@ -259,7 +259,8 @@
                                                     <td>@item.ServiceCode</td>
                                                     <td>@item.CreationDate.ToShamsi()</td>
                                                     <td>
-                                                        <a href="/Leon/ServiceCodings/?pageId=1&fsn=&fsb=@item.ServiceCode" class="btn btn-warning btn-xs">بررسی سرویس</a>
+                                                        <a href="/Leon/ServiceCodings/?take=&filterByServiceName=&filterByServiceCode=@item.ServiceCode" class="btn btn-success btn-xs">بررسی سرویس</a>
+                                                        <a href="/Leon/TopYarTmps/EditTopYarTmp/@item.Id" class="btn btn-warning btn-xs">ویرایش</a>
                                                     </td>
                                                 </tr>
                                                 rowCount++;

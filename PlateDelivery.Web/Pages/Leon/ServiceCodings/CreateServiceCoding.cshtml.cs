@@ -42,9 +42,9 @@ namespace PlateDelivery.Web.Pages.Leon.ServiceCodings
                 return Page();
             }
 
-            if(cat.Category != CertainCategory.Tax)
+            if (cat.Category != CertainCategory.Tax)
             {
-                if((CreateServiceCodeingViewModel.CodeLevel4 == null))
+                if ((CreateServiceCodeingViewModel.CodeLevel4 == null))
                 {
                     ModelState.AddModelError("CreateServiceCodeingViewModel.CodeLevel4", "کد سطح 4 نمی تواند خالی باشد");
                     ViewData["Title"] = "ایجاد کد مبلغ و خدمت";
@@ -63,7 +63,7 @@ namespace PlateDelivery.Web.Pages.Leon.ServiceCodings
             }
 
             if (_serviceCodingService
-                .IsServiceCodingExist(CreateServiceCodeingViewModel.ServiceCode, CreateServiceCodeingViewModel.CodeLevel4))
+                .IsServiceCodingExist(CreateServiceCodeingViewModel.ServiceCode, CreateServiceCodeingViewModel.CodeLevel4, CreateServiceCodeingViewModel.CertainId))
             {
                 ModelState.AddModelError("CreateServiceCodeingViewModel.ServiceCode", "این مبلغ و خدمت قبلا در سیستم ثبت شده است");
                 ViewData["Title"] = "ایجاد کد مبلغ و خدمت";
