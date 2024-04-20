@@ -217,6 +217,56 @@
                                         </tbody>
                                     </table>
                                 }
+                                else if (Model.TopYarTmpViewModel.MultiplexMessage != null)
+                                {
+                                    int rowCount = 1;
+                                    <table id="datatable-checkbox" class="table table-striped table-bordered bulk_action dataTable no-footer" role="grid" aria-describedby="datatable-checkbox_info">
+                                        <thead>
+                                            <tr role="row">
+                                                <th class="hidden-xs">ردیف</th>
+                                                <th>استان</th>
+                                                <th>شهر / مرکز</th>
+                                                <th>شماره مرجع</th>
+                                                <th>شماره پیگیری</th>
+                                                <th>تاریخ تراکنش</th>
+                                                <th>شماره شبا</th>
+                                                <th>مبلغ</th>
+                                                <th>شماره پایانه</th>
+                                                <th>نام خدمت</th>
+                                                <th>کد خدمت</th>
+                                                <th>تاریخ ثبت</th>
+                                                <th>عملیات</th>
+                                            </tr>
+                                        </thead>
+
+
+                                        <tbody>
+
+                                            @foreach (var item in Model.TopYarTmpViewModel.TopYarTmps)
+                                            {
+
+                                                <tr role="row" class="odd">
+                                                    <td class="hidden-xs">@rowCount</td>
+                                                    <td>@item.ProvinceName</td>
+                                                    <td>@item.SubProvince</td>
+                                                    <td>@item.RetrivalRef</td>
+                                                    <td>@item.TrackingNo</td>
+                                                    <td>@item.TransactionDate</td>
+                                                    <td>@item.Iban</td>
+                                                    <td>@item.Amount</td>
+                                                    <td>@item.Terminal</td>
+                                                    <td>@item.ServiceName</td>
+                                                    <td>@item.ServiceCode</td>
+                                                    <td>@item.CreationDate.ToShamsi()</td>
+                                                    <td>
+                                                        <a href="/Leon/ServiceCodings/?pageId=1&fsn=&fsb=@item.ServiceCode" class="btn btn-warning btn-xs">بررسی سرویس</a>
+                                                    </td>
+                                                </tr>
+                                                rowCount++;
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
                                 else
                                 {
                                     <a href="/Leon/TopYarTmps/GenerateDocument" class="btn btn-primary">تبدیل به سند</a>

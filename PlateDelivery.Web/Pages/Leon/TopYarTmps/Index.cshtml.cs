@@ -4,6 +4,7 @@ using PlateDelivery.Core.Models.TopYarTmps;
 using PlateDelivery.Core.Services.Accounts;
 using PlateDelivery.Core.Services.ServiceCodings;
 using PlateDelivery.Core.Services.TopYarTmps;
+using PlateDelivery.DataLayer.Entities.TopYarTmpAgg;
 
 namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
 {
@@ -128,12 +129,16 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
 
             else if (TopYarTmpViewModel.ProvinceMessage == null)
             {
+                //در این مرحله بررسی میشود آیا رکوردی در تاپ یار وجود دارد که شه و استان ندارد یا خیر
+                //این کار تا جایی انجام می شود که تمام رکوردها شهر و استان داشته باشند
                 var nullProvince = TopYarTmpViewModel.TopYarTmps.Where(r => r.ProvinceName == null || r.ProvinceName == string.Empty ||
                 r.SubProvince == null || r.SubProvince == string.Empty).ToList();
                 if (nullProvince.Count != 0)
                 {
                     TopYarTmpViewModel = _topYarTmpService.GetTopYarNullProvince(1, 50);
                 }
+
+                //بعد از بررسی شهر و استان به این مرحله می رسیم
                 else
                 {
                     if (TopYarTmpViewModel.IbanMessage == null)
@@ -160,54 +165,33 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
 
                         #endregion
 
-                        #region قطعه کد زیر لیست خدماتی که تسهیم دارند رو نشون میده
+                        #region قطعه کد زیر باید بررسی کند که آیا رکوردی وجود دارد که مبلغ آن با مبلغ و خدمت مغایرت دارد یا خیر
 
                         if (TopYarTmpViewModel.ServiceMessage == null)
                         {
-                            var newService = _serviceCodingService.GetServiceCodings(1, 300, "", "").ServiceCodings.GroupBy(s => s.ServiceCode)
-                            .Where(group => group.Count() > 1)
-                            .Select(group => group.Key)
-                            .ToList();
-                            List<string> incompatibleMultpelxRRN = new();
+                            //سرویس ها را به صورت کد خدمت و جمع مبلغ لیست می کند
+                            var newService = _serviceCodingService.GetServiceCodings(1, 300, "", "").ServiceCodings
+                                .GroupBy(s => s.ServiceCode)
+                                    .Select(group => new { ServiceCode = group.Key, Amount = group.Sum(s => long.Parse(s.Amount)) })
+                                                                                                                    .ToList();
+                            List<string> incompatibleRRN = new();
                             TopYarTmpViewModel = _topYarTmpService.GetTopYarTmps();
-                            List<string> serviceToRemove = new();
+
                             foreach (var srvc in newService)
                             {
                                 //در این قسمت باید بررسی کنیم خدماتی که بیشتر از یک رکورد دارند آیا جمع مبالغشون
                                 //با مبلغ تراکنش برابر هست یا نه
                                 //اگر برابر نبود یعنی مبلغ خدمت عوض شده و باید اون خدمات لیست شوند
-                                var srvcCode = _serviceCodingService.GetByServiceCode(srvc);
-                                if (srvcCode != null)
+                                if (TopYarTmpViewModel.TopYarTmps.Any(s => s.ServiceCode == srvc.ServiceCode && long.Parse(s.Amount) != srvc.Amount))
                                 {
-                                    if (srvcCode.Where(s => !s.IncludeTax).Select(s => s.IncludeTax).Count() > 1)
-                                        serviceToRemove.Add(srvc);
+                                    incompatibleRRN.AddRange(TopYarTmpViewModel.TopYarTmps.Where(s => s.ServiceCode == srvc.ServiceCode).Select(s => s.RetrivalRef).ToList());
+                                }
+                            }
 
-                                    if (srvcCode.Count > 1 && srvcCode.Where(s => !s.IncludeTax).Any()
-                                                    && srvcCode.Where(s => s.IncludeTax).Any())
-                                        serviceToRemove.Add(srvc);
-                                }
-                            }
-                            foreach (var srvc in serviceToRemove)
+                            if (incompatibleRRN.Count > 0)
                             {
-                                newService.Remove(srvc);
-                            }
-                            //باید مبلغ هاشون رو در مرحله بعد پبدا کنیم و جمع کنیم و با مبلغ تراکنش مطابقت بدیم
-                            foreach (var item in newService)
-                            {
-                                var multiplexRecords = TopYarTmpViewModel.TopYarTmps.Where(s => s.ServiceCode == item).Select(s => new { s.RetrivalRef, s.ServiceCode, s.ServiceName, s.Amount }).ToList();
-                                var ServiceCode = _serviceCodingService.GetByServiceCode(item);
-                                foreach (var record in multiplexRecords)
-                                {
-                                    long recordAmount = long.Parse(record.Amount);
-                                    var serviceAmount = ServiceCode.Select(s => s.Amount).Sum();
-                                    if (recordAmount != serviceAmount)
-                                        incompatibleMultpelxRRN.Add(record.RetrivalRef);
-                                }
-                            }
-                            if (incompatibleMultpelxRRN.Count > 0)
-                            {
-                                TopYarTmpViewModel = _topYarTmpService.GetTopYarTmps(incompatibleMultpelxRRN);
-                                TopYarTmpViewModel.MultiplexMessage = "تعداد " + TopYarTmpViewModel.TopYarTmps.Count + " رکورد از تراکنش های تسهیمی دارای مبلغ مغایر با اطلاعات ثبت شده در سامانه دارد";
+                                TopYarTmpViewModel = _topYarTmpService.GetTopYarTmps(incompatibleRRN);
+                                TopYarTmpViewModel.MultiplexMessage = "تعداد " + TopYarTmpViewModel.TopYarTmps.Count + " رکورد از تراکنش دارای مبلغ مغایر با خدمت های ثبت شده در سامانه دارند";
                             }
 
                             else//دیتا برای سند زدن اوکی هست
