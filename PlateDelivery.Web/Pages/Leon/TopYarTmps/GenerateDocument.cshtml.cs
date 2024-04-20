@@ -67,17 +67,27 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                             var service = serviceCode.FirstOrDefault();
                             if (service != null)
                             {
-                                long order = _documentService.CreateDocument(item, service, MaxOrder);
-                                if (order > 0)
-                                    Ids.Add(item.Id);
-                                //    _topYarTmpService.DeleteTopYarTmp(item.Id);
+                                if (service.IncludeTax)
+                                {
+                                    long order = _documentService.CreateDocument(item, service, MaxOrder);
+                                    if (order > 0)
+                                        Ids.Add(item.Id);
+                                    //    _topYarTmpService.DeleteTopYarTmp(item.Id);
+                                }
+
+                                else if (!service.IncludeTax)
+                                {
+                                    long order = _documentService.CreateTaxDocument(item, service, MaxOrder);
+                                    if (order > 0)
+                                        Ids.Add(item.Id);
+                                    //    _topYarTmpService.DeleteTopYarTmp(item.Id);
+                                }
                             }
                             break;
 
 
                         case 2:
 
-                            //chack that IncludeTax is True or False
                             //چک کردن اینکه آیا دو تا رکورد مقدار بولین مالیات 1 دارند
                             var trueTax = serviceCode.Select(s => s.IncludeTax).ToList();
                             if (!trueTax.Contains(false))
@@ -149,27 +159,43 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
 
                                     if (totalAmount == long.Parse(item.Amount))
                                     {
-                                        foreach (var servic in serviceCode)
-                                        {
-                                            if (servic != null && servic.IncludeTax)
-                                            {
-                                                long order = _documentService.CreateDocument(item, servic, MaxOrder);
-                                                if (order > 0)
-                                                    Ids.Add(item.Id);
-                                                //    _topYarTmpService.DeleteTopYarTmp(item.Id);
-                                            }
+                                        long order = _documentService.CreateTaxDocument(item, serviceCode, MaxOrder);
+                                        if (order > 0)
+                                            Ids.Add(item.Id);
+                                        //    _topYarTmpService.DeleteTopYarTmp(item.Id);
 
-                                            else if (servic != null && !servic.IncludeTax)
-                                            {
-                                                long order = _documentService.CreateTaxDocument(item, servic, MaxOrder);
-                                                if (order > 0)
-                                                    Ids.Add(item.Id);
-                                                //    _topYarTmpService.DeleteTopYarTmp(item.Id);
-                                            }
-                                        }
+                                        //foreach (var servic in serviceCode)
+                                        //{
+                                        //    if (servic != null && servic.IncludeTax)
+                                        //    {
+                                        //        long order = _documentService.CreateDocument(item, servic, MaxOrder);
+                                        //        if (order > 0)
+                                        //            Ids.Add(item.Id);
+                                        //        //    _topYarTmpService.DeleteTopYarTmp(item.Id);
+                                        //    }
+
+                                        //    else if (servic != null && !servic.IncludeTax)
+                                        //    {
+                                        //        long order = _documentService.CreateTaxDocument(item, servic, MaxOrder);
+                                        //        if (order > 0)
+                                        //            Ids.Add(item.Id);
+                                        //        //    _topYarTmpService.DeleteTopYarTmp(item.Id);
+                                        //    }
+                                            
+                                        //    //در این حالت باید سند 4 سطری تولید شود
+                                        //}
                                     }
                                 }
                             }
+                            break;
+
+                        //برای حالتی است که خدمت شامل دو رکورد است که فقط باید سند بانک/مالیت بخورد و 
+                        //یک رکورد دارد که باید مبلغ مالیت از آن کم شود و یند بانک/درآمد/مالیت بخورد
+                        //و در کل یک سند 5 سطری ثبت شود
+                        case 3:
+                            long ordr = _documentService.CreateTaxTaxIncomeDocument(item, serviceCode, MaxOrder);
+                            if (ordr > 0)
+                                Ids.Add(item.Id);
                             break;
                     }
                 }

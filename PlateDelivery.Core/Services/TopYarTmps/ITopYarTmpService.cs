@@ -16,6 +16,7 @@ public interface ITopYarTmpService
                   string? filterByRRN = "", string? filterByTrackingNo = "", string? filterByTransactionDate = "",
                     string? filterByIban = "", string? filterByAmount = "", string? filterByTerminal = "", string? filterByServiceCode = "",
                        string? filterByProvinceName = "", string? filterBySubProvince = "");
+    TopYarTmpViewModel GetTopYarNullProvince(int pageId = 1, int take = 50);
     TopYarTmpViewModel GetTopYarTmps(int pageId = 1, int take = 50);
     TopYarTmpViewModel GetTopYarTmps();
     TopYarTmpViewModel GetTopYarTmpsForDocument();
