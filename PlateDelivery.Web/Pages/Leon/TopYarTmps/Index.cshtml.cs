@@ -182,12 +182,32 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                 //در این قسمت باید بررسی کنیم خدماتی که بیشتر از یک رکورد دارند آیا جمع مبالغشون
                                 //با مبلغ تراکنش برابر هست یا نه
                                 //اگر برابر نبود یعنی مبلغ خدمت عوض شده و باید اون خدمات لیست شوند
-                                if (TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode})
+                                if (TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
                                     .Any(group => group.Key.ServiceCode == srvc.ServiceCode && group.Sum(group => long.Parse(group.Amount)) != srvc.Amount))
                                 {
-                                    incompatibleRRN.AddRange(TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
+                                    var ratio = _serviceCodingService.GetByServiceCode(srvc.ServiceCode).Select(s => s.Ratio).FirstOrDefault();
+
+                                    if (ratio)
+                                    {
+                                        var transactions = TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
+                                    .Where(group => group.Key.ServiceCode == srvc.ServiceCode && group.Sum(group => long.Parse(group.Amount)) != srvc.Amount).ToList();
+
+                                        foreach (var trans in transactions.ToList())
+                                        {
+                                            var amount = trans.Select(t => t.Amount).FirstOrDefault();
+                                            if (long.Parse(amount) % srvc.Amount == 0)
+                                            {
+                                                transactions.Remove(trans);
+                                            }
+                                        }
+                                        incompatibleRRN.AddRange(transactions.Select(s => s.Key.RetrivalRef).ToList());
+                                    }
+                                    else
+                                    {
+                                        incompatibleRRN.AddRange(TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
                                         .Where(group => group.Key.ServiceCode == srvc.ServiceCode && group.Sum(group => long.Parse(group.Amount)) != srvc.Amount).Select(s => s.Key.RetrivalRef).ToList());
-                                    srv.Add(srvc.ServiceCode);
+                                        srv.Add(srvc.ServiceCode);
+                                    }
                                 }
                             }
 
