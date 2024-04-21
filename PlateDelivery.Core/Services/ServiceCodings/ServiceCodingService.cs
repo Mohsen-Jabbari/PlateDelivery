@@ -19,7 +19,8 @@ internal class ServiceCodingService : IServiceCodingService
         if (!_repository.Exists(u => u.ServiceCode == model.ServiceCode && u.CodeLevel4 == model.CodeLevel4 && u.CertainId == model.CertainId))
         {
             var serviceCoding = new ServiceCoding(model.ServiceName, model.ServiceFullName, model.ServiceCode,
-                model.CodeLevel4, model.CodeLevel6, model.CertainId, model.Amount.ToString(), model.IncludeTax);
+                model.CodeLevel4, model.CodeLevel6, model.CertainId, model.Amount.ToString(), model.IncludeTax,
+                    model.Ratio);
             _repository.Add(serviceCoding);
             _repository.SaveSync();
             return serviceCoding.Id;
@@ -45,7 +46,8 @@ internal class ServiceCodingService : IServiceCodingService
         if (oldServiceCoding != null)
         {
             oldServiceCoding.Edit(model.ServiceName, model.ServiceFullName, model.ServiceCode,
-                model.CodeLevel4, model.CodeLevel6, model.CertainId, model.Amount.ToString(), model.IncludeTax);
+                model.CodeLevel4, model.CodeLevel6, model.CertainId, model.Amount.ToString(), model.IncludeTax,
+                    model.Ratio);
             _repository.SaveSync();
             return true;
         }
@@ -67,7 +69,8 @@ internal class ServiceCodingService : IServiceCodingService
                 CertainId = result.CertainId,
                 CreationDate = result.CreationDate,
                 Amount = long.Parse(result.Amount),
-                IncludeTax = result.IncludeTax
+                IncludeTax = result.IncludeTax,
+                Ratio = result.Ratio
             };
         return null;
     }
@@ -92,7 +95,8 @@ internal class ServiceCodingService : IServiceCodingService
                     CertainId = item.CertainId,
                     CreationDate = item.CreationDate,
                     Amount = long.Parse(item.Amount),
-                    IncludeTax = item.IncludeTax
+                    IncludeTax = item.IncludeTax,
+                    Ratio = item.Ratio
                 });
             }
             return poorResult;

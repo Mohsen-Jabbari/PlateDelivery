@@ -81,6 +81,7 @@
                                             <th style="width: 50px;">سطح 6</th>
                                             <th style="width: 60px;">مبلغ</th>
                                             <th style="width: 120px;">مالیات ارزش افزوده</th>
+                                            <th style="width: 60px;">ضریب</th>
                                             <th style="width: 100px;">عملیات</th>
                                         </tr>
                                     </thead>
@@ -111,6 +112,16 @@
                                                 <td>@item.Amount</td>
                                                 <td>
                                                     @if (item.IncludeTax)
+                                                    {
+                                                        <span class="alert-success" style="font-size:medium">دارد</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="alert-danger" style="font-size:medium">ندارد</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (item.Ratio)
                                                     {
                                                         <span class="alert-success" style="font-size:medium">دارد</span>
                                                     }

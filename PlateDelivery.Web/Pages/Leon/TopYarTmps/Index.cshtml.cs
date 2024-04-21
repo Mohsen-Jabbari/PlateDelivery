@@ -4,8 +4,6 @@ using PlateDelivery.Core.Models.TopYarTmps;
 using PlateDelivery.Core.Services.Accounts;
 using PlateDelivery.Core.Services.ServiceCodings;
 using PlateDelivery.Core.Services.TopYarTmps;
-using PlateDelivery.DataLayer.Entities.TopYarTmpAgg;
-using System.Linq;
 
 namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
 {
@@ -187,8 +185,8 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                 if (TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode})
                                     .Any(group => group.Key.ServiceCode == srvc.ServiceCode && group.Sum(group => long.Parse(group.Amount)) != srvc.Amount))
                                 {
-                                    incompatibleRRN.Add(TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
-                                        .Where(group => group.Key.ServiceCode == srvc.ServiceCode && group.Sum(group => long.Parse(group.Amount)) != srvc.Amount).Select(s => s.Key.RetrivalRef).First());
+                                    incompatibleRRN.AddRange(TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
+                                        .Where(group => group.Key.ServiceCode == srvc.ServiceCode && group.Sum(group => long.Parse(group.Amount)) != srvc.Amount).Select(s => s.Key.RetrivalRef).ToList());
                                     srv.Add(srvc.ServiceCode);
                                 }
                             }

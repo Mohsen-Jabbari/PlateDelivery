@@ -28,6 +28,8 @@ public class CreateAndEditServiceCodeingViewModel : BaseDto
 
     [Display(Name = "مالیات ارزش افزوده")]
     public bool IncludeTax { get; set; }
+    [Display(Name = "ضریب")]
+    public bool Ratio { get; set; }
 }
 
 public class ServiceCodingsViewModel

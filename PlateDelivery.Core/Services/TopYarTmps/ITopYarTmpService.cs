@@ -10,6 +10,7 @@ public interface ITopYarTmpService
     bool DeleteTopYarTmp(List<long> Ids);
     bool IsTopYarTmpExist(string retrivalRefNo);
     void DeleteTopYarTmp();
+    void DeleteTopYarTmpRecord(long Id);
     void DeleteUnUsedRecords(List<string> UnUsedAccounts);
 
     TopYarTmpViewModel GetTopYarTmps(int pageId = 1, int take = 50,

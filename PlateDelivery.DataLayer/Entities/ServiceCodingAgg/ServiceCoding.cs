@@ -6,7 +6,7 @@ namespace PlateDelivery.DataLayer.Entities.ServiceCodingAgg;
 public class ServiceCoding : BaseEntity
 {
     public ServiceCoding(string serviceName, string serviceFullName, string serviceCode, string codeLevel4,
-        string codeLevel6, long certainId, string amount, bool includeTax)
+        string codeLevel6, long certainId, string amount, bool includeTax, bool ratio)
     {
         ServiceName = serviceName;
         ServiceFullName = serviceFullName;
@@ -16,10 +16,11 @@ public class ServiceCoding : BaseEntity
         CertainId = certainId;
         Amount = amount;
         IncludeTax = includeTax;
+        Ratio = ratio;
     }
 
     public void Edit(string serviceName, string serviceFullName, string serviceCode, string codeLevel4, 
-        string codeLevel6, long certainId, string amount, bool includeTax)
+        string codeLevel6, long certainId, string amount, bool includeTax, bool ratio)
     {
         ServiceName = serviceName;
         ServiceFullName = serviceFullName;
@@ -29,6 +30,7 @@ public class ServiceCoding : BaseEntity
         CertainId = certainId;
         Amount = amount;
         IncludeTax = includeTax;
+        Ratio = ratio;
     }
 
     private ServiceCoding()
@@ -53,4 +55,5 @@ public class ServiceCoding : BaseEntity
     public string? CodeLevel6 { get; private set; }
     public string Amount { get; private set; }
     public bool IncludeTax { get; private set; }
+    public bool Ratio { get; private set; }
 }
