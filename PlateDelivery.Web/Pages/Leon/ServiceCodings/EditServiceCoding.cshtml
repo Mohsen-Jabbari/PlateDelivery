@@ -91,6 +91,15 @@
                             <span asp-validation-for="EditServiceCodingViewModel.Amount" class="text-danger"></span>
                         </div>
                     </div>
+                    <div class="item form-group">
+                        <label asp-for="EditServiceCodingViewModel.OldAmount" class="control-label col-md-7  ">
+                        </label>
+                        <div class="col-md-8">
+                            <input asp-for="EditServiceCodingViewModel.OldAmount" class="form-control" onkeypress="return onlyNumberKey(event)" style="font-size:medium" placeholder="لطفا مبلغ قدیم را وارد کنید" type="text">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                            <span asp-validation-for="EditServiceCodingViewModel.OldAmount" class="text-danger"></span>
+                        </div>
+                    </div>
                     <div class="item  form-group">
                         <label asp-for="EditServiceCodingViewModel.IncludeTax" class="control-label col-md-7  ">
                         </label>

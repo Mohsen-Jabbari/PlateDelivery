@@ -26,6 +26,10 @@ public class CreateAndEditServiceCodeingViewModel : BaseDto
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public long Amount { get; set; }
 
+    [Display(Name = "مبلغ قدیم خدمت")]
+    [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
+    public long OldAmount { get; set; }
+
     [Display(Name = "مالیات ارزش افزوده")]
     public bool IncludeTax { get; set; }
     [Display(Name = "ضریب")]

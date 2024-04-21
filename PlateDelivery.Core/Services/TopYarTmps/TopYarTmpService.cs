@@ -327,6 +327,7 @@ internal class TopYarTmpService : ITopYarTmpService
         list.TopYarTmps = result.OrderByDescending(u => u.RetrivalRef)
                     .Where(u => rrn.Contains(u.RetrivalRef)).ToList();
         list.TopYarTmpCounts = result.Count;
+        list.TopYarTmps.Take(100).ToList();
         return list;
     }
 

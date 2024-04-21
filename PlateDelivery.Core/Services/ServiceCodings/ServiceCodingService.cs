@@ -20,7 +20,7 @@ internal class ServiceCodingService : IServiceCodingService
         {
             var serviceCoding = new ServiceCoding(model.ServiceName, model.ServiceFullName, model.ServiceCode,
                 model.CodeLevel4, model.CodeLevel6, model.CertainId, model.Amount.ToString(), model.IncludeTax,
-                    model.Ratio);
+                    model.Ratio, model.OldAmount.ToString());
             _repository.Add(serviceCoding);
             _repository.SaveSync();
             return serviceCoding.Id;
@@ -47,7 +47,7 @@ internal class ServiceCodingService : IServiceCodingService
         {
             oldServiceCoding.Edit(model.ServiceName, model.ServiceFullName, model.ServiceCode,
                 model.CodeLevel4, model.CodeLevel6, model.CertainId, model.Amount.ToString(), model.IncludeTax,
-                    model.Ratio);
+                    model.Ratio, model.OldAmount.ToString());
             _repository.SaveSync();
             return true;
         }
@@ -69,6 +69,7 @@ internal class ServiceCodingService : IServiceCodingService
                 CertainId = result.CertainId,
                 CreationDate = result.CreationDate,
                 Amount = long.Parse(result.Amount),
+                OldAmount = long.Parse(result.OldAmount),
                 IncludeTax = result.IncludeTax,
                 Ratio = result.Ratio
             };
@@ -95,6 +96,7 @@ internal class ServiceCodingService : IServiceCodingService
                     CertainId = item.CertainId,
                     CreationDate = item.CreationDate,
                     Amount = long.Parse(item.Amount),
+                    OldAmount = long.Parse(item.OldAmount),
                     IncludeTax = item.IncludeTax,
                     Ratio = item.Ratio
                 });
