@@ -169,7 +169,7 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                         if (TopYarTmpViewModel.ServiceMessage == null)
                         {
                             //سرویس ها را به صورت کد خدمت و جمع مبلغ لیست می کند
-                            var newService = _serviceCodingService.GetServiceCodings(1, 300, "", "").ServiceCodings
+                            var newService = _serviceCodingService.GetServiceCodingsExceptParking(1, 300, "", "").ServiceCodings
                                 .GroupBy(s => s.ServiceCode)
                                     .Select(group => new { ServiceCode = group.Key, Amount = group.Sum(s => long.Parse(s.Amount)) })
                                                                                                                     .ToList();
