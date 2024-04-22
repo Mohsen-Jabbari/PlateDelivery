@@ -171,9 +171,12 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                             //سرویس ها را به صورت کد خدمت و جمع مبلغ لیست می کند
                             var newService = _serviceCodingService.GetServiceCodingsExceptParking(1, 300, "", "").ServiceCodings
                                 .GroupBy(s => s.ServiceCode)
-                                    .Select(group => new { ServiceCode = group.Key, 
-                                            Amount = group.Sum(s => long.Parse(s.Amount)),
-                                                OldAmount = group.Sum(s => long.Parse(s.OldAmount)) }).ToList();
+                                    .Select(group => new
+                                    {
+                                        ServiceCode = group.Key,
+                                        Amount = group.Sum(s => long.Parse(s.Amount)),
+                                        OldAmount = group.Sum(s => long.Parse(s.OldAmount))
+                                    }).ToList();
                             List<string> incompatibleRRN = new();
                             List<string> srv = new();
                             TopYarTmpViewModel = _topYarTmpService.GetTopYarTmps();
@@ -183,33 +186,83 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                 //در این قسمت باید بررسی کنیم خدماتی که بیشتر از یک رکورد دارند آیا جمع مبالغشون
                                 //با مبلغ تراکنش برابر هست یا نه
                                 //اگر برابر نبود یعنی مبلغ خدمت عوض شده و باید اون خدمات لیست شوند
+                                //if (TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
+                                //    .Any(group => group.Key.ServiceCode == srvc.ServiceCode && 
+                                //    (group.Sum(group => long.Parse(group.Amount)) != srvc.Amount && group.Sum(group => long.Parse(group.Amount)) != srvc.OldAmount)))
                                 if (TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
-                                    .Any(group => group.Key.ServiceCode == srvc.ServiceCode && 
-                                    (group.Sum(group => long.Parse(group.Amount)) != srvc.Amount && group.Sum(group => long.Parse(group.Amount)) != srvc.OldAmount)))
+                                    .Any(group => group.Key.ServiceCode == srvc.ServiceCode &&
+                                        group.Sum(group => long.Parse(group.Amount)) != srvc.OldAmount))
                                 {
-                                    var ratio = _serviceCodingService.GetByServiceCode(srvc.ServiceCode).Select(s => s.Ratio).FirstOrDefault();
-
-                                    if (ratio)
+                                    if (TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
+                                    .Any(group => group.Key.ServiceCode == srvc.ServiceCode &&
+                                        group.Sum(group => long.Parse(group.Amount)) != srvc.Amount))
                                     {
-                                        var transactions = TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
-                                    .Where(group => group.Key.ServiceCode == srvc.ServiceCode && 
-                                        (group.Sum(group => long.Parse(group.Amount)) != srvc.Amount && group.Sum(group => long.Parse(group.Amount)) != srvc.OldAmount)).ToList();
+                                        var ratio = _serviceCodingService.GetByServiceCode(srvc.ServiceCode).Select(s => s.Ratio).FirstOrDefault();
 
-                                        foreach (var trans in transactions.ToList())
+                                        if (ratio)
                                         {
-                                            var amount = trans.Select(t => t.Amount).FirstOrDefault();
-                                            if ((long.Parse(amount) % srvc.Amount == 0) && long.Parse(amount) % srvc.OldAmount == 0)
+                                            var transactions = TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
+                                                .Where(group => group.Key.ServiceCode == srvc.ServiceCode &&
+                                                    (group.Sum(group => long.Parse(group.Amount)) != srvc.Amount && group.Sum(group => long.Parse(group.Amount)) != srvc.OldAmount)).ToList();
+
+                                            foreach (var trans in transactions.ToList())
                                             {
-                                                transactions.Remove(trans);
+                                                var amount = trans.Select(t => t.Amount).FirstOrDefault();
+                                                if ((long.Parse(amount) % srvc.Amount == 0) && (long.Parse(amount) % srvc.OldAmount == 0))
+                                                {
+                                                    transactions.Remove(trans);
+                                                }
                                             }
+                                            incompatibleRRN.AddRange(transactions.Select(s => s.Key.RetrivalRef).ToList());
                                         }
-                                        incompatibleRRN.AddRange(transactions.Select(s => s.Key.RetrivalRef).ToList());
+                                        else
+                                        {
+                                            incompatibleRRN.AddRange(TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
+                                            .Where(group => group.Key.ServiceCode == srvc.ServiceCode && (group.Sum(group => long.Parse(group.Amount)) != srvc.Amount && group.Sum(group => long.Parse(group.Amount)) != srvc.OldAmount)).Select(s => s.Key.RetrivalRef).ToList());
+                                            srv.Add(srvc.ServiceCode);
+                                        }
                                     }
+                                }
+
+                                
+                                
+                                else if (TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
+                                    .Any(group => group.Key.ServiceCode == srvc.ServiceCode &&
+                                        group.Sum(group => long.Parse(group.Amount)) != srvc.Amount))
+                                {
+                                    if (TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
+                                    .Any(group => group.Key.ServiceCode == srvc.ServiceCode &&
+                                        group.Sum(group => long.Parse(group.Amount)) != srvc.OldAmount))
+                                    {
+                                        var ratio = _serviceCodingService.GetByServiceCode(srvc.ServiceCode).Select(s => s.Ratio).FirstOrDefault();
+
+                                        if (ratio)
+                                        {
+                                            var transactions = TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
+                                                .Where(group => group.Key.ServiceCode == srvc.ServiceCode &&
+                                                    (group.Sum(group => long.Parse(group.Amount)) != srvc.Amount && group.Sum(group => long.Parse(group.Amount)) != srvc.OldAmount)).ToList();
+
+                                            foreach (var trans in transactions.ToList())
+                                            {
+                                                var amount = trans.Select(t => t.Amount).FirstOrDefault();
+                                                if ((long.Parse(amount) % srvc.Amount == 0) && (long.Parse(amount) % srvc.OldAmount == 0))
+                                                {
+                                                    transactions.Remove(trans);
+                                                }
+                                            }
+                                            incompatibleRRN.AddRange(transactions.Select(s => s.Key.RetrivalRef).ToList());
+                                        }
+                                        else
+                                        {
+                                            incompatibleRRN.AddRange(TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
+                                            .Where(group => group.Key.ServiceCode == srvc.ServiceCode && (group.Sum(group => long.Parse(group.Amount)) != srvc.Amount && group.Sum(group => long.Parse(group.Amount)) != srvc.OldAmount)).Select(s => s.Key.RetrivalRef).ToList());
+                                            srv.Add(srvc.ServiceCode);
+                                        }
+                                    }
+
                                     else
                                     {
-                                        incompatibleRRN.AddRange(TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
-                                        .Where(group => group.Key.ServiceCode == srvc.ServiceCode && (group.Sum(group => long.Parse(group.Amount)) != srvc.Amount && group.Sum(group => long.Parse(group.Amount)) != srvc.OldAmount)).Select(s => s.Key.RetrivalRef).ToList());
-                                        srv.Add(srvc.ServiceCode);
+
                                     }
                                 }
                             }

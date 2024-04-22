@@ -127,27 +127,22 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                     }
                                     else
                                     {
-                                        var totalAmount = serviceCode.Select(s => long.Parse(s.Amount)).Sum();
-
-                                        if (totalAmount == long.Parse(item.Amount))
+                                        foreach (var servic in serviceCode)
                                         {
-                                            foreach (var servic in serviceCode)
+                                            if (servic.CodeLevel6 != null)
                                             {
-                                                if (servic.CodeLevel6 != null)
-                                                {
-                                                    long order = _documentService.CreateIncomeDocument(item, servic, MaxOrder);
-                                                    if (order > 0)
-                                                        Ids.Add(item.Id);
-                                                    //    _topYarTmpService.DeleteTopYarTmp(item.Id);
-                                                }
+                                                long order = _documentService.CreateIncomeDocument(item, servic, MaxOrder);
+                                                if (order > 0)
+                                                    Ids.Add(item.Id);
+                                                //    _topYarTmpService.DeleteTopYarTmp(item.Id);
+                                            }
 
-                                                else
-                                                {
-                                                    long order = _documentService.CreateTaxDocument(item, servic, MaxOrder);
-                                                    if (order > 0)
-                                                        Ids.Add(item.Id);
-                                                    //    _topYarTmpService.DeleteTopYarTmp(item.Id);
-                                                }
+                                            else
+                                            {
+                                                long order = _documentService.CreateTaxDocument(item, servic, MaxOrder);
+                                                if (order > 0)
+                                                    Ids.Add(item.Id);
+                                                //    _topYarTmpService.DeleteTopYarTmp(item.Id);
                                             }
                                         }
                                     }
@@ -155,36 +150,31 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                 //در این حالت یکی از فیلدهای مالیات صفر است و دیگری 1
                                 else
                                 {
-                                    var totalAmount = serviceCode.Select(s => long.Parse(s.Amount)).Sum();
+                                    long order = _documentService.CreateTaxDocument(item, serviceCode, MaxOrder);
+                                    if (order > 0)
+                                        Ids.Add(item.Id);
+                                    //    _topYarTmpService.DeleteTopYarTmp(item.Id);
 
-                                    if (totalAmount == long.Parse(item.Amount))
-                                    {
-                                        long order = _documentService.CreateTaxDocument(item, serviceCode, MaxOrder);
-                                        if (order > 0)
-                                            Ids.Add(item.Id);
-                                        //    _topYarTmpService.DeleteTopYarTmp(item.Id);
+                                    //foreach (var servic in serviceCode)
+                                    //{
+                                    //    if (servic != null && servic.IncludeTax)
+                                    //    {
+                                    //        long order = _documentService.CreateDocument(item, servic, MaxOrder);
+                                    //        if (order > 0)
+                                    //            Ids.Add(item.Id);
+                                    //        //    _topYarTmpService.DeleteTopYarTmp(item.Id);
+                                    //    }
 
-                                        //foreach (var servic in serviceCode)
-                                        //{
-                                        //    if (servic != null && servic.IncludeTax)
-                                        //    {
-                                        //        long order = _documentService.CreateDocument(item, servic, MaxOrder);
-                                        //        if (order > 0)
-                                        //            Ids.Add(item.Id);
-                                        //        //    _topYarTmpService.DeleteTopYarTmp(item.Id);
-                                        //    }
+                                    //    else if (servic != null && !servic.IncludeTax)
+                                    //    {
+                                    //        long order = _documentService.CreateTaxDocument(item, servic, MaxOrder);
+                                    //        if (order > 0)
+                                    //            Ids.Add(item.Id);
+                                    //        //    _topYarTmpService.DeleteTopYarTmp(item.Id);
+                                    //    }
 
-                                        //    else if (servic != null && !servic.IncludeTax)
-                                        //    {
-                                        //        long order = _documentService.CreateTaxDocument(item, servic, MaxOrder);
-                                        //        if (order > 0)
-                                        //            Ids.Add(item.Id);
-                                        //        //    _topYarTmpService.DeleteTopYarTmp(item.Id);
-                                        //    }
-                                            
-                                        //    //در این حالت باید سند 4 سطری تولید شود
-                                        //}
-                                    }
+                                    //    //در این حالت باید سند 4 سطری تولید شود
+                                    //}
                                 }
                             }
                             break;
