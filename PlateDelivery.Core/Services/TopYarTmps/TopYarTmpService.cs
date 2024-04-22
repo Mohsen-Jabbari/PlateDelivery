@@ -61,6 +61,11 @@ internal class TopYarTmpService : ITopYarTmpService
         _repository.DeleteTopYarTmp(Id);
     }
 
+    public void ExceptTopYarTmpRecord(long Id)
+    {
+        _repository.ExceptTopYarTmp(Id);
+    }
+
     public void DeleteUnUsedRecords(List<string> UnUsedAccounts)
     {
         _repository.DeleteUnUsedTopYarTmp(UnUsedAccounts);

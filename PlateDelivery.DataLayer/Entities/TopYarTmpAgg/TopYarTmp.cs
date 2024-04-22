@@ -63,6 +63,11 @@ public class TopYarTmp : BaseEntity
         NullOrEmptyDataException.CheckString(ServiceCode, nameof(ServiceCode));
     }
 
+    public void ExceptTopYarRecord()
+    {
+        ProvinceCode = "Except";
+    }
+
     public string RetrivalRef { get; private set; }
     public string TrackingNo { get; private set; }
     public string TransactionDate { get; private set; }

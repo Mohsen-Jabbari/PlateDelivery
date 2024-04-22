@@ -11,6 +11,7 @@ public interface ITopYarTmpService
     bool IsTopYarTmpExist(string retrivalRefNo);
     void DeleteTopYarTmp();
     void DeleteTopYarTmpRecord(long Id);
+    void ExceptTopYarTmpRecord(long Id);
     void DeleteUnUsedRecords(List<string> UnUsedAccounts);
 
     TopYarTmpViewModel GetTopYarTmps(int pageId = 1, int take = 50,

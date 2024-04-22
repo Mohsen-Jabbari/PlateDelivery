@@ -1,6 +1,6 @@
 ﻿@page "{Id}"
 @using PlateDelivery.Core.Security
-@model PlateDelivery.Web.Pages.Leon.TopYarTmps.DeleteTopYarTmpModel
+@model PlateDelivery.Web.Pages.Leon.TopYarTmps.ExceptTopYarTmpModel
 @{
     
 }
@@ -22,8 +22,8 @@
             <div class="clearfix"></div>
         </div>
         <div class="x_content">
-            <div class="alert alert-danger rounded text-danger">
-                آیا از حذف داده های موجود اطمینان دارید؟
+            <div class="alert alert-success rounded text-danger">
+                آیا از تایید رکورد اطمینان دارید؟
             </div>
             <form method="post">
                 <input type="hidden" asp-for="model.Id" />
@@ -33,7 +33,7 @@
                 <p> عنوان خدمت : @Model.model.ServiceName</p>
                 <p> کد خدمت : @Model.model.ServiceCode</p>
                 <p> مبلغ : @long.Parse(Model.model.Amount).ToString("#,##0") ریال</p>
-                <input type="submit" class="btn btn-danger btn-round" value="حذف" />
+                <input type="submit" class="btn btn-success btn-round" value="تایید" />
                 <a asp-page="Index" class="btn btn-info btn-round">انصراف</a>
             </form>
         </div>

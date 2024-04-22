@@ -119,7 +119,7 @@
                                                     <td>@item.TrackingNo</td>
                                                     <td>@item.TransactionDate</td>
                                                     <td>@item.Iban</td>
-                                                    <td>@item.Amount</td>
+                                                    <td>@long.Parse(item.Amount).ToString("##,# ریال")</td>
                                                     <td>@item.Terminal</td>
                                                     <td>@item.ServiceName</td>
                                                     <td>@item.ServiceCode</td>
@@ -202,7 +202,7 @@
                                                     <td>@item.TrackingNo</td>
                                                     <td>@item.TransactionDate</td>
                                                     <td>@item.Iban</td>
-                                                    <td>@item.Amount</td>
+                                                    <td>@long.Parse(item.Amount).ToString("##,# ریال")</td>
                                                     <td>@item.Terminal</td>
                                                     <td>@item.ServiceName</td>
                                                     <td>@item.ServiceCode</td>
@@ -227,7 +227,6 @@
                                                 <th>استان</th>
                                                 <th>شهر / مرکز</th>
                                                 <th>شماره مرجع</th>
-                                                <th>شماره پیگیری</th>
                                                 <th>تاریخ تراکنش</th>
                                                 <th>شماره شبا</th>
                                                 <th>مبلغ</th>
@@ -250,10 +249,9 @@
                                                     <td>@item.ProvinceName</td>
                                                     <td>@item.SubProvince</td>
                                                     <td>@item.RetrivalRef</td>
-                                                    <td>@item.TrackingNo</td>
                                                     <td>@item.TransactionDate</td>
                                                     <td>@item.Iban</td>
-                                                    <td>@item.Amount</td>
+                                                    <td>@long.Parse(item.Amount).ToString("##,# ریال")</td>
                                                     <td>@item.Terminal</td>
                                                     <td>@item.ServiceName</td>
                                                     <td>@item.ServiceCode</td>
@@ -262,6 +260,7 @@
                                                         <a href="/Leon/ServiceCodings/?take=&filterByServiceName=&filterByServiceCode=@item.ServiceCode" class="btn btn-success btn-xs">بررسی سرویس</a>
                                                         <a href="/Leon/TopYarTmps/EditTopYarTmp/@item.Id" class="btn btn-warning btn-xs">ویرایش</a>
                                                         <a href="/Leon/TopYarTmps/DeleteTopYarTmp/@item.Id" class="btn btn-danger btn-xs">حذف</a>
+                                                        <a href="/Leon/TopYarTmps/ExceptTopYarTmp/@item.Id" class="btn btn-primary btn-xs">تایید</a>
                                                     </td>
                                                 </tr>
                                                 rowCount++;
@@ -306,7 +305,7 @@
                                                     <td>@item.TrackingNo</td>
                                                     <td>@item.TransactionDate</td>
                                                     <td>@item.Iban</td>
-                                                    <td>@item.Amount</td>
+                                                    <td>@long.Parse(item.Amount).ToString("##,# ریال")</td>
                                                     <td>@item.Terminal</td>
                                                     <td>@item.ServiceName</td>
                                                     <td>@item.ServiceCode</td>

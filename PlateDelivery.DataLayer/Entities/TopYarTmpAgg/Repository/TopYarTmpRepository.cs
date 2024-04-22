@@ -28,6 +28,19 @@ internal class TopYarTmpRepository : BaseRepository<TopYarTmp>, ITopYarTmpReposi
         return false;
     }
 
+    public bool ExceptTopYarTmp(long Id)
+    {
+        var item = Context.TopYarTmps.FirstOrDefault(x => x.Id == Id);
+        if (item != null)
+        {
+            item.ExceptTopYarRecord();
+            Context.TopYarTmps.Update(item);
+            Context.SaveChanges();
+            return true;
+        }
+        return false;
+    }
+
     public bool DeleteTopYarTmp(List<long> Ids)
     {
         var items = Context.TopYarTmps.Where(x => Ids.Contains(x.Id)).ToList();
