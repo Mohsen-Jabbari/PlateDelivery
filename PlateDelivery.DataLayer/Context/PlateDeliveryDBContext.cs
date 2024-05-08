@@ -16,7 +16,7 @@ public class PlateDeliveryDBContext : DbContext
 {
     public PlateDeliveryDBContext(DbContextOptions<PlateDeliveryDBContext> options) : base(options)
     {
-
+        Database.SetCommandTimeout(3600);
     }
 
     public DbSet<User> Users { get; set; }

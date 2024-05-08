@@ -189,6 +189,8 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                 //if (TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
                                 //    .Any(group => group.Key.ServiceCode == srvc.ServiceCode && 
                                 //    (group.Sum(group => long.Parse(group.Amount)) != srvc.Amount && group.Sum(group => long.Parse(group.Amount)) != srvc.OldAmount)))
+                                
+                                //بر اساس OldAmount
                                 if (TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode})
                                     .Any(group => group.Key.ServiceCode == srvc.ServiceCode &&
                                         group.Sum(group => long.Parse(group.Amount)) != srvc.OldAmount && 
@@ -224,7 +226,13 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                             incompatibleRRN.AddRange(TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
                                             .Where(group => group.Key.ServiceCode == srvc.ServiceCode && 
                                                 (group.Sum(group => long.Parse(group.Amount)) != srvc.Amount && 
-                                                    group.Sum(group => long.Parse(group.Amount)) != srvc.OldAmount) && 
+                                                        group.Any(group => group.ProvinceCode != "Except")))
+                                                            .Select(s => s.Key.RetrivalRef).ToList());
+                                            
+                                            incompatibleRRN.AddRange(TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
+                                            .Where(group => group.Key.ServiceCode == srvc.ServiceCode &&
+                                                (group.Sum(group => long.Parse(group.Amount)) != srvc.Amount &&
+                                                    group.Sum(group => long.Parse(group.Amount)) != srvc.OldAmount) &&
                                                         group.Any(group => group.ProvinceCode != "Except"))
                                                             .Select(s => s.Key.RetrivalRef).ToList());
                                             srv.Add(srvc.ServiceCode);
@@ -234,6 +242,7 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
 
                                 
                                 
+                                //بر اساس Amount
                                 else if (TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
                                     .Any(group => group.Key.ServiceCode == srvc.ServiceCode &&
                                         group.Sum(group => long.Parse(group.Amount)) != srvc.Amount && 

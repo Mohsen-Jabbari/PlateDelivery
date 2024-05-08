@@ -5,6 +5,7 @@ using PlateDelivery.DataLayer.Entities.CertainAgg.Repository;
 using PlateDelivery.DataLayer.Entities.DocumentAgg;
 using PlateDelivery.DataLayer.Entities.DocumentAgg.Enums;
 using PlateDelivery.DataLayer.Entities.DocumentAgg.Repository;
+using PlateDelivery.DataLayer.Entities.DocumentAgg.Types;
 using PlateDelivery.DataLayer.Entities.ProvinceAgg.Repository;
 using PlateDelivery.DataLayer.Entities.ServiceCodingAgg;
 using PlateDelivery.DataLayer.Entities.ServiceCodingAgg.Repository;
@@ -1025,43 +1026,44 @@ internal class DocumentService : IDocumentService
 
     public List<Document> GetDocumentsByDocDateForTax(string docDate)
     {
+        List<string> validCertains = new() { "60120", "69090" };
         IQueryable<Document> result = _repository.GetDocumentByDate(docDate);
-        result = result.Where(r => r.CertainCode == "10101");
+        result = result.Where(r => validCertains.Contains(r.CertainCode));
+        #region MyRegion
+        //var taxService = _serviceCodingRepository.GetAll();
+        //taxService = taxService.Where(s => s.IncludeTax == false && s.CodeLevel6 == null).ToList();
+        //var taxArrey = taxService.Select(s => s.ServiceCode).ToArray();
+        //var list = result.ToList();
+        //var listToDelete = list.Where(r => taxArrey.Contains(r.ServiceCode)).ToList();
+        //var taxAmount = taxService.Where(s => s.CodeLevel6 == null).Select(s => s.Amount).ToList();
+        //listToDelete = listToDelete.Where(l => taxAmount.Contains(l.Amount)).ToList();
+        //list = list.Except(listToDelete).ToList();
+        #endregion
 
-        var taxService = _serviceCodingRepository.GetAll();
-        taxService = taxService.Where(s => s.IncludeTax == false && s.CodeLevel6 == null).ToList();
-        var taxArrey = taxService.Select(s => s.ServiceCode).ToArray();
-        var list = result.ToList();
-        var listToDelete = list.Where(r => taxArrey.Contains(r.ServiceCode)).ToList();
-        var taxAmount = taxService.Where(s => s.CodeLevel6 == null).Select(s => s.Amount).ToList();
-        listToDelete = listToDelete.Where(l => taxAmount.Contains(l.Amount)).ToList();
-        list = list.Except(listToDelete).ToList();
-        return list;
+        return result.ToList();
     }
 
     public SummaryExportDocumentViewModel GetMainHeadListOfDocumentsForExport(int pageId = 1, int take = 10, DocumentYears Year = DocumentYears.NotSelected, DocumentMonth Month = DocumentMonth.NotSelected)
     {
-        IQueryable<Document> result = _repository.GetSummary();
+        IQueryable<ExportSummaryType> result = _repository.GetSummary();
 
         if (Year != DocumentYears.NotSelected)
         {
-            result = result.Where(r => r.Year == Year);
+            result = result.Where(r => r.DocumentYear == Year);
         }
 
         if (Month != DocumentMonth.NotSelected)
         {
-            result = result.Where(r => r.Month == Month);
+            result = result.Where(r => r.DocumentMonth == Month);
         }
 
         int takeData = take;
         int skip = (pageId - 1) * takeData;
-        var x = result.GroupBy(u => new { year = u.Year, month = u.Month, docDate = u.TransactionDate })
+        var x = result.GroupBy(u => new { year = u.DocumentYear, month = u.DocumentMonth, docDate = u.TransactionDate })
             .Select(n => new { n.Key.year, n.Key.month, n.Key.docDate, cnt = n.Count() });
         SummaryExportDocumentViewModel list = new();
         SummaryDocuments summary = new();
-        list.PageCount = (int)Math.Ceiling(result.Count() / (double)takeData);
-        list.CurrentPage = pageId;
-        list.PageCount = (int)Math.Ceiling(result.Count() / (double)takeData);
+
         list.SummaryDocuments = new();
         foreach (var item in x)
         {
@@ -1073,6 +1075,10 @@ internal class DocumentService : IDocumentService
                 Count = item.cnt
             });
         }
+        list.SummaryDocuments = list.SummaryDocuments
+            .OrderBy(l => l.Year).ThenBy(l => l.Month).ThenBy(l => l.DocumentDate).ToList();
+        list.PageCount = (int)Math.Ceiling(list.SummaryDocuments.Count / (double)takeData);
+        list.CurrentPage = pageId;
         list.SummaryCounts = list.SummaryDocuments.Count;
         return list;
     }

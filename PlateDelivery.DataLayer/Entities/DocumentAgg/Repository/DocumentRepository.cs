@@ -1,6 +1,7 @@
 ﻿using PlateDelivery.DataLayer._Utilities;
 using PlateDelivery.DataLayer.Context;
 using PlateDelivery.DataLayer.Entities.DocumentAgg.Enums;
+using PlateDelivery.DataLayer.Entities.DocumentAgg.Types;
 
 namespace PlateDelivery.DataLayer.Entities.DocumentAgg.Repository;
 
@@ -50,9 +51,16 @@ internal class DocumentRepository : BaseRepository<Document>, IDocumentRepositor
         return st;
     }
 
-    public IQueryable<Document> GetSummary()
+    public IQueryable<ExportSummaryType> GetSummary()
     {
-        return Context.Documents;
+        return Context.Documents
+            .Select(s => new ExportSummaryType()
+            {
+                DocumentYear = s.Year,
+                DocumentMonth = s.Month,
+                RetrivalRef = s.RetrivalRef,
+                TransactionDate = s.TransactionDate,
+            }).AsQueryable();
     }
 
     public DocumentYears GetYear(string thisDate)

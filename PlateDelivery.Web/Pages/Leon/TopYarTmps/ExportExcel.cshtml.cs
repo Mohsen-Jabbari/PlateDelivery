@@ -164,7 +164,8 @@ public class ExportExcelModel : PageModel
 
             foreach (var item in DocumentsForExport)
             {
-                dt.Rows.Add(item.Debt,
+                decimal credit = (decimal.Parse(item.Credit) * 110) / 100;
+                dt.Rows.Add(decimal.Round(credit),
                             item.TransactionDate.ToStdDate(),
                             item.Description + " با کد پیگیری " + item.RetrivalRef);
             }
