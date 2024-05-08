@@ -207,14 +207,14 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                         {
                                             var transactions = TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
                                                 .Where(group => group.Key.ServiceCode == srvc.ServiceCode &&
-                                                    (group.Sum(group => long.Parse(group.Amount)) != srvc.Amount && 
+                                                    (group.Sum(group => long.Parse(group.Amount)) != srvc.Amount || 
                                                         group.Sum(group => long.Parse(group.Amount)) != srvc.OldAmount) && 
                                                             group.Any(group => group.ProvinceCode != "Except")).ToList();
 
                                             foreach (var trans in transactions.ToList())
                                             {
                                                 var amount = trans.Select(t => t.Amount).FirstOrDefault();
-                                                if ((long.Parse(amount) % srvc.Amount == 0) && (long.Parse(amount) % srvc.OldAmount == 0))
+                                                if ((long.Parse(amount) % srvc.Amount == 0) || (long.Parse(amount) % srvc.OldAmount == 0))
                                                 {
                                                     transactions.Remove(trans);
                                                 }
@@ -259,14 +259,14 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                         {
                                             var transactions = TopYarTmpViewModel.TopYarTmps.GroupBy(s => new { s.RetrivalRef, s.ServiceCode })
                                                 .Where(group => group.Key.ServiceCode == srvc.ServiceCode &&
-                                                    (group.Sum(group => long.Parse(group.Amount)) != srvc.Amount && 
+                                                    (group.Sum(group => long.Parse(group.Amount)) != srvc.Amount || 
                                                         group.Sum(group => long.Parse(group.Amount)) != srvc.OldAmount) && 
                                                             group.Any(group => group.ProvinceCode != "Except")).ToList();
 
                                             foreach (var trans in transactions.ToList())
                                             {
                                                 var amount = trans.Select(t => t.Amount).FirstOrDefault();
-                                                if ((long.Parse(amount) % srvc.Amount == 0) && (long.Parse(amount) % srvc.OldAmount == 0))
+                                                if ((long.Parse(amount) % srvc.Amount == 0) || (long.Parse(amount) % srvc.OldAmount == 0))
                                                 {
                                                     transactions.Remove(trans);
                                                 }
