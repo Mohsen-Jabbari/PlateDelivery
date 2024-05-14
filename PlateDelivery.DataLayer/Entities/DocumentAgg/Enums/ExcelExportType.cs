@@ -6,8 +6,10 @@ public enum ExcelExportType
 {
     [Description("خروجی جهت سامانه سیاق")]
     SiaghType = 1,
+    [Description("خروجی کلی جهت سامانه سیاق")]
+    SiaghFullType = 2,
     [Description("خروجی جهت اداره مالیات")]
-    TaxType = 2,
+    TaxType = 3,
     [Description("خروجی کلی")]
-    GeneralType = 3,
+    GeneralType = 4,
 }

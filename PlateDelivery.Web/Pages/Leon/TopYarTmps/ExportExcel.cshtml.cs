@@ -1,11 +1,9 @@
-﻿using Azure;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PlateDelivery.Core.Convertors;
 using PlateDelivery.Core.Models.Documents;
 using PlateDelivery.Core.Services.Documents;
-using PlateDelivery.DataLayer.Entities.CertainAgg;
 using PlateDelivery.DataLayer.Entities.DocumentAgg;
 using PlateDelivery.DataLayer.Entities.DocumentAgg.Enums;
 using System.Data;
@@ -147,6 +145,98 @@ public class ExportExcelModel : PageModel
             wb.SaveAs(stream);
             return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 "فایل اسناد مورخ " + DocDate.ToStdDate() + ".xlsx");
+        }
+
+        else if (ExportType == ExcelExportType.SiaghFullType)
+        {
+            ViewData["DocDate"] = DocDate;
+            DocumentsForExport = _documentService.GetDocumentsByDocDate(DocDate);
+
+            DataTable dt = new("فایل سیاق");
+            dt.Columns.AddRange(new DataColumn[10] {
+                                        new("کد معین"),
+                                        new("سطح 4"),
+                                        new("سطح 5"),
+                                        new("سطح 6"),
+                                        new("شرح"),
+                                        new("بد"),
+                                        new("بس"),
+                                        new(""),
+                                        new("کد پیگیری"),
+                                        new("تاریخ")
+                                         });
+
+            #region افزودن رکوردهای بانک
+
+            var bankRecords = DocumentsForExport.Where(b => b.CertainCode == "10101")
+                            .OrderBy(b => b.CodeLevel4).OrderBy(b => b.RetrivalRef).ToList();
+
+            foreach (var item in bankRecords)
+            {
+                dt.Rows.Add(item.CertainCode,
+                            item.CodeLevel4,
+                            item.CodeLevel5,
+                            item.CodeLevel6,
+                            item.Description,
+                            item.Debt,
+                            item.Credit,
+                            "",
+                            item.RetrivalRef,
+                            item.TransactionDate.ToStdDate());
+            }
+
+            #endregion
+
+            #region افزودن رکوردهای درآمد و مالیات
+
+            var incomeRecords = DocumentsForExport.Where(b => b.CertainCode != "10101")
+                            .GroupBy(d => new
+                            {
+                                d.CertainCode,
+                                d.CodeLevel4,
+                                d.CodeLevel5,
+                                d.CodeLevel6,
+                                d.Terminal,
+                                d.Description
+                            })
+                            .Select(n => new
+                            {
+                                n.Key.CertainCode,
+                                n.Key.CodeLevel4,
+                                n.Key.CodeLevel5,
+                                n.Key.CodeLevel6,
+                                n.Key.Terminal,
+                                n.Key.Description,
+                                Debt = n.Sum(s => int.Parse(s.Debt)),
+                                Credit = n.Sum(s => int.Parse(s.Credit))
+                            }).ToList();
+
+            foreach (var item in incomeRecords)
+            {
+                dt.Rows.Add(item.CertainCode,
+                            item.CodeLevel4,
+                            item.CodeLevel5,
+                            item.CodeLevel6,
+                            item.Description,
+                            item.Debt,
+                            item.Credit,
+                            "",
+                            "",
+                            "");
+            }
+            #endregion
+
+            dt.DefaultView.Sort = "کد معین";
+            dt = dt.DefaultView.ToTable();
+            using XLWorkbook wb = new();
+
+            wb.Worksheets.Add(dt);
+
+
+            using MemoryStream stream = new();
+            wb.SaveAs(stream);
+            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "فایل اسناد کلی مورخ " + DocDate.ToStdDate() + ".xlsx");
         }
 
         else if (ExportType == ExcelExportType.TaxType)
