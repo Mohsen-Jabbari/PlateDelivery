@@ -838,33 +838,64 @@ internal class DocumentService : IDocumentService
                                 , description, "0", tax.ToString(), year, month);
                             documents.Add(taxRecord);
                         }
-
                     }
                     else
                     {
-                        var serviceAmount = services.Sum(s => long.Parse(s.Amount));
-                        var serviceOldAmount = services.Sum(s => long.Parse(s.OldAmount));
-
-                        if (long.Parse(topYar.Amount) == serviceAmount)
+                        if (service.CertainId == 2)
                         {
-                            var taxRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                            , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                            , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                            , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                            , province.CodeLevel4 ?? service.CodeLevel4, null, null
-                            , description, "0", service.Amount, year, month);
-                            documents.Add(taxRecord);
+                            var ServiceCertain = _certainRepository.Get(service.CertainId);
+                            var serviceAmount = services.Sum(s => long.Parse(s.Amount));
+                            var serviceOldAmount = services.Sum(s => long.Parse(s.OldAmount));
+
+                            if (long.Parse(topYar.Amount) == serviceAmount)
+                            {
+                                var IncomeRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
+                                , province.CodeLevel4 ?? service.CodeLevel4, province.ProvinceCode, service.CodeLevel6
+                                , description, "0", service.Amount, year, month);
+                                documents.Add(IncomeRecord);
+                            }
+
+                            else
+                            {
+                                var IncomeRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
+                                , province.CodeLevel4 ?? service.CodeLevel4, province.ProvinceCode, service.CodeLevel6
+                                , description, "0", service.OldAmount, year, month);
+                                documents.Add(IncomeRecord);
+                            }
                         }
 
                         else
                         {
-                            var taxRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                            , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                            , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                            , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                            , province.CodeLevel4 ?? service.CodeLevel4, null, null
-                            , description, "0", service.OldAmount, year, month);
-                            documents.Add(taxRecord);
+                            var serviceAmount = services.Sum(s => long.Parse(s.Amount));
+                            var serviceOldAmount = services.Sum(s => long.Parse(s.OldAmount));
+
+                            if (long.Parse(topYar.Amount) == serviceAmount)
+                            {
+                                var taxRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
+                                , province.CodeLevel4 ?? service.CodeLevel4, null, null
+                                , description, "0", service.Amount, year, month);
+                                documents.Add(taxRecord);
+                            }
+
+                            else
+                            {
+                                var taxRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
+                                , province.CodeLevel4 ?? service.CodeLevel4, null, null
+                                , description, "0", service.OldAmount, year, month);
+                                documents.Add(taxRecord);
+                            }
                         }
                     }
                 }
@@ -969,7 +1000,7 @@ internal class DocumentService : IDocumentService
                                 , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
                                 , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
                                 , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
-                                , province.CodeLevel4 ?? service.CodeLevel4, service.CodeLevel6, null
+                                , province.CodeLevel4 ?? service.CodeLevel4, province.ProvinceCode, service.CodeLevel6
                                 , description, "0", service.Amount, year, month);
                                 documents.Add(IncomeRecord);
                             }
@@ -980,7 +1011,7 @@ internal class DocumentService : IDocumentService
                                 , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
                                 , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
                                 , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
-                                , province.CodeLevel4 ?? service.CodeLevel4, service.CodeLevel6, null
+                                , province.CodeLevel4 ?? service.CodeLevel4, province.ProvinceCode, service.CodeLevel6
                                 , description, "0", service.OldAmount, year, month);
                                 documents.Add(IncomeRecord);
                             }
