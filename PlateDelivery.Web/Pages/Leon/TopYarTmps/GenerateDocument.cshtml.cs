@@ -106,7 +106,7 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                 if (serviceCode.Where(s => !s.IncludeTax).Select(s => s.IncludeTax).Count() > 1)
                                 {
                                     var selectedService = serviceCode
-                                            .Where(s => s.Amount == item.Amount).SingleOrDefault();
+                                            .Where(s => s.Amount == item.Amount || s.OldAmount == item.Amount).SingleOrDefault();
                                     if (selectedService != null)
                                     {
                                         if (selectedService.CodeLevel6 != null)
