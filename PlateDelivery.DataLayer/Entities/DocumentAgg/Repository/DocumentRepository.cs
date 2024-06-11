@@ -13,7 +13,7 @@ internal class DocumentRepository : BaseRepository<Document>, IDocumentRepositor
 
     public IQueryable<Document> GetDocumentByDate(string docDate)
     {
-        return Context.Documents.Where(d => d.TransactionDate == docDate);
+        return Context.Documents.Where(d => d.TransactionDate == docDate && d.Credit != d.Debt);
     }
 
     public long GetMaxOrder()
