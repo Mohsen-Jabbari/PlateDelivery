@@ -115,8 +115,8 @@ public class ExportExcelModel : PageModel
                                     n.Key.CodeLevel6,
                                     n.Key.Terminal,
                                     n.Key.Description,
-                                    Debt = n.Sum(s => int.Parse(s.Debt)),
-                                    Credit = n.Sum(s => int.Parse(s.Credit))
+                                    Debt = n.Sum(s => long.Parse(s.Debt)),
+                                    Credit = n.Sum(s => long.Parse(s.Credit))
                                 }).ToList();
 
                 foreach (var item in incomeRecords)
@@ -207,8 +207,8 @@ public class ExportExcelModel : PageModel
                                 n.Key.CodeLevel6,
                                 n.Key.Terminal,
                                 n.Key.Description,
-                                Debt = n.Sum(s => int.Parse(s.Debt)),
-                                Credit = n.Sum(s => int.Parse(s.Credit))
+                                Debt = n.Sum(s => long.Parse(s.Debt)),
+                                Credit = n.Sum(s => long.Parse(s.Credit))
                             }).ToList();
 
             foreach (var item in incomeRecords)
