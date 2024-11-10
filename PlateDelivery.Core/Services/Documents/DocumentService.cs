@@ -988,7 +988,7 @@ internal class DocumentService : IDocumentService
                     }
                     else
                     {
-                        if(service.CertainId == 2)
+                        if (service.CertainId == 2)
                         {
                             var ServiceCertain = _certainRepository.Get(service.CertainId);
                             var serviceAmount = services.Sum(s => long.Parse(s.Amount));
@@ -1135,14 +1135,18 @@ internal class DocumentService : IDocumentService
                 Year = item.year,
                 Month = item.month,
                 DocumentDate = item.docDate,
-                Count = item.cnt
+                Count = item.cnt,
+                CreditAmount = GetDocumentsByDocDateForTax(item.docDate).Sum(d => long.Parse(d.Credit))
             });
         }
-        list.SummaryDocuments = list.SummaryDocuments
-            .OrderBy(l => l.Year).ThenBy(l => l.Month).ThenBy(l => l.DocumentDate).ToList();
+        list.SummaryCounts = list.SummaryDocuments.Count;
         list.PageCount = (int)Math.Ceiling(list.SummaryDocuments.Count / (double)takeData);
         list.CurrentPage = pageId;
-        list.SummaryCounts = list.SummaryDocuments.Count;
+        list.LastPage = list.PageCount;
+        list.PrevPage = Math.Max(pageId - 1, list.CurrentPage);
+        list.NextPage = Math.Max(pageId + 1, list.LastPage);
+        list.SummaryDocuments = list.SummaryDocuments
+            .OrderByDescending(l => l.Year).ThenByDescending(l => l.Month).ThenBy(l => l.DocumentDate).Skip(skip).Take(takeData).ToList();
         return list;
     }
 

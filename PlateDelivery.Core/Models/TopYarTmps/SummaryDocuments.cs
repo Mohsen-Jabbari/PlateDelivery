@@ -8,4 +8,5 @@ public class SummaryDocuments
     public DocumentYears Year { get; set; }
     public DocumentMonth Month { get; set; }
     public int Count { get; set; }
+    public long CreditAmount { get; set; }
 }

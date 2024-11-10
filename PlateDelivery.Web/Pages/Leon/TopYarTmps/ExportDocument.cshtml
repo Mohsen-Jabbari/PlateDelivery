@@ -38,52 +38,100 @@
                         </form>
                     </div>
                     <hr />
-                    @if (Model.SummaryExportDocumentViewModel.SummaryDocuments != null)
-                    {
-                        <div class="row">
-                            <div class="col-sm-12">
-                                @{
-                                    int rowCount = 1;
-                                }
-                                <table id="datatable-checkbox" class="table table-striped table-bordered bulk_action dataTable no-footer" role="grid" aria-describedby="datatable-checkbox_info">
-                                    <thead>
-                                        <tr role="row">
-                                            <th style="width: 30px;">ردیف</th>
-                                            <th style="width: 70px;">سال</th>
-                                            <th style="width: 50px;">ماه</th>
-                                            <th style="width: 50px;">روز</th>
-                                            <th style="width: 100px;">دریافت فایل اسناد</th>
-                                        </tr>
-                                    </thead>
-
-
-                                    <tbody>
-
-                                        @foreach (var item in Model.SummaryExportDocumentViewModel.SummaryDocuments)
-                                        {
-
-                                            <tr role="row" class="odd">
-                                                <td>@rowCount</td>
-                                                <td>@item.Year.GetDescription()</td>
-                                                <td>@item.Month.GetDescription()</td>
-                                                <td>@item.DocumentDate.Substring(6, 2)</td>
-                                                <td>
-                                                    <a href="/Leon/TopYarTmps/ExportExcel/@item.DocumentDate" class="btn btn-info btn-xs">دریافت خروجی اکسل</a>
-                                                </td>
+                    <div class="row">
+                        @if (Model.SummaryExportDocumentViewModel.SummaryDocuments != null)
+                        {
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    @{
+                                        int rowCount = 1;
+                                    }
+                                    <table id="datatable-checkbox" class="table table-striped table-bordered bulk_action dataTable no-footer" role="grid" aria-describedby="datatable-checkbox_info">
+                                        <thead>
+                                            <tr role="row">
+                                                <th style="width: 30px;">ردیف</th>
+                                                <th style="width: 70px;">سال</th>
+                                                <th style="width: 50px;">ماه</th>
+                                                <th style="width: 50px;">روز</th>
+                                                <th style="width: 50px;">مبلغ اداره مالیات</th>
+                                                <th style="width: 100px;">دریافت فایل اسناد</th>
                                             </tr>
-                                            rowCount++;
-                                        }
-                                    </tbody>
-                                </table>
+                                        </thead>
+
+
+                                        <tbody>
+
+                                            @foreach (var item in Model.SummaryExportDocumentViewModel.SummaryDocuments)
+                                            {
+
+                                                <tr role="row" class="odd">
+                                                    <td>@rowCount</td>
+                                                    <td>@item.Year.GetDescription()</td>
+                                                    <td>@item.Month.GetDescription()</td>
+                                                    <td>@item.DocumentDate.Substring(6, 2)</td>
+                                                    <td>@item.CreditAmount.ToString("##,# ریال")</td>
+                                                    <td>
+                                                        <a href="/Leon/TopYarTmps/ExportExcel/@item.DocumentDate" class="btn btn-info btn-xs">دریافت خروجی اکسل</a>
+                                                    </td>
+                                                </tr>
+                                                rowCount++;
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-danger ">
+                                رکوردی یافت نشد
+                            </div>
+                        }
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-sm-5">
+                            <div class="dataTables_info" id="datatable-checkbox_info" role="status" aria-live="polite">نمایش @ViewData["PageID"] تا @ViewData["Take"] از @Model.SummaryExportDocumentViewModel.SummaryCounts رکورد</div>
+                        </div>
+                        <div class="col-sm-7">
+
+                            <div class="btn-group">
+                                @if (Model.SummaryExportDocumentViewModel.CurrentPage > 1)
+                                {
+
+                                    <a class="btn btn-default" href="/Leon/TopYarTmps/ExportDocument?pageId=1&fdy=@Model.DocumentYears&fdm=@Model.DocumentMonth">اولین صفحه</a>
+                                    <a class="btn btn-default" href="/Leon/TopYarTmps/ExportDocument?pageId=@(Model.SummaryExportDocumentViewModel.CurrentPage-1)&fdy=@Model.DocumentYears&fdm=@Model.DocumentMonth">قبلی</a>
+                                }
+
+                                @if (Model.SummaryExportDocumentViewModel.CurrentPage + 4 <= Model.SummaryExportDocumentViewModel.PageCount)
+                                {
+                                    @for (int i = Model.SummaryExportDocumentViewModel.CurrentPage; i <= Model.SummaryExportDocumentViewModel.CurrentPage + 4; i++)
+                                    {
+
+                                        <a href="/Leon/TopYarTmps/ExportDocument?pageId=@i&fdy=@Model.DocumentYears&fdm=@Model.DocumentMonth" class="btn btn-default @((i==Model.SummaryExportDocumentViewModel.CurrentPage)? "btn btn-info" : "")">@i</a>
+
+                                    }
+                                }
+                                else
+                                {
+                                    for (int i = Model.SummaryExportDocumentViewModel.CurrentPage; i <= Model.SummaryExportDocumentViewModel.PageCount; i++)
+                                    {
+                                        <a href="/Leon/TopYarTmps/ExportDocument?pageId=@i&fdy=@Model.DocumentYears&fdm=@Model.DocumentMonth" class="btn btn-default @((i==Model.SummaryExportDocumentViewModel.CurrentPage)? "btn btn-info" : "")">@i</a>
+                                    }
+                                }
+
+                                @if (Model.SummaryExportDocumentViewModel.CurrentPage < Model.SummaryExportDocumentViewModel.PageCount)
+                                {
+
+                                    <a class="btn btn-default" href="/Leon/TopYarTmps/ExportDocument?pageId=@(Model.SummaryExportDocumentViewModel.CurrentPage + 1)&fdy=@Model.DocumentYears&fdm=@Model.DocumentMonth">بعدی</a>
+                                    <a class="btn btn-default" href="/Leon/TopYarTmps/ExportDocument?pageId=@(Model.SummaryExportDocumentViewModel.PageCount)&fdy=@Model.DocumentYears&fdm=@Model.DocumentMonth">اخرین صفحه</a>
+
+                                }
                             </div>
                         </div>
-                    }
-                    else
-                    {
-                        <div class="alert alert-danger ">
-                            رکوردی یافت نشد
-                        </div>
-                    }
+
+                    </div>
                 </div>
             </div>
         </div>

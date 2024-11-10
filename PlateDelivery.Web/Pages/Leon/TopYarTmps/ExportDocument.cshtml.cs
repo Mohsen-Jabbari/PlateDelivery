@@ -22,12 +22,27 @@ public class ExportDocumentModel : PageModel
 
     [BindProperty]
     public DocumentMonth DocumentMonth { get; set; }
-    public void OnGet(int pageId = 1, int take = 50, DocumentYears Year = DocumentYears.NotSelected, DocumentMonth Month = DocumentMonth.NotSelected)
+    public void OnGet(int pageId = 1, int take = 31
+        , DocumentYears Year = DocumentYears.NotSelected, DocumentMonth Month = DocumentMonth.NotSelected)
     {
         ViewData["Title"] = "خروجی اکسل اسناد حسابداری";
 
         ViewData["DocumentYear"] = DocumentYears.GetSelectList();
         ViewData["DocumentMonth"] = DocumentMonth.GetSelectList();
+
+        if (Request.Query.ContainsKey("fdy"))
+        {
+            string? s = Request.Query["fdy"];
+            if (s != "")
+                Year = (DocumentYears)Enum.Parse(typeof(DocumentYears), Request.Query["fdy"]);
+        }
+
+        if (Request.Query.ContainsKey("fdm"))
+        {
+            string? s = Request.Query["fdm"];
+            if (s != "")
+                Month = (DocumentMonth)Enum.Parse(typeof(DocumentMonth), Request.Query["fdm"]);
+        }
 
         if (Year != DocumentYears.NotSelected)
         {
@@ -40,5 +55,19 @@ public class ExportDocumentModel : PageModel
         }
 
         SummaryExportDocumentViewModel = _documentService.GetMainHeadListOfDocumentsForExport(pageId, take, Year, Month);
+        ViewData["PageID"] = (pageId - 1) * take + 1;
+
+        if (pageId > 1 && pageId != SummaryExportDocumentViewModel.PageCount)
+        {
+            ViewData["Take"] = ((pageId - 1) * take) + take;
+        }
+        else if (pageId == SummaryExportDocumentViewModel.PageCount)
+        {
+            ViewData["Take"] = ((pageId - 1) * take) + (SummaryExportDocumentViewModel.SummaryCounts % take);
+        }
+        else
+        {
+            ViewData["Take"] = take;
+        }
     }
 }
