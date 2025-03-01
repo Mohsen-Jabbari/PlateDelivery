@@ -15,11 +15,11 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
     {
         private readonly ITopYarTmpService _topYarTmpService;
         private readonly IDocumentService _documentService;
-        private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _environment;
+        private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
 
         public ImportTopYarModel(ITopYarTmpService topYarTmpService,
-            Microsoft.AspNetCore.Hosting.IHostingEnvironment environment, IConfiguration configuration,
+            IWebHostEnvironment environment, IConfiguration configuration,
             IDocumentService documentService)
         {
             _topYarTmpService = topYarTmpService;
