@@ -183,9 +183,19 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                         //یک رکورد دارد که باید مبلغ مالیات از آن کم شود و سند بانک/درآمد/مالیات بخورد
                         //و در کل یک سند 5 سطری ثبت شود
                         case 3:
-                            long ordr = _documentService.CreateTaxTaxIncomeDocument(item, serviceCode, MaxOrder);
-                            if (ordr > 0)
-                                Ids.Add(item.Id);
+                            if (serviceCode.Where(s => s.IncludeTax == true).Count() == 1)
+                            {
+                                long ordr = _documentService.CreateTaxTaxIncomeDocument(item, serviceCode, MaxOrder);
+                                if (ordr > 0)
+                                    Ids.Add(item.Id);
+                            }
+
+                            if (serviceCode.Where(s => s.IncludeTax == true).Count() == 2)
+                            {
+                                long ordr = _documentService.CreateTaxIncomeIncomeDocument(item, serviceCode, MaxOrder);
+                                if (ordr > 0)
+                                    Ids.Add(item.Id);
+                            }
                             break;
                     }
                 }

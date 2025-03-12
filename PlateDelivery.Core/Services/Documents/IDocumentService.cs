@@ -14,6 +14,7 @@ public interface IDocumentService
     long CreateTaxDocument(TopYarTmp topYar, ServiceCoding service, long maxOrder);
     long CreateTaxDocument(TopYarTmp topYar, List<ServiceCoding> services, long maxOrder);
     long CreateTaxTaxIncomeDocument(TopYarTmp topYar, List<ServiceCoding> services, long maxOrder);
+    long CreateTaxIncomeIncomeDocument(TopYarTmp topYar, List<ServiceCoding> services, long maxOrder);
     bool EditDocument(CreateAndEditDocumentViewModel model);
     bool DeleteDocument(long Id);
     void SaveChanges();
