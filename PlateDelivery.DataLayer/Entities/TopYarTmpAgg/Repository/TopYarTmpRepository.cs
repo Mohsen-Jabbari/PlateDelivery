@@ -1,4 +1,5 @@
-﻿using PlateDelivery.DataLayer._Utilities;
+﻿using Microsoft.EntityFrameworkCore;
+using PlateDelivery.DataLayer._Utilities;
 using PlateDelivery.DataLayer.Context;
 
 namespace PlateDelivery.DataLayer.Entities.TopYarTmpAgg.Repository;
@@ -11,9 +12,8 @@ internal class TopYarTmpRepository : BaseRepository<TopYarTmp>, ITopYarTmpReposi
 
     public void DeleteAllTopYarTmp()
     {
-        var results = Context.TopYarTmps.ToList();
-        Context.TopYarTmps.RemoveRange(results);
-        Context.SaveChanges();
+
+        Context.TopYarTmps.ExecuteDelete();
     }
 
     public bool DeleteTopYarTmp(long Id)
@@ -43,21 +43,35 @@ internal class TopYarTmpRepository : BaseRepository<TopYarTmp>, ITopYarTmpReposi
 
     public bool DeleteTopYarTmp(List<long> Ids)
     {
-        var items = Context.TopYarTmps.Where(x => Ids.Contains(x.Id)).ToList();
-        if (items != null)
-        {
-            Context.TopYarTmps.RemoveRange(items);
-            Context.SaveChanges();
+        // حذف مستقیم رکوردها از دیتابیس بدون واکشی آن‌ها
+        //var deletedCount = Context.TopYarTmps
+        //.Where(x => Ids.Contains(x.Id))
+        //.ExecuteDelete();
+
+        var idList = string.Join(",", Ids);
+        var sql = $"DELETE FROM TopYarTmps WHERE Id IN ({idList})";
+        var deletedCount = Context.Database.ExecuteSqlRaw(sql);
+
+        // اگر حداقل یک رکورد حذف شده باشد، true برگردان
+        if (deletedCount > 0)
             return true;
-        }
         return false;
+
+        //var items = Context.TopYarTmps.Where(x => Ids.Contains(x.Id)).ToList();
+        //if (items != null)
+        //{
+        //    Context.TopYarTmps.RemoveRange(items);
+        //    Context.SaveChanges();
+        //    return true;
+        //}
+        //return false;
     }
 
     public void DeleteUnUsedTopYarTmp(List<string> UnUsedAccount)
     {
-        var results = Context.TopYarTmps.Where(t => UnUsedAccount.Contains(t.Iban)).ToList();
-        Context.TopYarTmps.RemoveRange(results);
-        Context.SaveChanges();
+        var deletedCount = Context.TopYarTmps
+        .Where(x => UnUsedAccount.Contains(x.Iban))
+        .ExecuteDelete();
     }
 
     public TopYarTmp GetTopYarTmpFirstRecord()

@@ -48,6 +48,7 @@ internal class TopYarTmpService : ITopYarTmpService
 
     public bool DeleteTopYarTmp(List<long> Ids)
     {
+
         return _repository.DeleteTopYarTmp(Ids);
     }
 

@@ -175,7 +175,8 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                     {
                                         ServiceCode = group.Key,
                                         Amount = group.Sum(s => long.Parse(s.Amount)),
-                                        OldAmount = group.Sum(s => long.Parse(s.OldAmount))
+                                        OldAmount = group.Sum(s => long.Parse(s.OldAmount)),
+                                        Cnt = group.Count()
                                     }).ToList();
                             List<string> incompatibleRRN = new();
                             List<string> srv = new();
