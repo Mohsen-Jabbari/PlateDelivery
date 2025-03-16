@@ -787,116 +787,145 @@ internal class DocumentService : IDocumentService
                 documents.Add(bankRecord);
 
 
-                foreach (var service in services)
+                if (services.Any(f => f.Amount == topYar.Amount) ||
+                    services.Any(f => f.OldAmount == topYar.Amount))
                 {
-                    if (service.IncludeTax)
+                    var service = services
+                        .Where(s => s.Amount == topYar.Amount || s.OldAmount == topYar.Amount)
+                            .FirstOrDefault();
+                    if (service == null)
+                        return -2;
+
+                    var ServiceCertain = _certainRepository.Get(service.CertainId);
+
+                    if (ServiceCertain == null)
+                        return -3;
+
+                    if (service.Amount == topYar.Amount)
                     {
-                        var ServiceCertain = _certainRepository.Get(service.CertainId);
-                        var serviceAmount = services.Sum(s => long.Parse(s.Amount));
-                        var serviceOldAmount = services.Sum(s => long.Parse(s.OldAmount));
-
-                        if (long.Parse(topYar.Amount) == serviceAmount)
-                        {
-                            decimal income = (decimal.Parse(service.Amount) * 100) / 110;
-                            decimal tax = decimal.Parse(service.Amount) - decimal.Round(income);
-
-                            //income record
-                            var incomeRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
-                                , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
-                                province.ProvinceCode, service.CodeLevel6, description, "0", decimal.Round(income).ToString(), year, month);
-                            documents.Add(incomeRecord);
-                            //tax record
-                            var taxRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                                , province.CodeLevel4 ?? service.CodeLevel4, null, null
-                                , description, "0", tax.ToString(), year, month);
-                            documents.Add(taxRecord);
-                        }
-
-                        else
-                        {
-                            decimal income = (decimal.Parse(service.OldAmount) * 100) / 110;
-                            decimal tax = decimal.Parse(service.OldAmount) - decimal.Round(income);
-
-                            //income record
-                            var incomeRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
-                                , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
-                                province.ProvinceCode, service.CodeLevel6, description, "0", decimal.Round(income).ToString(), year, month);
-                            documents.Add(incomeRecord);
-                            //tax record
-                            var taxRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                                , province.CodeLevel4 ?? service.CodeLevel4, null, null
-                                , description, "0", tax.ToString(), year, month);
-                            documents.Add(taxRecord);
-                        }
+                        //income record
+                        var incomeRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                            , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                            , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                            , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
+                            , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
+                            province.ProvinceCode, service.CodeLevel6, description, "0", service.Amount, year, month);
+                        documents.Add(incomeRecord);
                     }
-                    else
+
+                    else if (service.OldAmount == topYar.Amount)
                     {
-                        if (service.CertainId == 2)
+                        //income record
+                        var incomeRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                            , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                            , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                            , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
+                            , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
+                            province.ProvinceCode, service.CodeLevel6, description, "0", service.OldAmount, year, month);
+                        documents.Add(incomeRecord);
+                    }
+
+                    else
+                        return -4;
+                }
+
+                else
+                {
+                    //حذف سرویس اضافی که در قسمت بالا بررسی شد
+                    var selectedService = services
+                        .Except(services.Where(s => s.IncludeTax == false && s.CertainId == 2))
+                        .ToList();
+                    if (selectedService != null)
+                    {
+                        foreach (var service in selectedService)
                         {
-                            var ServiceCertain = _certainRepository.Get(service.CertainId);
-                            var serviceAmount = services.Sum(s => long.Parse(s.Amount));
-                            var serviceOldAmount = services.Sum(s => long.Parse(s.OldAmount));
-
-                            if (long.Parse(topYar.Amount) == serviceAmount)
+                            if (service.IncludeTax)
                             {
-                                var IncomeRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
-                                , province.CodeLevel4 ?? service.CodeLevel4, province.ProvinceCode, service.CodeLevel6
-                                , description, "0", service.Amount, year, month);
-                                documents.Add(IncomeRecord);
+                                var ServiceCertain = _certainRepository.Get(service.CertainId);
+                                if (ServiceCertain == null)
+                                    return -3;
+                                var serviceAmount = selectedService.Sum(s => long.Parse(s.Amount));
+                                var serviceOldAmount = selectedService.Sum(s => long.Parse(s.OldAmount));
+
+                                if (long.Parse(topYar.Amount) == serviceAmount)
+                                {
+                                    decimal income = (decimal.Parse(service.Amount) * 100) / 110;
+                                    decimal tax = decimal.Parse(service.Amount) - decimal.Round(income);
+
+                                    //income record
+                                    var incomeRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                        , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                        , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                        , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
+                                        , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
+                                        province.ProvinceCode, service.CodeLevel6, description, "0", decimal.Round(income).ToString(), year, month);
+                                    documents.Add(incomeRecord);
+                                    //tax record
+                                    var taxRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                        , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                        , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                        , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
+                                        , province.CodeLevel4 ?? service.CodeLevel4, null, null
+                                        , description, "0", tax.ToString(), year, month);
+                                    documents.Add(taxRecord);
+                                }
+
+                                else if (long.Parse(topYar.Amount) == serviceOldAmount)
+                                {
+                                    decimal income = (decimal.Parse(service.OldAmount) * 100) / 110;
+                                    decimal tax = decimal.Parse(service.OldAmount) - decimal.Round(income);
+
+                                    //income record
+                                    var incomeRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                        , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                        , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                        , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
+                                        , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
+                                        province.ProvinceCode, service.CodeLevel6, description, "0", decimal.Round(income).ToString(), year, month);
+                                    documents.Add(incomeRecord);
+                                    //tax record
+                                    var taxRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                        , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                        , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                        , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
+                                        , province.CodeLevel4 ?? service.CodeLevel4, null, null
+                                        , description, "0", tax.ToString(), year, month);
+                                    documents.Add(taxRecord);
+                                }
+
+                                else
+                                    return -4;
                             }
 
-                            else
+                            else if (!service.IncludeTax)
                             {
-                                var IncomeRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
-                                , province.CodeLevel4 ?? service.CodeLevel4, province.ProvinceCode, service.CodeLevel6
-                                , description, "0", service.OldAmount, year, month);
-                                documents.Add(IncomeRecord);
-                            }
-                        }
+                                var serviceAmount = selectedService.Sum(s => long.Parse(s.Amount));
+                                var serviceOldAmount = selectedService.Sum(s => long.Parse(s.OldAmount));
 
-                        else
-                        {
-                            var serviceAmount = services.Sum(s => long.Parse(s.Amount));
-                            var serviceOldAmount = services.Sum(s => long.Parse(s.OldAmount));
+                                if (long.Parse(topYar.Amount) == serviceAmount)
+                                {
+                                    var taxRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                    , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                    , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                    , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
+                                    , province.CodeLevel4 ?? service.CodeLevel4, null, null
+                                    , description, "0", service.Amount, year, month);
+                                    documents.Add(taxRecord);
+                                }
 
-                            if (long.Parse(topYar.Amount) == serviceAmount)
-                            {
-                                var taxRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                                , province.CodeLevel4 ?? service.CodeLevel4, null, null
-                                , description, "0", service.Amount, year, month);
-                                documents.Add(taxRecord);
-                            }
+                                else if (long.Parse(topYar.Amount) == serviceOldAmount)
+                                {
+                                    var taxRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                    , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                    , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                    , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
+                                    , province.CodeLevel4 ?? service.CodeLevel4, null, null
+                                    , description, "0", service.OldAmount, year, month);
+                                    documents.Add(taxRecord);
+                                }
 
-                            else
-                            {
-                                var taxRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                                , province.CodeLevel4 ?? service.CodeLevel4, null, null
-                                , description, "0", service.OldAmount, year, month);
-                                documents.Add(taxRecord);
+                                else
+                                    return -4;
                             }
                         }
                     }
@@ -911,6 +940,8 @@ internal class DocumentService : IDocumentService
                 List<Document> documents = new();
                 //دریافت کد سطح 5 از طریق استان و شهر رکورد تاپ یار
                 var province = _provinceRepository.GetProvinceByNameAndSubName(topYar.ProvinceName, topYar.SubProvince);
+                if (province == null)
+                    return -1;
                 //دریافت کد معین بانک
                 var bankCertain = _certainRepository.Get(1);
                 //دریافت کد معین خدمت
@@ -933,86 +964,148 @@ internal class DocumentService : IDocumentService
                     "9999999999", null, description, topYar.Amount, "0", year, month);
                 documents.Add(bankRecord);
 
-                foreach (var service in services)
+                //برای حالتی که تراکنش ورودی مربوط به فیلد عدد بزرگ درون سرویس باشد
+                //و فقط باید سند بانک درآمد بخورد
+                if (services.Any(f => f.Amount == topYar.Amount) ||
+                    services.Any(f => f.OldAmount == topYar.Amount))
                 {
-                    if (service.IncludeTax)
+                    var service = services
+                        .Where(s => s.Amount == topYar.Amount || s.OldAmount == topYar.Amount)
+                            .FirstOrDefault();
+                    if (service == null)
+                        return -2;
+
+                    var ServiceCertain = _certainRepository.Get(service.CertainId);
+
+                    if (ServiceCertain == null)
+                        return -3;
+
+                    if (service.Amount == topYar.Amount)
                     {
-                        var ServiceCertain = _certainRepository.Get(service.CertainId);
-                        var serviceAmount = services.Sum(s => long.Parse(s.Amount));
-                        var serviceOldAmount = services.Sum(s => long.Parse(s.OldAmount));
-
-                        if (long.Parse(topYar.Amount) == serviceAmount)
-                        {
-                            decimal income = (decimal.Parse(service.Amount) * 100) / 110;
-                            decimal tax = decimal.Parse(service.Amount) - decimal.Round(income);
-
-                            //income record
-                            var incomeRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
-                                , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
-                                province.ProvinceCode, service.CodeLevel6, description, "0", decimal.Round(income).ToString(), year, month);
-                            documents.Add(incomeRecord);
-                            //tax record
-                            var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                                , province.CodeLevel4 ?? service.CodeLevel4, null, null
-                                , description, "0", tax.ToString(), year, month);
-                            documents.Add(taxRecord);
-                        }
-
-                        else
-                        {
-                            decimal income = (decimal.Parse(service.OldAmount) * 100) / 110;
-                            decimal tax = decimal.Parse(service.OldAmount) - decimal.Round(income);
-
-                            //income record
-                            var incomeRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
-                                , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
-                                province.ProvinceCode, service.CodeLevel6, description, "0", decimal.Round(income).ToString(), year, month);
-                            documents.Add(incomeRecord);
-                            //tax record
-                            var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                                , province.CodeLevel4 ?? service.CodeLevel4, null, null
-                                , description, "0", tax.ToString(), year, month);
-                            documents.Add(taxRecord);
-                        }
+                        //income record
+                        var incomeRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                            , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                            , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                            , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
+                            , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
+                            province.ProvinceCode, service.CodeLevel6, description, "0", service.Amount, year, month);
+                        documents.Add(incomeRecord);
                     }
 
-                    else if (!service.IncludeTax)
+                    else if (service.OldAmount == topYar.Amount)
                     {
-                        var serviceAmount = services.Sum(s => long.Parse(s.Amount));
-                        var serviceOldAmount = services.Sum(s => long.Parse(s.OldAmount));
+                        //income record
+                        var incomeRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                            , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                            , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                            , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
+                            , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
+                            province.ProvinceCode, service.CodeLevel6, description, "0", service.OldAmount, year, month);
+                        documents.Add(incomeRecord);
+                    }
 
-                        if (long.Parse(topYar.Amount) == serviceAmount)
-                        {
-                            var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                    , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                    , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                    , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                    , province.CodeLevel4 ?? service.CodeLevel4, null, null
-                    , description, "0", service.Amount, year, month);
-                            documents.Add(taxRecord);
-                        }
+                    else
+                        return -4;
+                }
 
-                        else
+                else
+                {
+                    //حذف سرویس اضافی که در قسمت بالا بررسی شد
+                    var selectedService = services
+                        .Except(services.Where(s => s.IncludeTax == false && s.CertainId == 2))
+                        .ToList();
+                    if (selectedService != null)
+                    {
+                        foreach (var service in selectedService)
                         {
-                            var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                    , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                    , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                    , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                    , province.CodeLevel4 ?? service.CodeLevel4, null, null
-                    , description, "0", service.OldAmount, year, month);
-                            documents.Add(taxRecord);
+                            if (service.IncludeTax)
+                            {
+                                var ServiceCertain = _certainRepository.Get(service.CertainId);
+                                if (ServiceCertain == null)
+                                    return -3;
+                                var serviceAmount = selectedService.Sum(s => long.Parse(s.Amount));
+                                var serviceOldAmount = selectedService.Sum(s => long.Parse(s.OldAmount));
+
+                                if (long.Parse(topYar.Amount) == serviceAmount)
+                                {
+                                    decimal income = (decimal.Parse(service.Amount) * 100) / 110;
+                                    decimal tax = decimal.Parse(service.Amount) - decimal.Round(income);
+
+                                    //income record
+                                    var incomeRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                        , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                        , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                        , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
+                                        , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
+                                        province.ProvinceCode, service.CodeLevel6, description, "0", decimal.Round(income).ToString(), year, month);
+                                    documents.Add(incomeRecord);
+                                    //tax record
+                                    var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                        , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                        , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                        , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
+                                        , province.CodeLevel4 ?? service.CodeLevel4, null, null
+                                        , description, "0", tax.ToString(), year, month);
+                                    documents.Add(taxRecord);
+                                }
+
+                                else if (long.Parse(topYar.Amount) == serviceOldAmount)
+                                {
+                                    decimal income = (decimal.Parse(service.OldAmount) * 100) / 110;
+                                    decimal tax = decimal.Parse(service.OldAmount) - decimal.Round(income);
+
+                                    //income record
+                                    var incomeRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                        , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                        , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                        , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
+                                        , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
+                                        province.ProvinceCode, service.CodeLevel6, description, "0", decimal.Round(income).ToString(), year, month);
+                                    documents.Add(incomeRecord);
+                                    //tax record
+                                    var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                        , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                        , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                        , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
+                                        , province.CodeLevel4 ?? service.CodeLevel4, null, null
+                                        , description, "0", tax.ToString(), year, month);
+                                    documents.Add(taxRecord);
+                                }
+
+                                else
+                                    return -4;
+                            }
+
+                            else if (!service.IncludeTax)
+                            {
+                                var serviceAmount = selectedService.Sum(s => long.Parse(s.Amount));
+                                var serviceOldAmount = selectedService.Sum(s => long.Parse(s.OldAmount));
+
+                                if (long.Parse(topYar.Amount) == serviceAmount)
+                                {
+                                    var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                    , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                    , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                    , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
+                                    , province.CodeLevel4 ?? service.CodeLevel4, null, null
+                                    , description, "0", service.Amount, year, month);
+                                    documents.Add(taxRecord);
+                                }
+
+                                else if (long.Parse(topYar.Amount) == serviceOldAmount)
+                                {
+                                    var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                    , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                    , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                    , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
+                                    , province.CodeLevel4 ?? service.CodeLevel4, null, null
+                                    , description, "0", service.OldAmount, year, month);
+                                    documents.Add(taxRecord);
+                                }
+
+                                else
+                                    return -4;
+                            }
                         }
                     }
                 }
@@ -1175,90 +1268,117 @@ internal class DocumentService : IDocumentService
                     "9999999999", null, description, topYar.Amount, "0", year, month);
                 documents.Add(bankRecord);
 
-                foreach (var service in services)
+                //برای حالتی که تراکنش ورودی مربوط به فیلد عدد بزرگ درون سرویس باشد
+                //و فقط باید سند بانک درآمد بخورد
+                if (services.Any(f => f.Amount == topYar.Amount) ||
+                    services.Any(f => f.OldAmount == topYar.Amount))
                 {
-                    if (service.IncludeTax)
+                    var service = services
+                        .Where(s => s.Amount == topYar.Amount || s.OldAmount == topYar.Amount)
+                            .FirstOrDefault();
+                    if (service == null)
+                        return -2;
+
+                    var ServiceCertain = _certainRepository.Get(service.CertainId);
+
+                    if (ServiceCertain == null)
+                        return -3;
+
+                    if (service.Amount == topYar.Amount)
                     {
-                        var ServiceCertain = _certainRepository.Get(service.CertainId);
-                        var serviceAmount = services.Sum(s => long.Parse(s.Amount));
-                        var serviceOldAmount = services.Sum(s => long.Parse(s.OldAmount));
-
-                        if (long.Parse(topYar.Amount) == serviceAmount)
-                        {
-                            decimal income = (decimal.Parse(service.Amount) * 100) / 110;
-                            decimal tax = decimal.Parse(service.Amount) - decimal.Round(income);
-
-                            //income record
-                            var incomeRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
-                                , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
-                                province.ProvinceCode, service.CodeLevel6, description, "0", decimal.Round(income).ToString(), year, month);
-                            documents.Add(incomeRecord);
-                            //tax record
-                            var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                                , province.CodeLevel4 ?? service.CodeLevel4, null, null
-                                , description, "0", tax.ToString(), year, month);
-                            documents.Add(taxRecord);
-                        }
-
-                        else
-                        {
-                            decimal income = (decimal.Parse(service.OldAmount) * 100) / 110;
-                            decimal tax = decimal.Parse(service.OldAmount) - decimal.Round(income);
-
-                            //income record
-                            var incomeRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
-                                , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
-                                province.ProvinceCode, service.CodeLevel6, description, "0", decimal.Round(income).ToString(), year, month);
-                            documents.Add(incomeRecord);
-                            //tax record
-                            var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                                , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                                , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                                , province.CodeLevel4 ?? service.CodeLevel4, null, null
-                                , description, "0", tax.ToString(), year, month);
-                            documents.Add(taxRecord);
-                        }
+                        //income record
+                        var incomeRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                            , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                            , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                            , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
+                            , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
+                            province.ProvinceCode, service.CodeLevel6, description, "0", service.Amount, year, month);
+                        documents.Add(incomeRecord);
                     }
-                    else
+
+                    else if (service.OldAmount == topYar.Amount)
                     {
-                        var serviceAmount = services.Sum(s => long.Parse(s.Amount));
-                        var serviceOldAmount = services.Sum(s => long.Parse(s.OldAmount));
-
-                        if (long.Parse(topYar.Amount) == serviceAmount)
-                        {
-                            var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                        //income record
+                        var incomeRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
                             , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
                             , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                            , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                            , province.CodeLevel4 ?? service.CodeLevel4, null, null
-                            , description, "0", service.Amount, year, month);
-                            documents.Add(taxRecord);
-                        }
+                            , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
+                            , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
+                            province.ProvinceCode, service.CodeLevel6, description, "0", service.OldAmount, year, month);
+                        documents.Add(incomeRecord);
+                    }
 
-                        else
+                    else
+                        return -4;
+                }
+
+                else
+                {
+                    //حذف سرویس اضافی که در قسمت بالا بررسی شد
+                    var selectedService = services
+                        .Except(services.Where(s => s.IncludeTax == false && s.CertainId == 2))
+                        .ToList();
+                    if (selectedService != null)
+                    {
+                        foreach (var service in selectedService)
                         {
-                            var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
-                            , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
-                            , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                            , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                            , province.CodeLevel4 ?? service.CodeLevel4, null, null
-                            , description, "0", service.OldAmount, year, month);
-                            documents.Add(taxRecord);
+                            var ServiceCertain = _certainRepository.Get(service.CertainId);
+                            if (ServiceCertain == null)
+                                return -3;
+                            var serviceAmount = selectedService.Sum(s => long.Parse(s.Amount));
+                            var serviceOldAmount = selectedService.Sum(s => long.Parse(s.OldAmount));
+
+                            if (long.Parse(topYar.Amount) == serviceAmount)
+                            {
+                                decimal income = (decimal.Parse(service.Amount) * 100) / 110;
+                                decimal tax = decimal.Parse(service.Amount) - decimal.Round(income);
+
+                                //income record
+                                var incomeRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                    , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                    , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                    , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
+                                    , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
+                                    province.ProvinceCode, service.CodeLevel6, description, "0", decimal.Round(income).ToString(), year, month);
+                                documents.Add(incomeRecord);
+                                //tax record
+                                var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                    , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                    , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                    , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
+                                    , province.CodeLevel4 ?? service.CodeLevel4, null, null
+                                    , description, "0", tax.ToString(), year, month);
+                                documents.Add(taxRecord);
+                            }
+
+                            else if (long.Parse(topYar.Amount) == serviceOldAmount)
+                            {
+                                decimal income = (decimal.Parse(service.OldAmount) * 100) / 110;
+                                decimal tax = decimal.Parse(service.OldAmount) - decimal.Round(income);
+
+                                //income record
+                                var incomeRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                    , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                    , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                    , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
+                                    , (province.CodeLevel4 != null) ? province.CodeLevel4 : service.CodeLevel4,
+                                    province.ProvinceCode, service.CodeLevel6, description, "0", decimal.Round(income).ToString(), year, month);
+                                documents.Add(incomeRecord);
+                                //tax record
+                                var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                                    , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                                    , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                                    , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
+                                    , province.CodeLevel4 ?? service.CodeLevel4, null, null
+                                    , description, "0", tax.ToString(), year, month);
+                                documents.Add(taxRecord);
+                            }
+
+                            else
+                                return -4;
                         }
                     }
                 }
-
-
                 _repository.AddRange(documents);
                 //_repository.SaveSync();
                 return bankRecord.Order;
