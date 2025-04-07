@@ -144,7 +144,7 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                     {
                         #region بررسی سرویس هایی که در تاپ یار هست ولی در سامانه ثبت نشده
 
-                        var services = _serviceCodingService.GetServiceCodings(1, 300, "", "").ServiceCodings.Select(s => s.ServiceCode).Distinct().ToList();
+                        var services = _serviceCodingService.GetServiceCodings(1, 500, "", "").ServiceCodings.Select(s => s.ServiceCode).Distinct().ToList();
                         TopYarTmpViewModel = _topYarTmpService.GetTopYarTmps();
                         var UnRegisteredService = TopYarTmpViewModel.TopYarTmps.Where(s => !services.Contains(s.ServiceCode)).Select(s => new { s.ServiceCode, s.ServiceName, s.Amount }).Distinct().ToList();
                         if (UnRegisteredService.Count > 0)

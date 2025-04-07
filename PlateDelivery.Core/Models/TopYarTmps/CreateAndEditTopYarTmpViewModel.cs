@@ -54,10 +54,11 @@ public class CreateAndEditTopYarTmpViewModel : BaseDto
     [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string ServiceCode { get; set; }
     [Display(Name = "نام خدمت")]
-    [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
     public string ServiceName { get; set; }
     [Display(Name = "نام استان")]
     public string? ProvinceName { get; set; }
+    [Display(Name = "شناسه")]
+    public string? Identification { get; set; }
     [Display(Name = "نام شهر / مرکز")]
     public string? SubProvince { get; set; }
     [Display(Name = "کد استان")]

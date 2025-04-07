@@ -41,7 +41,7 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
         {
             ServiceCodingsViewModel = _serviceCodingService.GetServiceCodings();
             TopYarTmpViewModel = _topYarTmpService.GetTopYarTmpsForDocument();
-           
+
             long MaxOrder = _documentService.GetMaxOrder();
             if (MaxOrder == 0)
                 MaxOrder = 0;
@@ -191,49 +191,79 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                             //یک رکورد دارد که باید مبلغ مالیات از آن کم شود و سند بانک/درآمد/مالیات بخورد
                             //و در کل یک سند 5 سطری ثبت شود
                             case 3:
-                                if (serviceCode.Where(s => s.IncludeTax == true).Count() == 1)
                                 {
-                                    long ordr = _documentService.CreateTaxTaxIncomeDocument(item, serviceCode, MaxOrder);
-                                    if (ordr > 0)
-                                        Ids.Add(item.Id);
+                                    if (serviceCode.Where(s => s.IncludeTax == true).Count() == 1)
+                                    {
+                                        long ordr = _documentService.CreateTaxTaxIncomeDocument(item, serviceCode, MaxOrder);
+                                        if (ordr > 0)
+                                            Ids.Add(item.Id);
+                                    }
+
+                                    if (serviceCode.Where(s => s.IncludeTax == true).Count() == 2)
+                                    {
+                                        long ordr = _documentService.CreateTaxIncomeIncomeDocument(item, serviceCode, MaxOrder);
+                                        if (ordr > 0)
+                                            Ids.Add(item.Id);
+                                    }
                                 }
 
-                                if (serviceCode.Where(s => s.IncludeTax == true).Count() == 2)
-                                {
-                                    long ordr = _documentService.CreateTaxIncomeIncomeDocument(item, serviceCode, MaxOrder);
-                                    if (ordr > 0)
-                                        Ids.Add(item.Id);
-                                }
                                 break;
 
                             case 4:
-                                var partialService = serviceCode.FirstOrDefault(s => s.CertainId == 2 && !s.IncludeTax);
-                                var reminderServices = serviceCode.Where(s => s.Id != partialService.Id).ToList();
-                                if (item.Amount == partialService.Amount ||
-                                    item.Amount == partialService.OldAmount)
                                 {
-                                    long ordr = _documentService.CreateIncomeDocument(item, partialService, MaxOrder);
-                                    if (ordr > 0)
-                                        Ids.Add(item.Id);
+                                    var partialService = serviceCode.FirstOrDefault(s => s.CertainId == 2 && !s.IncludeTax);
+                                    var reminderServices = serviceCode.Where(s => s.Id != partialService.Id).ToList();
+                                    if (item.Amount == partialService.Amount ||
+                                        item.Amount == partialService.OldAmount)
+                                    {
+                                        long ordr = _documentService.CreateIncomeDocument(item, partialService, MaxOrder);
+                                        if (ordr > 0)
+                                            Ids.Add(item.Id);
 
+                                    }
+
+                                    long srvcAmount = 0, servcOldAmount = 0;
+                                    foreach (var srvv in reminderServices)
+                                    {
+                                        srvcAmount += long.Parse(srvv.Amount);
+                                        servcOldAmount += long.Parse(srvv.OldAmount);
+                                    }
+                                    if (item.Amount == srvcAmount.ToString() || item.Amount == servcOldAmount.ToString())
+                                    {
+                                        long ordr = _documentService.CreateTaxDocument(item, reminderServices, MaxOrder);
+                                        if (ordr > 0)
+                                            Ids.Add(item.Id);
+                                    }
                                 }
 
-                                long srvcAmount = 0, servcOldAmount = 0;
-                                foreach (var srvv in reminderServices)
-                                {
-                                    srvcAmount += long.Parse(srvv.Amount);
-                                    servcOldAmount += long.Parse(srvv.OldAmount);
-                                }
-                                if (item.Amount == srvcAmount.ToString() || item.Amount == servcOldAmount.ToString())
-                                {
-                                    long ordr = _documentService.CreateTaxDocument(item, reminderServices, MaxOrder);
-                                    if (ordr > 0)
-                                        Ids.Add(item.Id);
-                                }
                                 break;
 
                             case 5:
+                                {
+                                    var partialService = serviceCode.FirstOrDefault(s => s.CertainId == 2 && !s.IncludeTax);
+                                    var reminderServices = serviceCode.Where(s => s.Id != partialService.Id).ToList();
+                                    if (item.Amount == partialService.Amount ||
+                                        item.Amount == partialService.OldAmount)
+                                    {
+                                        long ordr = _documentService.CreateIncomeDocument(item, partialService, MaxOrder);
+                                        if (ordr > 0)
+                                            Ids.Add(item.Id);
 
+                                    }
+
+                                    long srvcAmount = 0, servcOldAmount = 0;
+                                    foreach (var srvv in reminderServices)
+                                    {
+                                        srvcAmount += long.Parse(srvv.Amount);
+                                        servcOldAmount += long.Parse(srvv.OldAmount);
+                                    }
+                                    if (item.Amount == srvcAmount.ToString() || item.Amount == servcOldAmount.ToString())
+                                    {
+                                        long ordr = _documentService.CreateTaxDocument(item, reminderServices, MaxOrder);
+                                        if (ordr > 0)
+                                            Ids.Add(item.Id);
+                                    }
+                                }
                                 break;
                         }
                     }
@@ -241,7 +271,7 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                 _documentService.SaveChanges();
                 _topYarTmpService.DeleteTopYarTmp(Ids);
             }
-            
+
             return RedirectToPage("Index");
         }
     }
