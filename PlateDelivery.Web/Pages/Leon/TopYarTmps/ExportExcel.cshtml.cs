@@ -24,7 +24,7 @@ public class ExportExcelModel : PageModel
     [BindProperty]
     public ExcelExportType ExportType { get; set; }
 
-    public void OnGet(string DocDate, int pageId = 1, int take = 200000)
+    public void OnGet(string DocDate, int pageId = 1, int take = 500000)
     {
         ViewData["Title"] = "خروجی اکسل";
         ViewData["ExportType"] = ExportType.GetSelectList();
@@ -39,7 +39,7 @@ public class ExportExcelModel : PageModel
             ViewData["Title"] = "خروجی اکسل";
             ViewData["ExportType"] = ExportType.GetSelectList();
             ViewData["DocDate"] = DocDate;//تاریخ سندهای روز برای خروجی اکسل
-            DocumentViewModel = _documentService.GetDocumentsByDocDate(DocDate, 1, 200000);
+            DocumentViewModel = _documentService.GetDocumentsByDocDate(DocDate, 1, 500000);
         }
 
         if (ExportType == ExcelExportType.SiaghType)
@@ -50,14 +50,14 @@ public class ExportExcelModel : PageModel
             //باید فایل اکسل ایجاد شود
 
             var Orders = DocumentsForExport.Select(d => d.Order).Distinct().ToList();
-            List<List<long>> partitions = Orders.partition(4000);
+            List<List<long>> partitions = Orders.partition(40000);
 
             using XLWorkbook wb = new();
             for (int i = 0; i < partitions.Count; i++)
             {
                 List<long> partition = partitions[i];
 
-                //هر پارتیشن حاوی 4000 سند می باشد که باید از لیست خروجی دریافت کنیم
+                //هر پارتیشن حاوی 40000 سند می باشد که باید از لیست خروجی دریافت کنیم
                 DataTable dt = new("فایل سیاق");
                 dt.Columns.AddRange(new DataColumn[10] {
                                         new("کد معین"),
