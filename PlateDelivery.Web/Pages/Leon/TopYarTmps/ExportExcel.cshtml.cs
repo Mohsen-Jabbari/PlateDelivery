@@ -50,14 +50,14 @@ public class ExportExcelModel : PageModel
             //باید فایل اکسل ایجاد شود
 
             var Orders = DocumentsForExport.Select(d => d.Order).Distinct().ToList();
-            List<List<long>> partitions = Orders.partition(40000);
+            List<List<long>> partitions = Orders.partition(20000);
 
             using XLWorkbook wb = new();
             for (int i = 0; i < partitions.Count; i++)
             {
                 List<long> partition = partitions[i];
 
-                //هر پارتیشن حاوی 40000 سند می باشد که باید از لیست خروجی دریافت کنیم
+                //هر پارتیشن حاوی 25000 سند می باشد که باید از لیست خروجی دریافت کنیم
                 DataTable dt = new("فایل سیاق");
                 dt.Columns.AddRange(new DataColumn[10] {
                                         new("کد معین"),
