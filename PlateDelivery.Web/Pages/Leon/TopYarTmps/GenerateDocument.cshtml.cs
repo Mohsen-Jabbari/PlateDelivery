@@ -80,7 +80,6 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                         long order = _documentService.CreateDocument(item, service, MaxOrder);
                                         if (order > 0)
                                             Ids.Add(item.Id);
-                                        //    _topYarTmpService.DeleteTopYarTmp(item.Id);
                                     }
 
                                     else if (!service.IncludeTax)
@@ -88,7 +87,6 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                         long order = _documentService.CreateTaxDocument(item, service, MaxOrder);
                                         if (order > 0)
                                             Ids.Add(item.Id);
-                                        //    _topYarTmpService.DeleteTopYarTmp(item.Id);
                                     }
                                 }
                                 break;
@@ -104,7 +102,6 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                     long order = _documentService.CreateDocument(item, serviceCode, MaxOrder);
                                     if (order > 0)
                                         Ids.Add(item.Id);
-                                    //    _topYarTmpService.DeleteTopYarTmp(item.Id);
                                 }
 
                                 //یعنی حداقل یکی از وضعیت مالیات ها صفر است
@@ -122,7 +119,6 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                                 long order = _documentService.CreateIncomeDocument(item, selectedService, MaxOrder);
                                                 if (order > 0)
                                                     Ids.Add(item.Id);
-                                                //    _topYarTmpService.DeleteTopYarTmp(item.Id);
                                             }
 
                                             else
@@ -130,7 +126,6 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                                 long order = _documentService.CreateTaxDocument(item, selectedService, MaxOrder);
                                                 if (order > 0)
                                                     Ids.Add(item.Id);
-                                                //    _topYarTmpService.DeleteTopYarTmp(item.Id);
                                             }
                                         }
                                         else
@@ -142,7 +137,6 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                                     long order = _documentService.CreateIncomeDocument(item, servic, MaxOrder);
                                                     if (order > 0)
                                                         Ids.Add(item.Id);
-                                                    //    _topYarTmpService.DeleteTopYarTmp(item.Id);
                                                 }
 
                                                 else
@@ -150,7 +144,6 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                                     long order = _documentService.CreateTaxDocument(item, servic, MaxOrder);
                                                     if (order > 0)
                                                         Ids.Add(item.Id);
-                                                    //    _topYarTmpService.DeleteTopYarTmp(item.Id);
                                                 }
                                             }
                                         }
@@ -161,28 +154,6 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
                                         long order = _documentService.CreateTaxDocument(item, serviceCode, MaxOrder);
                                         if (order > 0)
                                             Ids.Add(item.Id);
-                                        //    _topYarTmpService.DeleteTopYarTmp(item.Id);
-
-                                        //foreach (var servic in serviceCode)
-                                        //{
-                                        //    if (servic != null && servic.IncludeTax)
-                                        //    {
-                                        //        long order = _documentService.CreateDocument(item, servic, MaxOrder);
-                                        //        if (order > 0)
-                                        //            Ids.Add(item.Id);
-                                        //        //    _topYarTmpService.DeleteTopYarTmp(item.Id);
-                                        //    }
-
-                                        //    else if (servic != null && !servic.IncludeTax)
-                                        //    {
-                                        //        long order = _documentService.CreateTaxDocument(item, servic, MaxOrder);
-                                        //        if (order > 0)
-                                        //            Ids.Add(item.Id);
-                                        //        //    _topYarTmpService.DeleteTopYarTmp(item.Id);
-                                        //    }
-
-                                        //    //در این حالت باید سند 4 سطری تولید شود
-                                        //}
                                     }
                                 }
                                 break;

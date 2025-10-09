@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using PlateDelivery.Core.Convertors;
 using PlateDelivery.Core.Models.Documents;
 using PlateDelivery.Core.Services.Documents;
+using PlateDelivery.DataLayer.Entities.CertainAgg.Enums;
+using PlateDelivery.DataLayer.Entities.CertainAgg.Repository;
 using PlateDelivery.DataLayer.Entities.DocumentAgg;
 using PlateDelivery.DataLayer.Entities.DocumentAgg.Enums;
 using System.Data;
@@ -12,10 +14,11 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps;
 public class ExportExcelModel : PageModel
 {
     private readonly IDocumentService _documentService;
-
-    public ExportExcelModel(IDocumentService documentService)
+    private readonly ICertainRepository _certainRepository;
+    public ExportExcelModel(IDocumentService documentService, ICertainRepository certainRepository)
     {
         _documentService = documentService;
+        _certainRepository = certainRepository;
     }
 
     public DocumentViewModel DocumentViewModel { get; set; }
@@ -301,7 +304,51 @@ public class ExportExcelModel : PageModel
 
             #region افزودن رکوردهای درآمد و مالیات
 
-            var incomeRecords = DocumentsForExport.Where(b => b.CertainCode != "10101")
+            var allCertains = _certainRepository.GetAll();
+            var aggregateTaxes = allCertains
+                                    .Where(c => c.Category == CertainCategory.Tax && c.CertainCode != "32091")
+                                        .Select(c => c.CertainCode).ToArray();
+
+            var remindingCertains = allCertains.Where(r => !aggregateTaxes.Contains(r.CertainCode) && r.CertainCode != "10101")
+                .Select(r => r.CertainCode).ToArray();
+
+            var bonyadTaxRecord = DocumentsForExport.Where(b => aggregateTaxes.Contains(b.CertainCode))
+                            .GroupBy(d => new
+                            {
+                                d.CertainCode,
+                                d.CodeLevel4,
+                                d.CodeLevel5,
+                                d.CodeLevel6,
+                                d.ServiceCode,
+                                d.ServiceName
+                            })
+                            .Select(n => new
+                            {
+                                n.Key.CertainCode,
+                                n.Key.CodeLevel4,
+                                n.Key.CodeLevel5,
+                                n.Key.CodeLevel6,
+                                n.Key.ServiceCode,
+                                n.Key.ServiceName,
+                                Debt = n.Sum(s => long.Parse(s.Debt)),
+                                Credit = n.Sum(s => long.Parse(s.Credit))
+                            }).ToList();
+
+            foreach (var item in bonyadTaxRecord)
+            {
+                dt.Rows.Add(item.CertainCode,
+                            item.CodeLevel4,
+                            item.CodeLevel5,
+                            item.CodeLevel6,
+                            string.Concat("بابت درآمد ", item.ServiceName, "  و سرویس ", item.ServiceCode, " در تاریخ ", DocDate),
+                            item.Debt,
+                            item.Credit,
+                            "",
+                            "",
+                            "");
+            }
+
+            var incomeRecords = DocumentsForExport.Where(b => remindingCertains.Contains(b.CertainCode))
                             .GroupBy(d => new
                             {
                                 d.CertainCode,
