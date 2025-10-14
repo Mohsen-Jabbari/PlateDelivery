@@ -476,7 +476,7 @@ internal class DocumentService : IDocumentService
                 var ServiceCertain = _certainRepository.Get(service.CertainId);
                 //دریافت کد معین مالیات
                 var taxCertains = _certainRepository.GetAll();
-                var taxServiceElement = taxCertains.FirstOrDefault(t => t.Category == CertainCategory.Tax);
+                var taxServiceElement = taxCertains.FirstOrDefault(t => t.Category == CertainCategory.Tax && t.Id == service.CertainId);
                 if (taxServiceElement == null)
                     return 0;
                 var account = _accountRepository.GetByIban(topYar.Iban);
@@ -648,7 +648,8 @@ internal class DocumentService : IDocumentService
                 var account = _accountRepository.GetByIban(topYar.Iban);
                 //دریافت کد معین مالیات
                 var taxCertains = _certainRepository.GetAll();
-                var taxServiceElement = taxCertains.FirstOrDefault(t => t.Category == CertainCategory.Tax);
+                var serviceCertainIds = services.Select(x => x.CertainId).ToArray();
+                var taxServiceElement = taxCertains.FirstOrDefault(t => t.Category == CertainCategory.Tax && serviceCertainIds.Contains(t.Id));
                 if (taxServiceElement == null)
                     return 0;
 
@@ -781,7 +782,9 @@ internal class DocumentService : IDocumentService
                 //دریافت کد معین خدمت
                 var account = _accountRepository.GetByIban(topYar.Iban);
                 //دریافت کد معین مالیات
-                var taxCertain = _certainRepository.Get(4);
+                var taxCertains = _certainRepository.GetAll();
+                var serviceCertainIds = services.Select(x => x.CertainId).ToArray();
+                var taxServiceElement = taxCertains.FirstOrDefault(t => t.Category == CertainCategory.Tax && serviceCertainIds.Contains(t.Id));
                 string description = string.Concat("بابت درآمد ", services.First().ServiceName,
                     " با شماره پایانه ", topYar.Terminal, " در تاریخ ", topYar.TransactionDate);
 
@@ -876,8 +879,8 @@ internal class DocumentService : IDocumentService
                                     var taxRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
                                         , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
                                         , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                        , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                                        , province.CodeLevel4 ?? service.CodeLevel4, null, null
+                                        , topYar.ProvinceName, topYar.SubProvince, null, taxServiceElement.CertainCode
+                                        , province.CodeLevel4 ?? service.CodeLevel4, taxServiceElement.Id != 4 ? "9999999999" : null, null
                                         , description, "0", tax.ToString(), year, month);
                                     documents.Add(taxRecord);
                                 }
@@ -899,8 +902,8 @@ internal class DocumentService : IDocumentService
                                     var taxRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
                                         , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
                                         , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                        , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                                        , province.CodeLevel4 ?? service.CodeLevel4, null, null
+                                        , topYar.ProvinceName, topYar.SubProvince, null, taxServiceElement.CertainCode
+                                        , province.CodeLevel4 ?? service.CodeLevel4, taxServiceElement.Id != 4 ? "9999999999" : null, null
                                         , description, "0", tax.ToString(), year, month);
                                     documents.Add(taxRecord);
                                 }
@@ -919,8 +922,8 @@ internal class DocumentService : IDocumentService
                                     var taxRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
                                     , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
                                     , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                    , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                                    , province.CodeLevel4 ?? service.CodeLevel4, null, null
+                                    , topYar.ProvinceName, topYar.SubProvince, null, taxServiceElement.CertainCode
+                                    , province.CodeLevel4 ?? service.CodeLevel4, taxServiceElement.Id != 4 ? "9999999999" : null, null
                                     , description, "0", service.Amount, year, month);
                                     documents.Add(taxRecord);
                                 }
@@ -930,8 +933,8 @@ internal class DocumentService : IDocumentService
                                     var taxRecord = new Document(1, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
                                     , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
                                     , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                    , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                                    , province.CodeLevel4 ?? service.CodeLevel4, null, null
+                                    , topYar.ProvinceName, topYar.SubProvince, null, taxServiceElement.CertainCode
+                                    , province.CodeLevel4 ?? service.CodeLevel4, taxServiceElement.Id != 4 ? "9999999999" : null, null
                                     , description, "0", service.OldAmount, year, month);
                                     documents.Add(taxRecord);
                                 }
@@ -1264,7 +1267,8 @@ internal class DocumentService : IDocumentService
                 var account = _accountRepository.GetByIban(topYar.Iban);
                 //دریافت کد معین مالیات
                 var taxCertains = _certainRepository.GetAll();
-                var taxServiceElement = taxCertains.FirstOrDefault(t => t.Category == CertainCategory.Tax);
+                var serviceCertainIds = services.Select(x => x.CertainId).ToArray();
+                var taxServiceElement = taxCertains.FirstOrDefault(t => t.Category == CertainCategory.Tax && serviceCertainIds.Contains(t.Id));
                 if (taxServiceElement == null)
                     return 0;
                 string description = string.Concat("بابت درآمد ", services.First().ServiceName,
