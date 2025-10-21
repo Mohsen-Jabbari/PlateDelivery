@@ -245,10 +245,7 @@ internal class DocumentService : IDocumentService
                 //دریافت کد معین خدمت
                 var account = _accountRepository.GetByIban(topYar.Iban);
                 //دریافت کد معین مالیات
-                var taxCertains = _certainRepository.GetAll();
-                var taxServiceElement = taxCertains.FirstOrDefault(t => t.Category == CertainCategory.Tax);
-                if (taxServiceElement == null)
-                    return 0;
+                var taxCertains = _certainRepository.Get(4);
                 string description = string.Concat("بابت درآمد ", services.First().ServiceName,
                     " با شماره پایانه ", topYar.Terminal, " در تاریخ ", topYar.TransactionDate);
 
@@ -288,8 +285,8 @@ internal class DocumentService : IDocumentService
                         var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
                             , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
                             , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                            , topYar.ProvinceName, topYar.SubProvince, null, taxServiceElement.CertainCode
-                            , province.CodeLevel4 ?? service.CodeLevel4, taxServiceElement.Id != 4 ? "9999999999" : null, null
+                            , topYar.ProvinceName, topYar.SubProvince, null, taxCertains.CertainCode
+                            , province.CodeLevel4 ?? service.CodeLevel4, null, null
                             , description, "0", tax.ToString(), year, month);
                         documents.Add(taxRecord);
                     }
@@ -311,8 +308,8 @@ internal class DocumentService : IDocumentService
                         var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
                             , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
                             , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                            , topYar.ProvinceName, topYar.SubProvince, null, taxServiceElement.CertainCode
-                            , province.CodeLevel4 ?? service.CodeLevel4, taxServiceElement.Id != 4 ? "9999999999" : null, null
+                            , topYar.ProvinceName, topYar.SubProvince, null, taxCertains.CertainCode
+                            , province.CodeLevel4 ?? service.CodeLevel4, null, null
                             , description, "0", tax.ToString(), year, month);
                         documents.Add(taxRecord);
                     }
@@ -677,7 +674,7 @@ internal class DocumentService : IDocumentService
                         var ServiceCertain = _certainRepository.Get(service.CertainId);
                         var serviceAmount = services.Sum(s => long.Parse(s.Amount));
                         var serviceOldAmount = services.Sum(s => long.Parse(s.OldAmount));
-
+                        var txElement = _certainRepository.Get(4);
                         if (long.Parse(topYar.Amount) == serviceAmount)
                         {
                             decimal income = (decimal.Parse(service.Amount) * 100) / 110;
@@ -695,8 +692,8 @@ internal class DocumentService : IDocumentService
                             var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
                                 , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
                                 , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                , topYar.ProvinceName, topYar.SubProvince, null, taxServiceElement.CertainCode
-                                , province.CodeLevel4 ?? service.CodeLevel4, taxServiceElement.Id != 4 ? "9999999999" : null, null
+                                , topYar.ProvinceName, topYar.SubProvince, null, txElement.CertainCode
+                                , province.CodeLevel4 ?? service.CodeLevel4, null, null
                                 , description, "0", tax.ToString(), year, month);
                             documents.Add(taxRecord);
                         }
@@ -718,8 +715,8 @@ internal class DocumentService : IDocumentService
                             var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
                                 , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
                                 , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                                , topYar.ProvinceName, topYar.SubProvince, null, taxServiceElement.CertainCode
-                                , province.CodeLevel4 ?? service.CodeLevel4, taxServiceElement.Id != 4 ? "9999999999" : null, null
+                                , topYar.ProvinceName, topYar.SubProvince, null, txElement.CertainCode
+                                , province.CodeLevel4 ?? service.CodeLevel4, null, null
                                 , description, "0", tax.ToString(), year, month);
                             documents.Add(taxRecord);
                         }
@@ -1035,6 +1032,7 @@ internal class DocumentService : IDocumentService
                         {
                             if (service.IncludeTax)
                             {
+                                taxCertain = _certainRepository.Get(4);
                                 var ServiceCertain = _certainRepository.Get(service.CertainId);
                                 if (ServiceCertain == null)
                                     return -3;
@@ -1095,6 +1093,8 @@ internal class DocumentService : IDocumentService
                             {
                                 var serviceAmount = selectedService.Sum(s => long.Parse(s.Amount));
                                 var serviceOldAmount = selectedService.Sum(s => long.Parse(s.OldAmount));
+                                if(service.CertainId != 4)
+                                    taxCertain = _certainRepository.Get(service.CertainId);
 
                                 if (long.Parse(topYar.Amount) == serviceAmount)
                                 {
@@ -1102,7 +1102,7 @@ internal class DocumentService : IDocumentService
                                     , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
                                     , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
                                     , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                                    , province.CodeLevel4 ?? service.CodeLevel4, null, null
+                                    , province.CodeLevel4 ?? service.CodeLevel4, taxCertain.Id != 4 ? "9999999999" : null, null
                                     , description, "0", service.Amount, year, month);
                                     documents.Add(taxRecord);
                                 }
@@ -1113,7 +1113,7 @@ internal class DocumentService : IDocumentService
                                     , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
                                     , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
                                     , topYar.ProvinceName, topYar.SubProvince, null, taxCertain.CertainCode
-                                    , province.CodeLevel4 ?? service.CodeLevel4, null, null
+                                    , province.CodeLevel4 ?? service.CodeLevel4, taxCertain.Id != 4 ? "9999999999" : null, null
                                     , description, "0", service.OldAmount, year, month);
                                     documents.Add(taxRecord);
                                 }
