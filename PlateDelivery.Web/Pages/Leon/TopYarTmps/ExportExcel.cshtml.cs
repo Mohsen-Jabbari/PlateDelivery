@@ -309,7 +309,8 @@ public class ExportExcelModel : PageModel
                                     .Where(c => c.Category == CertainCategory.Tax && c.CertainCode != "32091")
                                         .Select(c => c.CertainCode).ToArray();
 
-            var remindingCertains = allCertains.Where(r => !aggregateTaxes.Contains(r.CertainCode) && r.CertainCode != "10101")
+            var remindingCertains = allCertains.Where(r => !aggregateTaxes.Contains(r.CertainCode) 
+                                                && r.CertainCode != "10101" && r.CertainCode != "32091")
                 .Select(r => r.CertainCode).ToArray();
 
             var bonyadTaxRecord = DocumentsForExport.Where(b => aggregateTaxes.Contains(b.CertainCode))
@@ -347,6 +348,42 @@ public class ExportExcelModel : PageModel
                             "",
                             "");
             }
+
+            var taxRecords = DocumentsForExport.Where(b => b.CertainCode == "32091")
+                            .GroupBy(d => new
+                            {
+                                d.CertainCode,
+                                d.CodeLevel4,
+                                d.CodeLevel5,
+                                d.CodeLevel6,
+                                d.ServiceCode,
+                                d.ServiceName
+                            })
+                            .Select(n => new
+                            {
+                                n.Key.CertainCode,
+                                n.Key.CodeLevel4,
+                                n.Key.CodeLevel5,
+                                n.Key.CodeLevel6,
+                                n.Key.ServiceCode,
+                                n.Key.ServiceName,
+                                Debt = n.Sum(s => long.Parse(s.Debt)),
+                                Credit = n.Sum(s => long.Parse(s.Credit))
+                            }).ToList();
+            foreach (var item in taxRecords)
+            {
+                dt.Rows.Add(item.CertainCode,
+                            item.CodeLevel4,
+                            item.CodeLevel5,
+                            item.CodeLevel6,
+                            string.Concat("بابت درآمد ", item.ServiceName, "  و سرویس ", item.ServiceCode, " در تاریخ ", DocDate),
+                            item.Debt,
+                            item.Credit,
+                            "",
+                            "",
+                            "");
+            }
+
 
             var incomeRecords = DocumentsForExport.Where(b => remindingCertains.Contains(b.CertainCode))
                             .GroupBy(d => new
