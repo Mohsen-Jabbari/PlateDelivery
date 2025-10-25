@@ -355,8 +355,8 @@ public class ExportExcelModel : PageModel
                                 d.CodeLevel4,
                                 d.CodeLevel5,
                                 d.CodeLevel6,
-                                d.Terminal,
-                                d.Description
+                                d.ServiceCode,
+                                d.ServiceName
                             })
                             .Select(n => new
                             {
@@ -364,8 +364,8 @@ public class ExportExcelModel : PageModel
                                 n.Key.CodeLevel4,
                                 n.Key.CodeLevel5,
                                 n.Key.CodeLevel6,
-                                n.Key.Terminal,
-                                n.Key.Description,
+                                n.Key.ServiceCode,
+                                n.Key.ServiceName,
                                 Debt = n.Sum(s => long.Parse(s.Debt)),
                                 Credit = n.Sum(s => long.Parse(s.Credit))
                             }).ToList();
@@ -376,7 +376,7 @@ public class ExportExcelModel : PageModel
                             item.CodeLevel4,
                             item.CodeLevel5,
                             item.CodeLevel6,
-                            item.Description,
+                            string.Concat("بابت درآمد ", item.ServiceName, "  و سرویس ", item.ServiceCode, " در تاریخ ", DocDate),
                             item.Debt,
                             item.Credit,
                             "",
