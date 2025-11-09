@@ -1,4 +1,5 @@
-﻿using PlateDelivery.DataLayer._Utilities;
+﻿using Microsoft.EntityFrameworkCore;
+using PlateDelivery.DataLayer._Utilities;
 using PlateDelivery.DataLayer.Context;
 using PlateDelivery.DataLayer.Entities.DocumentAgg.Enums;
 using PlateDelivery.DataLayer.Entities.DocumentAgg.Types;
@@ -18,14 +19,13 @@ internal class DocumentRepository : BaseRepository<Document>, IDocumentRepositor
 
     public long GetMaxOrder()
     {
-        var maxOrder = Context.Documents.Select(d => d.Order).ToList();
-        long maxOrderForReturn = maxOrder.DefaultIfEmpty(0).Max();
-        if (maxOrderForReturn == 0)
-        {
-            return maxOrderForReturn;
-        }
-        else
-            return ++maxOrderForReturn;
+        var maxOrder = Context.Documents
+        .AsNoTracking() // برای کاهش overhead
+        .OrderByDescending(d => d.Order)
+        .Select(d => d.Order)
+        .FirstOrDefault();
+
+        return maxOrder + 1;
     }
 
     public DocumentMonth GetMonth(string thisDate)

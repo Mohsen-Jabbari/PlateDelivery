@@ -1,4 +1,5 @@
-﻿using PlateDelivery.Core.Models.Documents;
+﻿using Microsoft.EntityFrameworkCore;
+using PlateDelivery.Core.Models.Documents;
 using PlateDelivery.Core.Models.TopYarTmps;
 using PlateDelivery.DataLayer.Entities.AccountAgg.Repository;
 using PlateDelivery.DataLayer.Entities.CertainAgg.Enums;
@@ -1385,23 +1386,18 @@ internal class DocumentService : IDocumentService
         return result.ToList();
     }
 
+    public long GetDocumentsCreditSumByDate(string docDate)
+    {
+        List<string> validCertains = new() { "60120", "69090" };
+        return _repository.GetDocumentByDate(docDate)
+        .Where(r => validCertains.Contains(r.CertainCode))
+        .Sum(d => Convert.ToInt64(d.Credit));
+    }
+
     public List<Document> GetDocumentsByDocDateForTax(string docDate)
     {
         List<string> validCertains = new() { "60120", "69090" };
-        IQueryable<Document> result = _repository.GetDocumentByDate(docDate);
-        result = result.Where(r => validCertains.Contains(r.CertainCode));
-        #region MyRegion
-        //var taxService = _serviceCodingRepository.GetAll();
-        //taxService = taxService.Where(s => s.IncludeTax == false && s.CodeLevel6 == null).ToList();
-        //var taxArrey = taxService.Select(s => s.ServiceCode).ToArray();
-        //var list = result.ToList();
-        //var listToDelete = list.Where(r => taxArrey.Contains(r.ServiceCode)).ToList();
-        //var taxAmount = taxService.Where(s => s.CodeLevel6 == null).Select(s => s.Amount).ToList();
-        //listToDelete = listToDelete.Where(l => taxAmount.Contains(l.Amount)).ToList();
-        //list = list.Except(listToDelete).ToList();
-        #endregion
-
-        return result.ToList();
+        return _repository.GetDocumentByDate(docDate).Where(r => validCertains.Contains(r.CertainCode)).AsNoTracking().ToList();
     }
 
     public SummaryExportDocumentViewModel GetMainHeadListOfDocumentsForExport(int pageId = 1, int take = 10, DocumentYears Year = DocumentYears.NotSelected, DocumentMonth Month = DocumentMonth.NotSelected)
@@ -1418,34 +1414,59 @@ internal class DocumentService : IDocumentService
             result = result.Where(r => r.DocumentMonth == Month);
         }
 
+        // ابتدا گروه‌بندی و pagination را روی داده‌های اصلی انجام دهید
+        var groupedResult = result
+            .GroupBy(u => new { year = u.DocumentYear, month = u.DocumentMonth, docDate = u.TransactionDate })
+            .Select(g => new
+            {
+                g.Key.year,
+                g.Key.month,
+                g.Key.docDate,
+                Count = g.Count()
+            })
+            .OrderByDescending(x => x.year)
+            .ThenByDescending(x => x.month)
+            .ThenBy(x => x.docDate);
+
+        // pagination روی داده‌های گروه‌بندی شده
+        int totalCount = groupedResult.Count();
         int takeData = take;
         int skip = (pageId - 1) * takeData;
-        var x = result.GroupBy(u => new { year = u.DocumentYear, month = u.DocumentMonth, docDate = u.TransactionDate })
-            .Select(n => new { n.Key.year, n.Key.month, n.Key.docDate, cnt = n.Count() });
-        SummaryExportDocumentViewModel list = new();
-        SummaryDocuments summary = new();
+        int pageCount = (int)Math.Ceiling(totalCount / (double)takeData);
 
-        list.SummaryDocuments = new();
-        foreach (var item in x)
+        var pagedGroupedData = groupedResult
+            .Skip(skip)
+            .Take(takeData)
+            .ToList();
+
+        // حالا برای هر گروه، مجموع درآمد را محاسبه کنید (اما این بار فقط برای داده‌های صفحه جاری)
+        var summaryDocuments = new List<SummaryDocuments>();
+
+        foreach (var item in pagedGroupedData)
         {
-            list.SummaryDocuments.Add(new SummaryDocuments()
+            // این متد باید بهینه شود - فقط داده‌های مورد نیاز را بگیرد
+            var creditAmount = GetDocumentsCreditSumByDate(item.docDate);
+
+            summaryDocuments.Add(new SummaryDocuments()
             {
                 Year = item.year,
                 Month = item.month,
                 DocumentDate = item.docDate,
-                Count = item.cnt,
-                CreditAmount = GetDocumentsByDocDateForTax(item.docDate).Sum(d => long.Parse(d.Credit))
+                Count = item.Count,
+                CreditAmount = creditAmount
             });
         }
-        list.SummaryCounts = list.SummaryDocuments.Count;
-        list.PageCount = (int)Math.Ceiling(list.SummaryDocuments.Count / (double)takeData);
-        list.CurrentPage = pageId;
-        list.LastPage = list.PageCount;
-        list.PrevPage = Math.Max(pageId - 1, list.CurrentPage);
-        list.NextPage = Math.Max(pageId + 1, list.LastPage);
-        list.SummaryDocuments = list.SummaryDocuments
-            .OrderByDescending(l => l.Year).ThenByDescending(l => l.Month).ThenBy(l => l.DocumentDate).Skip(skip).Take(takeData).ToList();
-        return list;
+
+        return new SummaryExportDocumentViewModel
+        {
+            SummaryDocuments = summaryDocuments,
+            SummaryCounts = totalCount,
+            PageCount = pageCount,
+            CurrentPage = pageId,
+            LastPage = pageCount,
+            PrevPage = Math.Max(pageId - 1, 1),
+            NextPage = Math.Min(pageId + 1, pageCount)
+        };
     }
 
     public long GetMaxOrder()

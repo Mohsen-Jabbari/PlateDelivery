@@ -4,6 +4,7 @@ using PlateDelivery.Core.Convertors;
 using PlateDelivery.Core.Models.TopYarTmps;
 using PlateDelivery.Core.Services.Documents;
 using PlateDelivery.DataLayer.Entities.DocumentAgg.Enums;
+using System.Globalization;
 
 namespace PlateDelivery.Web.Pages.Leon.TopYarTmps;
 public class ExportDocumentModel : PageModel
@@ -25,8 +26,8 @@ public class ExportDocumentModel : PageModel
     public void OnGet(int pageId = 1, int take = 31
         , DocumentYears Year = DocumentYears.NotSelected, DocumentMonth Month = DocumentMonth.NotSelected)
     {
+        
         ViewData["Title"] = "خروجی اکسل اسناد حسابداری";
-
         ViewData["DocumentYear"] = DocumentYears.GetSelectList();
         ViewData["DocumentMonth"] = DocumentMonth.GetSelectList();
 
@@ -47,6 +48,45 @@ public class ExportDocumentModel : PageModel
         if (Year != DocumentYears.NotSelected)
         {
             DocumentYears = Year;
+        }
+
+        else
+        {
+            PersianCalendar pc = new PersianCalendar();
+            var year = pc.GetYear(DateTime.Now);
+            switch (year)
+            {
+                case 1404:
+                    Year = DocumentYears.Year1404;
+                    break;
+
+                case 1405:
+                    Year = DocumentYears.Year1405;
+                    break;
+
+                case 1406:
+                    Year = DocumentYears.Year1406;
+                    break;
+
+                case 1407:
+                    Year = DocumentYears.Year1407;
+                    break;
+
+                case 1408:
+                    Year = DocumentYears.Year1408;
+                    break;
+
+                case 1409:
+                    Year = DocumentYears.Year1409;
+                    break;
+
+                case 1410:
+                    Year = DocumentYears.Year1410;
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         if (Month != DocumentMonth.NotSelected)
