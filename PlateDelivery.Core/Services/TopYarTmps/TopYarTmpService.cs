@@ -232,60 +232,60 @@ internal class TopYarTmpService : ITopYarTmpService
 
         if (result != null)
         {
-                if (!string.IsNullOrEmpty(filterByRRN))
-                {
-                    result = result.Where(u => u.RetrivalRef.Contains(filterByRRN)).ToList();
-                }
+            if (!string.IsNullOrEmpty(filterByRRN))
+            {
+                result = result.Where(u => u.RetrivalRef.Contains(filterByRRN)).ToList();
+            }
 
-                if (!string.IsNullOrEmpty(filterByTrackingNo))
-                {
-                    result = result.Where(u => u.TrackingNo.Contains(filterByTrackingNo)).ToList();
-                }
+            if (!string.IsNullOrEmpty(filterByTrackingNo))
+            {
+                result = result.Where(u => u.TrackingNo.Contains(filterByTrackingNo)).ToList();
+            }
 
-                if (!string.IsNullOrEmpty(filterByTransactionDate))
-                {
-                    result = result.Where(u => u.TransactionDate.Contains(filterByTransactionDate)).ToList();
-                }
+            if (!string.IsNullOrEmpty(filterByTransactionDate))
+            {
+                result = result.Where(u => u.TransactionDate.Contains(filterByTransactionDate)).ToList();
+            }
 
-                if (!string.IsNullOrEmpty(filterByIban))
-                {
-                    result = result.Where(u => u.Iban.Contains(filterByRRN)).ToList();
-                }
+            if (!string.IsNullOrEmpty(filterByIban))
+            {
+                result = result.Where(u => u.Iban.Contains(filterByRRN)).ToList();
+            }
 
-                if (!string.IsNullOrEmpty(filterByAmount))
-                {
-                    result = result.Where(u => u.Amount.Contains(filterByAmount) || u.PrincipalAmount.Contains(filterByAmount)).ToList();
-                }
+            if (!string.IsNullOrEmpty(filterByAmount))
+            {
+                result = result.Where(u => u.Amount.Contains(filterByAmount) || u.PrincipalAmount.Contains(filterByAmount)).ToList();
+            }
 
-                if (!string.IsNullOrEmpty(filterByTerminal))
-                {
-                    result = result.Where(u => u.Terminal.Contains(filterByTerminal)).ToList();
-                }
+            if (!string.IsNullOrEmpty(filterByTerminal))
+            {
+                result = result.Where(u => u.Terminal.Contains(filterByTerminal)).ToList();
+            }
 
-                if (!string.IsNullOrEmpty(filterByServiceCode))
-                {
-                    result = result.Where(u => u.ServiceCode.Contains(filterByServiceCode)).ToList();
-                }
+            if (!string.IsNullOrEmpty(filterByServiceCode))
+            {
+                result = result.Where(u => u.ServiceCode.Contains(filterByServiceCode)).ToList();
+            }
 
-                if (!string.IsNullOrEmpty(filterByProvinceName))
-                {
-                    result = result.Where(u => u.ProvinceName.Contains(filterByProvinceName)).ToList();
-                }
+            if (!string.IsNullOrEmpty(filterByProvinceName))
+            {
+                result = result.Where(u => u.ProvinceName.Contains(filterByProvinceName)).ToList();
+            }
 
-                if (!string.IsNullOrEmpty(filterBySubProvince))
-                {
-                    result = result.Where(u => u.SubProvince.Contains(filterBySubProvince)).ToList();
-                }
+            if (!string.IsNullOrEmpty(filterBySubProvince))
+            {
+                result = result.Where(u => u.SubProvince.Contains(filterBySubProvince)).ToList();
+            }
 
-                int takeData = take;
-                int skip = (pageId - 1) * takeData;
+            int takeData = take;
+            int skip = (pageId - 1) * takeData;
 
-                TopYarTmpViewModel list = new TopYarTmpViewModel();
-                list.TopYarTmps = result.OrderByDescending(u => u.RetrivalRef).Skip(skip).Take(takeData).ToList();
-                list.PageCount = (int)Math.Ceiling(result.Count / (double)takeData);
-                list.CurrentPage = pageId;
-                list.TopYarTmpCounts = result.Count;
-                return list;
+            TopYarTmpViewModel list = new TopYarTmpViewModel();
+            list.TopYarTmps = result.OrderByDescending(u => u.RetrivalRef).Skip(skip).Take(takeData).ToList();
+            list.PageCount = (int)Math.Ceiling(result.Count / (double)takeData);
+            list.CurrentPage = pageId;
+            list.TopYarTmpCounts = result.Count;
+            return list;
         }
         return new TopYarTmpViewModel();
     }
@@ -360,28 +360,25 @@ internal class TopYarTmpService : ITopYarTmpService
 
             for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
             {
-                var tmp = new CreateAndEditTopYarTmpViewModel
-                {
-                    RetrivalRef = worksheet.Cells[row, 1].Value.ToString(),
-                    TrackingNo = worksheet.Cells[row, 2].Value.ToString(),
-                    TransactionDate = worksheet.Cells[row, 3].Value.ToString(),
-                    FinancialDate = worksheet.Cells[row, 4].Value.ToString(),
-                    Iban = worksheet.Cells[row, 5].Value.ToString(),
-                    Amount = worksheet.Cells[row, 6].Value.ToString(),
-                    PrincipalAmount = worksheet.Cells[row, 7].Value.ToString(),
-                    CardNo = worksheet.Cells[row, 8].Value.ToString(),
-                    Terminal = worksheet.Cells[row, 9].Value.ToString(),
-                    InstallationPlace = worksheet.Cells[row, 10].Value.ToString(),
-                    ServiceCode = worksheet.Cells[row, 11].Value.ToString(),
-                    ServiceName = (string)(worksheet.Cells[row, 12].Value ?? "NULL"),
-                    Identification = (string)(worksheet.Cells[row, 13].Value ?? null),
-                    ProvinceName = (string)(worksheet.Cells[row, 14].Value ?? null),
-                    SubProvince = (string)(worksheet.Cells[row, 15].Value ?? null),
-                    TransactionTime = worksheet.Cells[row, 16].Value.ToString(),
-                    ProvinceCode = "",
-                    CreationDate = DateTime.Now,
-                    // Map other properties accordingly
-                };
+                var tmp = new CreateAndEditTopYarTmpViewModel();
+                tmp.RetrivalRef = worksheet.Cells[row, 1].Value.ToString();
+                tmp.TrackingNo = worksheet.Cells[row, 2].Value.ToString();
+                tmp.TransactionDate = worksheet.Cells[row, 3].Value.ToString();
+                tmp.FinancialDate = worksheet.Cells[row, 4].Value.ToString();
+                tmp.Iban = worksheet.Cells[row, 5].Value.ToString();
+                tmp.Amount = worksheet.Cells[row, 6].Value.ToString();
+                tmp.PrincipalAmount = worksheet.Cells[row, 7].Value.ToString();
+                tmp.CardNo = worksheet.Cells[row, 8].Value.ToString();
+                tmp.Terminal = worksheet.Cells[row, 9].Value.ToString();
+                tmp.InstallationPlace = worksheet.Cells[row, 10].Value.ToString();
+                tmp.ServiceCode = worksheet.Cells[row, 11].Value.ToString();
+                tmp.ServiceName = (string)(worksheet.Cells[row, 12].Value ?? "NULL");
+                tmp.Identification = (string)(worksheet.Cells[row, 13].Value ?? null);
+                tmp.ProvinceName = (string)(worksheet.Cells[row, 14].Value ?? null);
+                tmp.SubProvince = (string)(worksheet.Cells[row, 15].Value ?? null);
+                tmp.TransactionTime = worksheet.Cells[row, 16].Value.ToString();
+                tmp.ProvinceCode = "";
+                tmp.CreationDate = DateTime.Now;
 
                 topYar.Add(tmp);
             }
