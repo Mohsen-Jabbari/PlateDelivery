@@ -52,6 +52,15 @@ public class TopYarTmp : BaseEntity
         ProvinceCode = provinceCode;
     }
 
+    public void SetAmount(string amount)
+    {
+        if (amount != null && amount != "0")
+        {
+            Amount = amount;
+            PrincipalAmount = amount;
+        }
+    }
+
     public static void Guard(string RetrivalRef, string TransactionDate, string Iban, string PrincipalAmount, string Terminal,
         string ServiceCode)
     {

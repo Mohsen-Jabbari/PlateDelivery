@@ -182,28 +182,54 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
 
                             case 4:
                                 {
+
+                                    var serviceAmountSum = serviceCode.Sum(s => long.Parse(s.Amount));
+                                    var serviceOldAmountSum = serviceCode.Sum(s => long.Parse(s.OldAmount));
                                     var partialService = serviceCode.FirstOrDefault(s => s.CertainId == 2 && !s.IncludeTax);
                                     var reminderServices = serviceCode.Where(s => s.Id != partialService.Id).ToList();
-                                    if (item.Amount == partialService.Amount ||
-                                        item.Amount == partialService.OldAmount)
-                                    {
-                                        long ordr = _documentService.CreateIncomeDocument(item, partialService, MaxOrder);
-                                        if (ordr > 0)
-                                            Ids.Add(item.Id);
 
+                                    //برای حالتی که مبلغ راهور در دل حساب موسسه باشد
+                                    if (item.Amount == serviceAmountSum.ToString())
+                                    {
+                                        long ordrr = _documentService.CreateTaxDocument(item, serviceCode, MaxOrder);
+                                        if (ordrr > 0)
+                                            Ids.Add(item.Id);
                                     }
 
-                                    long srvcAmount = 0, servcOldAmount = 0;
-                                    foreach (var srvv in reminderServices)
+                                    else if (item.Amount == serviceOldAmountSum.ToString())
                                     {
-                                        srvcAmount += long.Parse(srvv.Amount);
-                                        servcOldAmount += long.Parse(srvv.OldAmount);
-                                    }
-                                    if (item.Amount == srvcAmount.ToString() || item.Amount == servcOldAmount.ToString())
-                                    {
-                                        long ordr = _documentService.CreateTaxDocument(item, reminderServices, MaxOrder);
-                                        if (ordr > 0)
+                                        long srvcOldAmount = 0;
+                                        foreach (var srvv in reminderServices)
+                                            srvcOldAmount += long.Parse(srvv.Amount);
+                                        item.SetAmount(srvcOldAmount.ToString());
+                                        long ordrr = _documentService.CreateTaxDocument(item, reminderServices, MaxOrder);
+                                        if (ordrr > 0)
                                             Ids.Add(item.Id);
+                                    }
+
+                                    //برای حالتی که مبلغ مربوط به راهور جدا باشد
+                                    else
+                                    {
+                                        if (item.Amount == partialService.Amount ||
+                                            item.Amount == partialService.OldAmount)
+                                        {
+                                            long ordr = _documentService.CreateIncomeDocument(item, partialService, MaxOrder);
+                                            if (ordr > 0)
+                                                Ids.Add(item.Id);
+                                        }
+
+                                        long srvcAmount = 0, servcOldAmount = 0;
+                                        foreach (var srvv in reminderServices)
+                                        {
+                                            srvcAmount += long.Parse(srvv.Amount);
+                                            servcOldAmount += long.Parse(srvv.OldAmount);
+                                        }
+                                        if (item.Amount == srvcAmount.ToString() || item.Amount == servcOldAmount.ToString())
+                                        {
+                                            long ordr = _documentService.CreateTaxDocument(item, reminderServices, MaxOrder);
+                                            if (ordr > 0)
+                                                Ids.Add(item.Id);
+                                        }
                                     }
                                 }
 
@@ -211,56 +237,106 @@ namespace PlateDelivery.Web.Pages.Leon.TopYarTmps
 
                             case 5:
                                 {
+                                    var serviceAmountSum = serviceCode.Sum(s => long.Parse(s.Amount));
+                                    var serviceOldAmountSum = serviceCode.Sum(s => long.Parse(s.OldAmount));
                                     var partialService = serviceCode.FirstOrDefault(s => s.CertainId == 2 && !s.IncludeTax);
                                     var reminderServices = serviceCode.Where(s => s.Id != partialService.Id).ToList();
-                                    if (item.Amount == partialService.Amount ||
-                                        item.Amount == partialService.OldAmount)
-                                    {
-                                        long ordr = _documentService.CreateIncomeDocument(item, partialService, MaxOrder);
-                                        if (ordr > 0)
-                                            Ids.Add(item.Id);
 
+                                    //برای حالتی که مبلغ راهور در دل حساب موسسه باشد
+                                    if (item.Amount == serviceAmountSum.ToString())
+                                    {
+                                        long ordrr = _documentService.CreateTaxDocument(item, serviceCode, MaxOrder);
+                                        if (ordrr > 0)
+                                            Ids.Add(item.Id);
                                     }
 
-                                    long srvcAmount = 0, servcOldAmount = 0;
-                                    foreach (var srvv in reminderServices)
+                                    else if (item.Amount == serviceOldAmountSum.ToString())
                                     {
-                                        srvcAmount += long.Parse(srvv.Amount);
-                                        servcOldAmount += long.Parse(srvv.OldAmount);
-                                    }
-                                    if (item.Amount == srvcAmount.ToString() || item.Amount == servcOldAmount.ToString())
-                                    {
-                                        long ordr = _documentService.CreateTaxDocument(item, reminderServices, MaxOrder);
-                                        if (ordr > 0)
+                                        long srvcOldAmount = 0;
+                                        foreach (var srvv in reminderServices)
+                                            srvcOldAmount += long.Parse(srvv.Amount);
+                                        item.SetAmount(srvcOldAmount.ToString());
+                                        long ordrr = _documentService.CreateTaxDocument(item, reminderServices, MaxOrder);
+                                        if (ordrr > 0)
                                             Ids.Add(item.Id);
+                                    }
+
+                                    //برای حالتی که مبلغ مربوط به راهور جدا باشد
+                                    else
+                                    {
+                                        if (item.Amount == partialService.Amount ||
+                                            item.Amount == partialService.OldAmount)
+                                        {
+                                            long ordr = _documentService.CreateIncomeDocument(item, partialService, MaxOrder);
+                                            if (ordr > 0)
+                                                Ids.Add(item.Id);
+                                        }
+
+                                        long srvcAmount = 0, servcOldAmount = 0;
+                                        foreach (var srvv in reminderServices)
+                                        {
+                                            srvcAmount += long.Parse(srvv.Amount);
+                                            servcOldAmount += long.Parse(srvv.OldAmount);
+                                        }
+                                        if (item.Amount == srvcAmount.ToString() || item.Amount == servcOldAmount.ToString())
+                                        {
+                                            long ordr = _documentService.CreateTaxDocument(item, reminderServices, MaxOrder);
+                                            if (ordr > 0)
+                                                Ids.Add(item.Id);
+                                        }
                                     }
                                 }
                                 break;
 
                             case 6:
                                 {
+                                    var serviceAmountSum = serviceCode.Sum(s => long.Parse(s.Amount));
+                                    var serviceOldAmountSum = serviceCode.Sum(s => long.Parse(s.OldAmount));
                                     var partialService = serviceCode.FirstOrDefault(s => s.CertainId == 2 && !s.IncludeTax);
                                     var reminderServices = serviceCode.Where(s => s.Id != partialService.Id).ToList();
-                                    if (item.Amount == partialService.Amount ||
-                                        item.Amount == partialService.OldAmount)
-                                    {
-                                        long ordr = _documentService.CreateIncomeDocument(item, partialService, MaxOrder);
-                                        if (ordr > 0)
-                                            Ids.Add(item.Id);
 
+                                    //برای حالتی که مبلغ راهور در دل حساب موسسه باشد
+                                    if (item.Amount == serviceAmountSum.ToString())
+                                    {
+                                        long ordrr = _documentService.CreateTaxDocument(item, serviceCode, MaxOrder);
+                                        if (ordrr > 0)
+                                            Ids.Add(item.Id);
                                     }
 
-                                    long srvcAmount = 0, servcOldAmount = 0;
-                                    foreach (var srvv in reminderServices)
+                                    else if (item.Amount == serviceOldAmountSum.ToString())
                                     {
-                                        srvcAmount += long.Parse(srvv.Amount);
-                                        servcOldAmount += long.Parse(srvv.OldAmount);
-                                    }
-                                    if (item.Amount == srvcAmount.ToString() || item.Amount == servcOldAmount.ToString())
-                                    {
-                                        long ordr = _documentService.CreateTaxDocument(item, reminderServices, MaxOrder);
-                                        if (ordr > 0)
+                                        long srvcOldAmount = 0;
+                                        foreach (var srvv in reminderServices)
+                                            srvcOldAmount += long.Parse(srvv.Amount);
+                                        item.SetAmount(srvcOldAmount.ToString());
+                                        long ordrr = _documentService.CreateTaxDocument(item, reminderServices, MaxOrder);
+                                        if (ordrr > 0)
                                             Ids.Add(item.Id);
+                                    }
+
+                                    //برای حالتی که مبلغ مربوط به راهور جدا باشد
+                                    else
+                                    {
+                                        if (item.Amount == partialService.Amount ||
+                                            item.Amount == partialService.OldAmount)
+                                        {
+                                            long ordr = _documentService.CreateIncomeDocument(item, partialService, MaxOrder);
+                                            if (ordr > 0)
+                                                Ids.Add(item.Id);
+                                        }
+
+                                        long srvcAmount = 0, servcOldAmount = 0;
+                                        foreach (var srvv in reminderServices)
+                                        {
+                                            srvcAmount += long.Parse(srvv.Amount);
+                                            servcOldAmount += long.Parse(srvv.OldAmount);
+                                        }
+                                        if (item.Amount == srvcAmount.ToString() || item.Amount == servcOldAmount.ToString())
+                                        {
+                                            long ordr = _documentService.CreateTaxDocument(item, reminderServices, MaxOrder);
+                                            if (ordr > 0)
+                                                Ids.Add(item.Id);
+                                        }
                                     }
                                 }
                                 break;

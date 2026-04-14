@@ -723,7 +723,7 @@ internal class DocumentService : IDocumentService
                         }
                     }
 
-                    else if (!service.IncludeTax)
+                    else if (!service.IncludeTax && (service.Amount != "0" || service.OldAmount != "0"))
                     {
                         var serviceAmount = services.Sum(s => long.Parse(s.Amount));
                         var serviceOldAmount = services.Sum(s => long.Parse(s.OldAmount));
