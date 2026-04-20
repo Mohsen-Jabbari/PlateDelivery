@@ -725,29 +725,58 @@ internal class DocumentService : IDocumentService
 
                     else if (!service.IncludeTax && (service.Amount != "0" || service.OldAmount != "0"))
                     {
+                        var ServiceCertain = _certainRepository.Get(service.CertainId);
                         var serviceAmount = services.Sum(s => long.Parse(s.Amount));
                         var serviceOldAmount = services.Sum(s => long.Parse(s.OldAmount));
 
                         if (long.Parse(topYar.Amount) == serviceAmount)
                         {
-                            var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                            if (service.CertainId == 2)
+                            {
+                                var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                    , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                    , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                    , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
+                    , province.CodeLevel4 ?? service.CodeLevel4, province.ProvinceCode, service.CodeLevel6
+                    , description, "0", service.Amount, year, month);
+                                documents.Add(taxRecord);
+                            }
+
+                            else
+                            {
+                                var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
                     , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
                     , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
                     , topYar.ProvinceName, topYar.SubProvince, null, taxServiceElement.CertainCode
                     , province.CodeLevel4 ?? service.CodeLevel4, taxServiceElement.Id != 4 ? "9999999999" : null, null
                     , description, "0", service.Amount, year, month);
-                            documents.Add(taxRecord);
+                                documents.Add(taxRecord);
+                            }
                         }
 
                         else
                         {
-                            var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                            if (service.CertainId == 2)
+                            {
+                                var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
                     , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
                     , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
-                    , topYar.ProvinceName, topYar.SubProvince, null, taxServiceElement.CertainCode
-                    , province.CodeLevel4 ?? service.CodeLevel4, taxServiceElement.Id != 4 ? "9999999999" : null, null
-                    , description, "0", service.OldAmount, year, month);
-                            documents.Add(taxRecord);
+                    , topYar.ProvinceName, topYar.SubProvince, null, ServiceCertain.CertainCode
+                    , province.CodeLevel4 ?? service.CodeLevel4, province.ProvinceCode, service.CodeLevel6
+                    , description, "0", service.Amount, year, month);
+                                documents.Add(taxRecord);
+                            }
+                            else
+                            {
+                                var taxRecord = new Document(maxOrder, topYar.RetrivalRef, topYar.TrackingNo, topYar.TransactionDate
+                        , topYar.TransactionTime, topYar.FinancialDate, topYar.Iban, topYar.Amount, topYar.PrincipalAmount
+                        , topYar.CardNo, topYar.Terminal, topYar.InstallationPlace, topYar.ServiceCode, service.ServiceName
+                        , topYar.ProvinceName, topYar.SubProvince, null, taxServiceElement.CertainCode
+                        , province.CodeLevel4 ?? service.CodeLevel4, taxServiceElement.Id != 4 ? "9999999999" : null, null
+                        , description, "0", service.OldAmount, year, month);
+                                documents.Add(taxRecord);
+                            }
+
                         }
 
                     }
